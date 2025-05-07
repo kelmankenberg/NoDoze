@@ -1,0 +1,78 @@
+appId: com.nodoze.app
+productName: NoDoze
+copyright: Copyright © 2025
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - public/**/*
+  - "!**/*.{ts,map}"
+  - "!*.{js,ts}"
+  - "!{tsconfig.json,tslint.json,package-lock.json,yarn.lock}"
+
+asar: true
+
+# Windows Configuration
+win:
+  target:
+    - nsis
+    - portable
+  icon: build/icons/win/icon.ico
+  artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+
+# macOS Configuration
+mac:
+  category: public.app-category.utilities
+  target:
+    - dmg
+    - zip
+  icon: build/icons/mac/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  darkModeSupport: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  artifactName: ${productName}-${version}-${os}.${ext}
+
+# Linux Configuration
+linux:
+  target:
+    - AppImage
+    - deb
+    - rpm
+  icon: build/icons
+  category: Utility
+  synopsis: Keep your computer awake
+  description: NoDoze prevents your computer from going to sleep
+  artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+
+# NSIS Installer Configuration (Windows)
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  installerIcon: build/icons/win/icon.ico
+  uninstallerIcon: build/icons/win/icon.ico
+
+# DMG Configuration (macOS)
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+# Publish Configuration
+publish:
+  provider: github
+  owner: your-github-username
+  repo: nodoze
+  private: false
