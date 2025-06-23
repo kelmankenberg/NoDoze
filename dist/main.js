@@ -299,15 +299,30 @@ function createWindow() {
         },
         icon: path.join(electron_1.app.isPackaged ? path.dirname(electron_1.app.getPath('exe')) : path.join(__dirname, '..'), 'public', 'icon.png'),
         resizable: false,
-        show: true
     });
+    // Set the title
+    mainWindow.setTitle('NoDoze');
+    console.log('Window title set to NoDoze');
     // Load the index.html file
-    if (electron_1.app.isPackaged) {
-        mainWindow.loadFile(path.join(__dirname, 'index.html'));
-    }
-    else {
-        mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
-    }
+    const indexPath = electron_1.app.isPackaged
+        ? path.join(__dirname, 'index.html')
+        : path.join(__dirname, '../dist/index.html');
+    console.log('Loading index.html from:', indexPath);
+    mainWindow.loadFile(indexPath).then(() => {
+        console.log('Successfully loaded index.html');
+    }).catch(error => {
+        console.error('Failed to load index.html:', error);
+        // Try to show an error message to the user
+        if (mainWindow) {
+            mainWindow.webContents.executeJavaScript(`
+        document.body.innerHTML = '<div style="padding: 20px; font-family: Arial, sans-serif;">
+          <h2>Failed to load application</h2>
+          <p>${error.toString()}</p>
+          <p>Please check the console for more details.</p>
+        </div>';
+      `);
+        }
+    });
     // Open DevTools for debugging in development mode
     if (!electron_1.app.isPackaged) {
         mainWindow.webContents.openDevTools({ mode: 'detach' });
