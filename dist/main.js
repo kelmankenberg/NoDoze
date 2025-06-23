@@ -646,63 +646,26 @@ exports.cleanup = cleanup;
 /*!***************************************!*\
   !*** ./src/main/platforms/windows.ts ***!
   \***************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPowerStatus = exports.getLastActivityTime = exports.isPreventingDisplaySleep = exports.getInterval = exports.isPreventingSleep = exports.cleanup = exports.allowSleep = exports.preventSleep = exports.initialize = void 0;
 /**
  * Windows platform-specific implementation for NoDoze
- * Uses Windows SetThreadExecutionState API to prevent sleep
+ * Uses Electron's built-in powerSaveBlocker API to prevent sleep
  */
 const child_process_1 = __webpack_require__(/*! child_process */ "child_process");
-const ffi = __importStar(__webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'ffi-napi'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
-// Define ES_CONTINUOUS and ES_SYSTEM_REQUIRED constants
-const ES_CONTINUOUS = 0x80000000;
-const ES_SYSTEM_REQUIRED = 0x00000001;
-const ES_DISPLAY_REQUIRED = 0x00000002;
-let preventSleepTimer = null;
+const electron_1 = __webpack_require__(/*! electron */ "electron");
+// Track state
 let intervalSeconds = 59; // Default interval
 let isActive = false;
 let lastActivityTime = null;
 let preventDisplaySleep = true; // Default to also prevent display sleep
-// Define Windows API functions through FFI
-const user32 = ffi.Library('user32', {
-    'SetThreadExecutionState': ['uint32', ['uint32']]
-});
+let statusLogTimer = null;
+// Track blockers
+let displayBlockerId = -1;
+let systemBlockerId = -1;
 /**
  * Initialize Windows sleep prevention
  */
@@ -713,7 +676,7 @@ const initialize = () => {
 exports.initialize = initialize;
 /**
  * Prevent the system from going to sleep
- * Uses the Windows SetThreadExecutionState API
+ * Uses Electron's powerSaveBlocker API
  * @param seconds Optional parameter to set the interval in seconds (default: 59)
  * @param keepDisplayOn Optional parameter to also keep the display on (default: true)
  */
@@ -724,19 +687,14 @@ const preventSleep = async (seconds = 59, keepDisplayOn = true) => {
         // Store the settings
         intervalSeconds = seconds;
         preventDisplaySleep = keepDisplayOn;
-        // Set the execution state flags
-        let flags = ES_CONTINUOUS | ES_SYSTEM_REQUIRED;
+        // Start system sleep prevention
+        systemBlockerId = electron_1.powerSaveBlocker.start('prevent-app-suspension');
+        // Also prevent display sleep if requested
         if (keepDisplayOn) {
-            flags |= ES_DISPLAY_REQUIRED;
+            displayBlockerId = electron_1.powerSaveBlocker.start('prevent-display-sleep');
         }
-        // Set the initial state
-        const result = user32.SetThreadExecutionState(flags);
-        if (result === 0) {
-            throw new Error('SetThreadExecutionState API call failed');
-        }
-        // Create a timer to refresh the state periodically
-        preventSleepTimer = setInterval(() => {
-            user32.SetThreadExecutionState(flags);
+        // Create a timer to log status periodically (actual prevention is handled by powerSaveBlocker)
+        statusLogTimer = setInterval(() => {
             console.log(`NoDoze: Keeping system awake at ${new Date().toISOString()}`);
         }, seconds * 1000);
         // Track activity status and time
@@ -756,12 +714,19 @@ exports.preventSleep = preventSleep;
  */
 const allowSleep = async () => {
     try {
-        if (preventSleepTimer) {
-            clearInterval(preventSleepTimer);
-            preventSleepTimer = null;
+        if (statusLogTimer) {
+            clearInterval(statusLogTimer);
+            statusLogTimer = null;
         }
-        // Reset the execution state to default (allow sleep)
-        user32.SetThreadExecutionState(ES_CONTINUOUS);
+        // Stop the power save blockers
+        if (displayBlockerId !== -1 && electron_1.powerSaveBlocker.isStarted(displayBlockerId)) {
+            electron_1.powerSaveBlocker.stop(displayBlockerId);
+            displayBlockerId = -1;
+        }
+        if (systemBlockerId !== -1 && electron_1.powerSaveBlocker.isStarted(systemBlockerId)) {
+            electron_1.powerSaveBlocker.stop(systemBlockerId);
+            systemBlockerId = -1;
+        }
         isActive = false;
         return true;
     }

@@ -1,19 +1,25 @@
 /**
  * Tests for Windows platform implementation
- * Testing the sleep prevention functionality using SetThreadExecutionState API
+ * Testing the sleep prevention functionality using Electron's powerSaveBlocker API
  */
 
-// Mock ffi-napi and ref-napi modules
-jest.mock('ffi-napi', () => ({
-  Library: jest.fn().mockImplementation(() => ({
-    SetThreadExecutionState: jest.fn().mockImplementation((flags) => {
-      // Return a successful result (non-zero)
-      return 1;
-    })
-  }))
-}));
+// Mock Electron's powerSaveBlocker
+const mockPowerSaveBlocker = {
+  start: jest.fn().mockImplementation((type) => {
+    // Return a different ID based on the type
+    if (type === 'prevent-display-sleep') return 1;
+    if (type === 'prevent-app-suspension') return 2;
+    return 0;
+  }),
+  stop: jest.fn(),
+  isStarted: jest.fn().mockReturnValue(true)
+};
 
-jest.mock('ref-napi');
+// Mock Electron module
+jest.mock('electron', () => ({
+  powerSaveBlocker: mockPowerSaveBlocker,
+  app: {}
+}));
 
 // Mock child_process for getPowerStatus method
 jest.mock('child_process', () => ({
@@ -26,17 +32,15 @@ jest.mock('child_process', () => ({
   })
 }));
 
-const ffi = require('ffi-napi');
 import * as windowsImpl from '../../../main/platforms/windows';
 
 describe('Windows Platform Implementation', () => {
-  let mockSetThreadExecutionState;
-  
   beforeEach(() => {
     jest.useFakeTimers();
     
-    // Get access to the mocked SetThreadExecutionState function for assertions
-    mockSetThreadExecutionState = ffi.Library().SetThreadExecutionState;
+    // Reset mock counters
+    mockPowerSaveBlocker.start.mockClear();
+    mockPowerSaveBlocker.stop.mockClear();
     
     // Clear all interval timers
     jest.clearAllTimers();
@@ -52,58 +56,55 @@ describe('Windows Platform Implementation', () => {
       expect(result).toBe(true);
     });
   });
-
   describe('preventSleep', () => {
-    it('should call SetThreadExecutionState with correct flags', async () => {
+    it('should call powerSaveBlocker.start with correct types', async () => {
       const result = await windowsImpl.preventSleep();
       
-      // Verify it was called with ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED
-      // These values are defined in the windows.ts file
-      const expectedFlags = 0x80000000 | 0x00000001 | 0x00000002;
-      expect(mockSetThreadExecutionState).toHaveBeenCalledWith(expectedFlags);
+      // Verify it was called with both prevent-app-suspension and prevent-display-sleep
+      expect(mockPowerSaveBlocker.start).toHaveBeenCalledWith('prevent-app-suspension');
+      expect(mockPowerSaveBlocker.start).toHaveBeenCalledWith('prevent-display-sleep');
       expect(result).toBe(true);
     });
 
-    it('should create a timer to refresh the state periodically', async () => {
+    it('should create a timer to log status periodically', async () => {
       await windowsImpl.preventSleep();
       
-      // Initially called once
-      expect(mockSetThreadExecutionState).toHaveBeenCalledTimes(1);
-      
-      // Clear previous calls
-      mockSetThreadExecutionState.mockClear();
+      // Spy on console.log
+      const consoleSpy = jest.spyOn(console, 'log');
       
       // Advance time by default interval (59 seconds)
       jest.advanceTimersByTime(59000);
       
-      // Should be called again after the timer fires
-      expect(mockSetThreadExecutionState).toHaveBeenCalledTimes(1);
+      // Should have logged status message
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('NoDoze: Keeping system awake at'));
+      
+      // Clean up
+      consoleSpy.mockRestore();
     });
 
     it('should respect the custom interval parameter', async () => {
       const customInterval = 30; // 30 seconds
       await windowsImpl.preventSleep(customInterval);
       
-      // Initially called once
-      expect(mockSetThreadExecutionState).toHaveBeenCalledTimes(1);
-      
-      // Clear previous calls
-      mockSetThreadExecutionState.mockClear();
+      // Spy on console.log
+      const consoleSpy = jest.spyOn(console, 'log');
       
       // Advance time by custom interval
       jest.advanceTimersByTime(30000);
       
-      // Should be called again after the timer fires
-      expect(mockSetThreadExecutionState).toHaveBeenCalledTimes(1);
-    });
-
-    it('should respect the display sleep parameter', async () => {
+      // Should have logged status message
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('NoDoze: Keeping system awake at'));
+      
+      // Clean up
+      consoleSpy.mockRestore();
+    });    it('should respect the display sleep parameter', async () => {
       // Prevent system sleep but allow display sleep
       await windowsImpl.preventSleep(59, false);
       
-      // Should call with ES_CONTINUOUS | ES_SYSTEM_REQUIRED only
-      const expectedFlags = 0x80000000 | 0x00000001; // ES_CONTINUOUS | ES_SYSTEM_REQUIRED
-      expect(mockSetThreadExecutionState).toHaveBeenCalledWith(expectedFlags);
+      // Should only call once for prevent-app-suspension, not for prevent-display-sleep
+      expect(mockPowerSaveBlocker.start).toHaveBeenCalledTimes(1);
+      expect(mockPowerSaveBlocker.start).toHaveBeenCalledWith('prevent-app-suspension');
+      expect(mockPowerSaveBlocker.start).not.toHaveBeenCalledWith('prevent-display-sleep');
     });
 
     it('should track activity state correctly', async () => {
@@ -114,18 +115,18 @@ describe('Windows Platform Implementation', () => {
   });
 
   describe('allowSleep', () => {
-    it('should call SetThreadExecutionState to reset state', async () => {
+    it('should call powerSaveBlocker.stop to release blockers', async () => {
       // First prevent sleep
       await windowsImpl.preventSleep();
       
       // Reset call count
-      mockSetThreadExecutionState.mockClear();
+      mockPowerSaveBlocker.stop.mockClear();
       
       // Then allow sleep
       await windowsImpl.allowSleep();
       
-      // Should call with ES_CONTINUOUS only to reset state
-      expect(mockSetThreadExecutionState).toHaveBeenCalledWith(0x80000000); // ES_CONTINUOUS
+      // Should call stop for both blockers
+      expect(mockPowerSaveBlocker.stop).toHaveBeenCalledTimes(2);
     });
 
     it('should clear the timer', async () => {

@@ -1,20 +1,28 @@
 // Mock Electron API for tests
 
 // Store IPC handlers for testing
-const ipcHandlers = new Map();
+const ipcHandlers = new Map<string, any>();
 // Track sleep prevention status
 let sleepPrevented = false;
 
-const mockIpcMain = {
-  on: jest.fn((channel, handler) => {
+interface IpcMainInterface {
+  on: jest.Mock;
+  once: jest.Mock;
+  handle: jest.Mock;
+  removeAllListeners: jest.Mock;
+  removeHandler: jest.Mock;
+}
+
+const mockIpcMain: IpcMainInterface = {
+  on: jest.fn((channel: string, handler: (event: any, ...args: any[]) => void) => {
     ipcHandlers.set(`on:${channel}`, handler);
     return mockIpcMain;
   }),
-  once: jest.fn((channel, handler) => {
+  once: jest.fn((channel: string, handler: (event: any, ...args: any[]) => void) => {
     ipcHandlers.set(`once:${channel}`, handler);
     return mockIpcMain;
   }),
-  handle: jest.fn((channel, handler) => {
+  handle: jest.fn((channel: string, handler: (event: any, ...args: any[]) => any) => {
     ipcHandlers.set(`handle:${channel}`, handler);
     return mockIpcMain;
   }),
@@ -22,7 +30,15 @@ const mockIpcMain = {
   removeHandler: jest.fn()
 };
 
-const mockIpcRenderer = {
+interface IpcRendererInterface {
+  on: jest.Mock;
+  once: jest.Mock;
+  send: jest.Mock;
+  invoke: jest.Mock;
+  removeAllListeners: jest.Mock;
+}
+
+const mockIpcRenderer: IpcRendererInterface = {
   on: jest.fn(),
   once: jest.fn(),
   send: jest.fn((channel, ...args) => {
@@ -44,10 +60,20 @@ const mockIpcRenderer = {
 };
 
 // Store the ready callback so tests can invoke it
-let readyCallback = null;
+let readyCallback: (() => void) | null = null;
 
-const mockApp = {
-  getPath: jest.fn(pathName => {
+interface AppInterface {
+  getPath: jest.Mock;
+  getLoginItemSettings: jest.Mock;
+  setLoginItemSettings: jest.Mock;
+  whenReady: jest.Mock;
+  on: jest.Mock;
+  _beforeQuitHandler?: () => void;
+  [key: string]: any; // For other properties that might be accessed
+}
+
+const mockApp: AppInterface = {
+  getPath: jest.fn((pathName: string) => {
     if (pathName === 'exe') return '/mock/path/to/exe';
     return '/mock/path';
   }),
@@ -56,7 +82,7 @@ const mockApp = {
   whenReady: jest.fn().mockImplementation(() => {
     return Promise.resolve();
   }),
-  on: jest.fn((event, handler) => {
+  on: jest.fn((event: string, handler: () => void) => {
     if (event === 'before-quit') {
       mockApp._beforeQuitHandler = handler;
     }
@@ -69,7 +95,7 @@ const mockApp = {
   }),
   isPackaged: false,
   quit: jest.fn(),
-  _beforeQuitHandler: null, // Store for testing
+  _beforeQuitHandler: undefined, // Store for testing
   _triggerBeforeQuit: () => {
     if (mockApp._beforeQuitHandler) {
       return mockApp._beforeQuitHandler();
@@ -86,14 +112,22 @@ const mockApp = {
 };
 
 // Mock child process
+interface IEventHandlers {
+  [key: string]: Array<((...args: any[]) => void)>;
+}
+
 class MockChildProcess {
+  eventHandlers: IEventHandlers;
+  stdout: { on: jest.Mock };
+  stderr: { on: jest.Mock };
+
   constructor() {
     this.eventHandlers = {};
     this.stdout = { on: jest.fn() };
     this.stderr = { on: jest.fn() };
   }
 
-  on(event, handler) {
+  on(event: string, handler: (...args: any[]) => void): MockChildProcess {
     if (!this.eventHandlers[event]) {
       this.eventHandlers[event] = [];
     }
@@ -101,21 +135,27 @@ class MockChildProcess {
     return this;
   }
 
-  emit(event, ...args) {
+  emit(event: string, ...args: any[]): boolean {
     if (this.eventHandlers[event]) {
-      this.eventHandlers[event].forEach(handler => handler(...args));
+      this.eventHandlers[event].forEach((handler: (...args: any[]) => void) => handler(...args));
     }
     return true;
   }
 }
 
-const mockChildProcess = {
+interface ChildProcessInterface {
+  spawn: jest.Mock;
+  _lastProcess?: MockChildProcess;
+  [key: string]: any;
+}
+
+const mockChildProcess: ChildProcessInterface = {
   spawn: jest.fn(() => {
     const proc = new MockChildProcess();
     mockChildProcess._lastProcess = proc;
     return proc;
   }),
-  _lastProcess: null, // Store for testing
+  _lastProcess: undefined, // Store for testing
   exec: jest.fn((command, options, callback) => {
     if (typeof options === 'function') {
       callback = options;
@@ -187,9 +227,8 @@ module.exports = {
   __resetMocks: () => {
     ipcHandlers.clear();
     sleepPrevented = false;
-    readyCallback = null;
-    mockApp._beforeQuitHandler = null;
-    mockChildProcess._lastProcess = null;
+    readyCallback = null as unknown as (() => void) | null;    mockApp._beforeQuitHandler = undefined;
+    mockChildProcess._lastProcess = undefined;
     
     // Reset all mocks
     jest.clearAllMocks();

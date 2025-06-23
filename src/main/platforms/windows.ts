@@ -1,27 +1,20 @@
 /**
  * Windows platform-specific implementation for NoDoze
- * Uses Windows SetThreadExecutionState API to prevent sleep
+ * Uses Electron's built-in powerSaveBlocker API to prevent sleep
  */
 import { exec } from 'child_process';
-import { app } from 'electron';
-import * as ffi from 'ffi-napi';
-import * as ref from 'ref-napi';
+import { app, powerSaveBlocker } from 'electron';
 
-// Define ES_CONTINUOUS and ES_SYSTEM_REQUIRED constants
-const ES_CONTINUOUS = 0x80000000;
-const ES_SYSTEM_REQUIRED = 0x00000001;
-const ES_DISPLAY_REQUIRED = 0x00000002;
-
-let preventSleepTimer: NodeJS.Timeout | null = null;
+// Track state
 let intervalSeconds = 59; // Default interval
 let isActive = false;
 let lastActivityTime: Date | null = null;
 let preventDisplaySleep = true; // Default to also prevent display sleep
+let statusLogTimer: NodeJS.Timeout | null = null;
 
-// Define Windows API functions through FFI
-const user32 = ffi.Library('user32', {
-  'SetThreadExecutionState': ['uint32', ['uint32']]
-});
+// Track blockers
+let displayBlockerId: number = -1;
+let systemBlockerId: number = -1;
 
 /**
  * Initialize Windows sleep prevention
@@ -33,7 +26,7 @@ export const initialize = (): boolean => {
 
 /**
  * Prevent the system from going to sleep
- * Uses the Windows SetThreadExecutionState API
+ * Uses Electron's powerSaveBlocker API
  * @param seconds Optional parameter to set the interval in seconds (default: 59)
  * @param keepDisplayOn Optional parameter to also keep the display on (default: true)
  */
@@ -46,22 +39,16 @@ export const preventSleep = async (seconds: number = 59, keepDisplayOn: boolean 
     intervalSeconds = seconds;
     preventDisplaySleep = keepDisplayOn;
 
-    // Set the execution state flags
-    let flags = ES_CONTINUOUS | ES_SYSTEM_REQUIRED;
+    // Start system sleep prevention
+    systemBlockerId = powerSaveBlocker.start('prevent-app-suspension');
+    
+    // Also prevent display sleep if requested
     if (keepDisplayOn) {
-      flags |= ES_DISPLAY_REQUIRED;
+      displayBlockerId = powerSaveBlocker.start('prevent-display-sleep');
     }
     
-    // Set the initial state
-    const result = user32.SetThreadExecutionState(flags);
-    
-    if (result === 0) {
-      throw new Error('SetThreadExecutionState API call failed');
-    }
-    
-    // Create a timer to refresh the state periodically
-    preventSleepTimer = setInterval(() => {
-      user32.SetThreadExecutionState(flags);
+    // Create a timer to log status periodically (actual prevention is handled by powerSaveBlocker)
+    statusLogTimer = setInterval(() => {
       console.log(`NoDoze: Keeping system awake at ${new Date().toISOString()}`);
     }, seconds * 1000);
     
@@ -82,13 +69,21 @@ export const preventSleep = async (seconds: number = 59, keepDisplayOn: boolean 
  */
 export const allowSleep = async (): Promise<boolean> => {
   try {
-    if (preventSleepTimer) {
-      clearInterval(preventSleepTimer);
-      preventSleepTimer = null;
+    if (statusLogTimer) {
+      clearInterval(statusLogTimer);
+      statusLogTimer = null;
     }
     
-    // Reset the execution state to default (allow sleep)
-    user32.SetThreadExecutionState(ES_CONTINUOUS);
+    // Stop the power save blockers
+    if (displayBlockerId !== -1 && powerSaveBlocker.isStarted(displayBlockerId)) {
+      powerSaveBlocker.stop(displayBlockerId);
+      displayBlockerId = -1;
+    }
+    
+    if (systemBlockerId !== -1 && powerSaveBlocker.isStarted(systemBlockerId)) {
+      powerSaveBlocker.stop(systemBlockerId);
+      systemBlockerId = -1;
+    }
     
     isActive = false;
     return true;
