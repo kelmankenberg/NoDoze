@@ -3,10 +3,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { createTrayIcon, createAppIcon, updateAppIcons } from './icon-manager';
 import { fixWindowsTaskbarIcon } from './windows-taskbar-icon-fix';
-import { SleepPreventionManager, SleepPreventionMode } from './activity/SleepPreventionManager';
-import { ActivitySimulatorFactory } from './activity/ActivitySimulatorFactory';
-import { ActivitySimulator } from './activity/ActivitySimulator';
-import { SettingsManager } from './SettingsManager';
 
 // Setup live reload for development
 if (process.env.NODE_ENV === 'development') {
@@ -31,11 +27,6 @@ let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let isPreventingSleep = false;
 let isAppQuitting = false; // Track app quitting state
-
-// Activity simulation system
-let sleepPreventionManager: SleepPreventionManager;
-let activitySimulator: ActivitySimulator | null = null;
-let settingsManager: SettingsManager;
 
 // Get the appropriate platform implementation
 const getPlatformImpl = () => {
@@ -63,25 +54,13 @@ const preventSleep = async () => {
   }
   
   try {
-    const currentMode = sleepPreventionManager.getState().mode;
-    
-    // Handle system sleep prevention
-    if (sleepPreventionManager.shouldPreventSystemSleep(currentMode)) {
-      await platformImpl.preventSleep();
-      sleepPreventionManager.setSystemSleepPrevention(true);
-    }
-    
-    // Handle activity simulation
-    if (sleepPreventionManager.shouldSimulateActivity(currentMode)) {
-      await startActivitySimulation();
-    }
-    
+    await platformImpl.preventSleep();
     isPreventingSleep = true;
     
     // Update both tray and taskbar icons
     updateAppIcons(mainWindow, tray, true);
     
-    console.log(`Sleep prevention enabled on ${process.platform} (mode: ${currentMode})`);
+    console.log(`Sleep prevention enabled on ${process.platform}`);
   } catch (error) {
     console.error('Error preventing sleep:', error);
   }
@@ -94,15 +73,7 @@ const allowSleep = async () => {
   if (!platformImpl) return;
   
   try {
-    // Stop activity simulation
-    await stopActivitySimulation();
-    
-    // Handle system sleep prevention
-    if (sleepPreventionManager.getState().systemSleepPrevention) {
-      await platformImpl.allowSleep();
-      sleepPreventionManager.setSystemSleepPrevention(false);
-    }
-    
+    await platformImpl.allowSleep();
     isPreventingSleep = false;
     
     // Update both tray and taskbar icons
@@ -113,6 +84,8 @@ const allowSleep = async () => {
     console.error('Error allowing sleep:', error);
   }
 };
+
+// Icon management is now handled by the icon-manager module
 
 /**
  * Creates a system tray icon with menu
@@ -148,8 +121,6 @@ function updateTrayMenu() {
   // Update both tray and app icons based on current state
   updateAppIcons(mainWindow, tray, isPreventingSleep);
   
-  const state = sleepPreventionManager.getState();
-  
   const contextMenu = Menu.buildFromTemplate([
     { 
       label: 'Open NoDoze', 
@@ -171,42 +142,6 @@ function updateTrayMenu() {
         updateTrayMenu();
         mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
       }
-    },
-    {
-      label: 'Sleep Prevention Mode',
-      submenu: [
-        {
-          label: 'Basic (Sleep only)',
-          type: 'radio',
-          checked: state.mode === SleepPreventionMode.BASIC,
-          click: async () => {
-            await changeSleepPreventionMode(SleepPreventionMode.BASIC);
-          }
-        },
-        {
-          label: 'Full (Sleep + Activity)',
-          type: 'radio',
-          checked: state.mode === SleepPreventionMode.FULL,
-          click: async () => {
-            await changeSleepPreventionMode(SleepPreventionMode.FULL);
-          }
-        },
-        {
-          label: 'Activity Only',
-          type: 'radio',
-          checked: state.mode === SleepPreventionMode.ACTIVITY_ONLY,
-          click: async () => {
-            await changeSleepPreventionMode(SleepPreventionMode.ACTIVITY_ONLY);
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: `Current: ${sleepPreventionManager.getModeDisplayName(state.mode)}`,
-          enabled: false
-        }
-      ]
     },
     { 
       type: 'separator' 
@@ -326,12 +261,7 @@ function createWindow() {
       } else {
         // Fallback to the state-specific icons
         const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
-        iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', iconName);
-        
-        // If that doesn't exist, try the build folder
-        if (!fs.existsSync(iconPath)) {
-          iconPath = path.join(__dirname, '..', '..', 'build', iconName);
-        }
+        iconPath = path.join(__dirname, '..', '..', 'build', iconName);
       }
     }
   } else {
@@ -350,14 +280,7 @@ function createWindow() {
   // If icon doesn't exist, try a fallback
   if (!iconExists) {
     console.log("Attempting to use fallback icon...");
-    if (process.platform === 'win32') {
-      iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon.ico');
-      if (!fs.existsSync(iconPath)) {
-        iconPath = path.join(__dirname, '..', '..', 'build', 'icon.ico');
-      }
-    } else {
-      iconPath = path.join(__dirname, '..', 'public', 'icon.svg');
-    }
+    iconPath = path.join(__dirname, '..', 'public', 'icon.svg');
     debugIconPath(iconPath);
   }
 
@@ -375,7 +298,6 @@ function createWindow() {
     transparent: false,
     hasShadow: true,
   });
-  
   // Set the title
   mainWindow.setTitle('NoDoze');
   
@@ -484,130 +406,6 @@ function createWindow() {
       }
       return true;
     });
-  }
-}
-
-/**
- * Initialize the sleep prevention manager and activity simulator
- */
-function initializeSleepPreventionSystem() {
-  // Initialize settings manager
-  settingsManager = new SettingsManager();
-  
-  // Initialize the sleep prevention manager with saved settings
-  const config = settingsManager.getSleepPreventionConfig();
-  sleepPreventionManager = new SleepPreventionManager(config);
-
-  // Add state change listener
-  sleepPreventionManager.addListener((state) => {
-    console.log('Sleep prevention state changed:', state);
-    
-    // Save the current mode to settings
-    settingsManager.setSleepPreventionMode(state.mode);
-    
-    // Notify renderer process
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('sleep-state-changed', state);
-    }
-    
-    // Update tray menu
-    updateTrayMenu();
-  });
-
-  console.log('Sleep prevention system initialized with saved settings');
-}
-
-/**
- * Start activity simulation
- */
-async function startActivitySimulation(): Promise<void> {
-  if (activitySimulator && activitySimulator.getStatus().isRunning) {
-    console.log('[NoDoze] startActivitySimulation: Already running');
-    return;
-  }
-
-  try {
-    console.log('[NoDoze] startActivitySimulation: Creating or starting simulator');
-    // Create activity simulator if it doesn't exist
-    if (!activitySimulator) {
-      const config = sleepPreventionManager.getConfig();
-      console.log('[NoDoze] startActivitySimulation: Creating new ActivitySimulator with config', config);
-      activitySimulator = ActivitySimulatorFactory.create({
-        interval: config.activityInterval,
-        activityType: config.activityType,
-        debug: config.debug
-      });
-    }
-
-    await activitySimulator.start();
-    sleepPreventionManager.setActivitySimulation(true);
-    
-    console.log('[NoDoze] Activity simulation started');
-  } catch (error) {
-    console.error('[NoDoze] Error starting activity simulation:', error);
-  }
-}
-
-/**
- * Stop activity simulation
- */
-async function stopActivitySimulation(): Promise<void> {
-  if (!activitySimulator || !activitySimulator.getStatus().isRunning) {
-    return;
-  }
-
-  try {
-    activitySimulator.stop();
-    sleepPreventionManager.setActivitySimulation(false);
-    
-    console.log('Activity simulation stopped');
-  } catch (error) {
-    console.error('Error stopping activity simulation:', error);
-  }
-}
-
-/**
- * Change sleep prevention mode
- */
-async function changeSleepPreventionMode(mode: SleepPreventionMode): Promise<void> {
-  const previousMode = sleepPreventionManager.getState().mode;
-  if (previousMode === mode) {
-    console.log(`[NoDoze] changeSleepPreventionMode: Mode unchanged (${mode})`);
-    return;
-  }
-
-  console.log(`[NoDoze] Changing sleep prevention mode from ${previousMode} to ${mode}`);
-  console.log(`[NoDoze] shouldSimulateActivity:`, sleepPreventionManager.shouldSimulateActivity(mode));
-  console.log(`[NoDoze] shouldPreventSystemSleep:`, sleepPreventionManager.shouldPreventSystemSleep(mode));
-
-  // Always allow sleep and stop simulation before changing mode
-  if (isPreventingSleep) {
-    await allowSleep();
-  }
-  sleepPreventionManager.setMode(mode);
-
-  // After changing mode, start activity simulation if needed
-  if (sleepPreventionManager.shouldSimulateActivity(mode)) {
-    console.log('[NoDoze] changeSleepPreventionMode: Starting activity simulation');
-    await startActivitySimulation();
-  }
-  // If the new mode also prevents system sleep, start that as well
-  if (sleepPreventionManager.shouldPreventSystemSleep(mode)) {
-    console.log('[NoDoze] changeSleepPreventionMode: Preventing system sleep');
-    await preventSleep();
-  }
-}
-
-/**
- * Get activity simulator capabilities
- */
-async function getActivitySimulatorCapabilities() {
-  try {
-    const capabilities = await ActivitySimulatorFactory.getPlatformCapabilities();
-    return capabilities;
-  } catch (error) {
-    console.error('Error getting activity simulator capabilities:', error);
-    return null;
   }
 }
 
@@ -809,15 +607,6 @@ app.on('before-quit', async () => {
   
   await allowSleep();
   
-  // Stop activity simulation
-  if (activitySimulator) {
-    try {
-      activitySimulator.stop();
-    } catch (error) {
-      console.error('Error stopping activity simulation:', error);
-    }
-  }
-  
   // Clean up platform-specific resources
   const platformImpl = getPlatformImpl();
   if (platformImpl && platformImpl.cleanup) {
@@ -832,117 +621,5 @@ app.on('before-quit', async () => {
   if (tray) {
     tray.destroy();
     tray = null;
-  }
-});
-
-// Initialize the sleep prevention system
-initializeSleepPreventionSystem();
-
-// Handle sleep prevention mode changes
-ipcMain.handle('set-sleep-prevention-mode', async (event, mode: SleepPreventionMode) => {
-  try {
-    await changeSleepPreventionMode(mode);
-    return { success: true };
-  } catch (error) {
-    console.error('Error setting sleep prevention mode:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-ipcMain.handle('get-sleep-prevention-state', () => {
-  return sleepPreventionManager.getState();
-});
-
-ipcMain.handle('get-activity-simulator-capabilities', async () => {
-  return await getActivitySimulatorCapabilities();
-});
-
-// Handle activity simulation controls
-ipcMain.handle('start-activity-simulation', async () => {
-  try {
-    await startActivitySimulation();
-    return { success: true };
-  } catch (error) {
-    console.error('Error starting activity simulation:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-ipcMain.handle('stop-activity-simulation', async () => {
-  try {
-    await stopActivitySimulation();
-    return { success: true };
-  } catch (error) {
-    console.error('Error stopping activity simulation:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-// Handle configuration updates
-ipcMain.handle('update-sleep-prevention-config', async (event, config) => {
-  try {
-    sleepPreventionManager.updateConfig(config);
-    
-    // If activity simulator is running, update its configuration
-    if (activitySimulator && activitySimulator.getStatus().isRunning) {
-      activitySimulator.setInterval(config.activityInterval || 30000);
-      activitySimulator.setActivityType(config.activityType || 'both');
-    }
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error updating sleep prevention config:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-// Handle settings management
-ipcMain.handle('get-settings', () => {
-  return settingsManager.getSettings();
-});
-
-ipcMain.handle('update-settings', async (event, settings) => {
-  try {
-    // Update specific settings
-    if (settings.sleepPreventionMode) {
-      settingsManager.setSleepPreventionMode(settings.sleepPreventionMode);
-    }
-    
-    if (settings.activitySimulation) {
-      settingsManager.setActivitySimulationSettings(settings.activitySimulation);
-    }
-    
-    if (settings.ui) {
-      settingsManager.setUISettings(settings.ui);
-    }
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error updating settings:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-ipcMain.handle('reset-settings', () => {
-  try {
-    settingsManager.resetSettings();
-    return { success: true };
-  } catch (error) {
-    console.error('Error resetting settings:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-});
-
-ipcMain.handle('export-settings', () => {
-  return settingsManager.exportSettings();
-});
-
-ipcMain.handle('import-settings', (event, jsonString) => {
-  try {
-    const success = settingsManager.importSettings(jsonString);
-    return { success };
-  } catch (error) {
-    console.error('Error importing settings:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 });

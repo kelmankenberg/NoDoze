@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="256" height="256" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="#e74c3c" />
+  
+  <!-- Closed eyelid -->
+  <path d="M48,128 Q128,180 208,128" stroke="#c0392b" stroke-width="6" fill="#e67e22" />
+  
+  <!-- Closed eye line -->
+  <path d="M48,128 Q128,180 208,128" stroke="#2c3e50" stroke-width="8" fill="none" />
+  
+  <!-- Eyelash details -->
+  <path d="M78,108 L68,88 M108,118 L98,98 M128,122 L128,98 M148,118 L158,98 M178,108 L188,88" 
+        stroke="#2c3e50" stroke-width="4" fill="none" stroke-linecap="round" />
+</svg>

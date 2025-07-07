@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 import './styles.css';
 import AboutDialog from './AboutDialog';
+import TitleBar from './TitleBar';
+import SleepPreventionModeToggle, { SleepPreventionMode } from './SleepPreventionModeToggle';
+
+interface SleepPreventionState {
+  mode: SleepPreventionMode;
+  systemSleepPrevention: boolean;
+  activitySimulation: boolean;
+  timerActive: boolean;
+  timerDuration: number;
+  timeRemaining: number;
+}
 
 const App: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
@@ -9,6 +20,15 @@ const App: React.FC = () => {
   const [timerDuration, setTimerDuration] = useState(30); // Default 30 minutes
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showAbout, setShowAbout] = useState(false);
+  const [sleepPreventionState, setSleepPreventionState] = useState<SleepPreventionState>({
+    mode: SleepPreventionMode.FULL,
+    systemSleepPrevention: false,
+    activitySimulation: false,
+    timerActive: false,
+    timerDuration: 0,
+    timeRemaining: 0
+  });
+  const [capabilities, setCapabilities] = useState<any>(null);
 
   // Initialize on component mount
   useEffect(() => {
@@ -17,9 +37,24 @@ const App: React.FC = () => {
       setIsActive(status);
     });
 
+    // Get initial sleep prevention state
+    ipcRenderer.invoke('get-sleep-prevention-state').then((state) => {
+      setSleepPreventionState(state);
+    });
+
+    // Get activity simulator capabilities
+    ipcRenderer.invoke('get-activity-simulator-capabilities').then((caps) => {
+      setCapabilities(caps);
+    });
+
     // Listen for status changes from main process
     ipcRenderer.on('sleep-status-changed', (_, status) => {
       setIsActive(status);
+    });
+
+    // Listen for sleep prevention state changes
+    ipcRenderer.on('sleep-state-changed', (_, state) => {
+      setSleepPreventionState(state);
     });
 
     // Listen for quick timer settings from the tray menu
@@ -31,6 +66,7 @@ const App: React.FC = () => {
 
     return () => {
       ipcRenderer.removeAllListeners('sleep-status-changed');
+      ipcRenderer.removeAllListeners('sleep-state-changed');
       ipcRenderer.removeAllListeners('set-quick-timer');
     };
   }, []);
@@ -86,6 +122,19 @@ const App: React.FC = () => {
     }
   };
 
+  const handleModeChange = async (mode: SleepPreventionMode) => {
+    try {
+      const result = await ipcRenderer.invoke('set-sleep-prevention-mode', mode);
+      if (result.success) {
+        setSleepPreventionState(prev => ({ ...prev, mode }));
+      } else {
+        console.error('Failed to change mode:', result.error);
+      }
+    } catch (error) {
+      console.error('Error changing sleep prevention mode:', error);
+    }
+  };
+
   // Format time as MM:SS
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -113,13 +162,16 @@ const App: React.FC = () => {
   };
 
   const statusColors = getStatusColors();
-
+  
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>NoDoze</h1>
-        <p className="subtitle">Keep your computer awake</p>
-      </header>
+      <div className="fixed-header-container">
+        <TitleBar title="NoDoze" />
+        <header className="app-header">
+          <h1>NoDoze</h1>
+          <p className="subtitle">Keep your computer awake</p>
+        </header>
+      </div>
       
       <div className="control-section">
         <div className="toggle-container">
@@ -133,6 +185,15 @@ const App: React.FC = () => {
           <p className="status-text">
             {statusColors.statusEmoji} {statusColors.statusText}
           </p>
+        </div>
+        
+        {/* Sleep Prevention Mode Toggle */}
+        <div className="mode-toggle-section">
+          <SleepPreventionModeToggle
+            currentMode={sleepPreventionState.mode}
+            onModeChange={handleModeChange}
+            disabled={false}
+          />
         </div>
         
         <div className="timer-section">

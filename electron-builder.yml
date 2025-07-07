@@ -9,6 +9,8 @@ directories:
 files:
   - dist/**/*
   - public/**/*
+  - build/**/*.ico
+  - build/**/*.svg
   - "!**/*.{ts,map}"
   - "!*.{js,ts}"
   - "!{tsconfig.json,tslint.json,package-lock.json,yarn.lock}"

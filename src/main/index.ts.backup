@@ -1,0 +1,1162 @@
+import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen } from 'electron';
+import * as path from 'path';
+import * as fs from 'fs';
+// Import our new icon utilities
+import { createTrayIcon, createTaskbarIcon, debugIconPath } from './icon-utils';
+
+// Setup live reload for development
+if (process.env.NODE_ENV === 'development') {
+  try {
+    require('electron-reload')(__dirname, {
+      electron: path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron'),
+      hardResetMethod: 'exit'
+    });
+    console.log('Electron reload enabled for development');
+  } catch (err) {
+    console.log('electron-reload not available, continuing without live reload');
+  }
+}
+
+// Import platform-specific modules
+import * as windowsImpl from './platforms/windows';
+import * as macosImpl from './platforms/macos';
+import * as linuxImpl from './platforms/linux';
+
+// Keep a global reference of objects to prevent garbage collection
+let mainWindow: BrowserWindow | null = null;
+let tray: Tray | null = null;
+let isPreventingSleep = false;
+let isAppQuitting = false; // Track app quitting state
+
+// Get the appropriate platform implementation
+const getPlatformImpl = () => {
+  switch (process.platform) {
+    case 'win32':
+      return windowsImpl;
+    case 'darwin':
+      return macosImpl;
+    case 'linux':
+      return linuxImpl;
+    default:
+      console.error(`Unsupported platform: ${process.platform}`);
+      return null;
+  }
+};
+
+// Platform-specific sleep prevention
+const preventSleep = async () => {
+  if (isPreventingSleep) return;
+  
+  const platformImpl = getPlatformImpl();
+  if (!platformImpl) {
+    console.error('No platform implementation available');
+    return;
+  }
+  
+  try {
+    await platformImpl.preventSleep();
+    isPreventingSleep = true;
+    
+    console.log('Sleep prevention enabled - updating icons...');
+    
+    // Update menu and icons
+    updateTrayMenu();
+    
+    // Apply special Windows taskbar icon fix
+    if (process.platform === 'win32' && mainWindow) {
+      try {
+        // Use our specialized Windows taskbar icon updater
+        forceWindowsTaskbarIconUpdate(mainWindow, true);
+        
+        // Also apply the regular taskbar fix as a backup
+        fixWindowsTaskbarIcon(mainWindow);
+        
+        console.log('Applied all available Windows taskbar icon update techniques');
+      } catch (iconError) {
+        console.error('Error updating taskbar icon:', iconError);
+      }
+    }
+    
+    console.log(`Sleep prevention enabled on ${process.platform}`);
+  } catch (error) {
+    console.error('Error preventing sleep:', error);
+  }
+};
+
+const allowSleep = async () => {
+  if (!isPreventingSleep) return;
+  
+  const platformImpl = getPlatformImpl();
+  if (!platformImpl) return;
+  
+  try {
+    await platformImpl.allowSleep();
+    isPreventingSleep = false;
+    
+    console.log('Sleep prevention disabled - updating icons...');
+    
+    // Update menu and icons
+    updateTrayMenu();
+    
+    // Apply special Windows taskbar icon fix
+    if (process.platform === 'win32' && mainWindow) {
+      try {
+        // Use our specialized Windows taskbar icon updater
+        forceWindowsTaskbarIconUpdate(mainWindow, false);
+        
+        // Clear any overlay icons
+        mainWindow.setOverlayIcon(null, '');
+        
+        // Also apply the regular taskbar fix as a backup
+        fixWindowsTaskbarIcon(mainWindow);
+        
+        console.log('Applied all available Windows taskbar icon update techniques');
+      } catch (iconError) {
+        console.error('Error updating taskbar icon:', iconError);
+      }
+    }
+    
+    console.log(`Sleep prevention disabled on ${process.platform}`);
+  } catch (error) {
+    console.error('Error allowing sleep:', error);
+  }
+};
+
+/**
+ * Creates a system tray icon with menu
+ */
+function createTray() {
+  // Don't create a tray if it already exists
+  if (tray !== null) return;
+  
+  console.log('Creating tray icon...');
+  
+  // For Windows, we need to use an ICO file for the tray
+  let iconPath;
+  if (process.platform === 'win32') {
+    // Always use absolute path to avoid path resolution issues
+    const basePath = app.getAppPath(); // Gets the root of the application folder
+    console.log(`App base path: ${basePath}`);
+    
+    const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+    
+    // Handle packaged vs development paths
+    if (app.isPackaged) {
+      // In packaged app, check these locations in order
+      const possiblePaths = [
+        path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', iconName),
+        path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
+        path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', iconName),
+        path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico')
+      ];
+      
+      // Use the first path that exists
+      for (const testPath of possiblePaths) {
+        console.log(`Checking for packaged app tray icon at: ${testPath}`);
+        if (fs.existsSync(testPath)) {
+          iconPath = testPath;
+          console.log(`Found tray icon at: ${iconPath}`);
+          break;
+        }
+      }
+      
+      // If no icon found, default to the first path and continue
+      if (!iconPath) {
+        iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.png');
+        console.warn(`No ICO icon found, defaulting to: ${iconPath}`);
+      }
+    } else {
+      // Development paths
+      iconPath = path.join(basePath, 'build', 'icons', 'win', iconName);
+      
+      console.log(`Checking for tray icon at: ${iconPath}`);
+      if (!fs.existsSync(iconPath)) {
+        console.warn(`Tray icon not found at ${iconPath}, trying fallback`);
+        iconPath = path.join(basePath, 'build', 'icons', 'win', 'icon.ico');
+        
+        if (!fs.existsSync(iconPath)) {
+          console.warn(`Fallback icon not found at ${iconPath}, using PNG`);
+          iconPath = path.join(basePath, 'public', 'icon.png');
+        }
+      }
+    }
+  } else {
+    // For other platforms, use SVG
+    const iconName = isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg';
+    
+    if (app.isPackaged) {
+      iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', iconName);
+    } else {
+      iconPath = path.join(app.getAppPath(), 'public', iconName);
+    }
+  }
+  
+  // Check if icon file exists and log it
+  if (fs.existsSync(iconPath)) {
+    console.log(`Using tray icon from: ${iconPath}`);
+  } else {
+    console.error(`Tray icon not found at: ${iconPath}`);
+    iconPath = path.join(__dirname, '..', 'public', 'icon.png'); // Ultimate fallback
+  }    // Create the tray with direct path instead of using the icon manager
+  try {
+    const trayIconImage = nativeImage.createFromPath(iconPath);
+    
+    // For Windows, resize to appropriate size for the tray
+    if (process.platform === 'win32') {
+      // Create a native image from buffer to avoid caching issues
+      const buffer = fs.readFileSync(iconPath);
+      const freshIcon = nativeImage.createFromBuffer(buffer);
+      const resizedIcon = freshIcon.resize({ width: 16, height: 16 });
+      tray = new Tray(resizedIcon);
+    } else {
+      tray = new Tray(trayIconImage);
+    }
+    
+    tray.setToolTip('NoDoze - Keep Your Computer Awake');
+    console.log('Tray icon created successfully');
+    
+    // Update the context menu
+    updateTrayMenu();
+    
+    // Show/hide window on tray click
+    tray.on('click', () => {
+      if (mainWindow?.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow?.show();
+      }
+    });
+  } catch (error) {
+    console.error('Failed to create tray icon:', error);
+  }
+}
+
+/**
+ * Updates the tray context menu with the current state
+ */
+
+/**
+ * Updates the tray context menu with the current state
+ */
+function updateTrayMenu() {
+  if (!tray) return;
+  
+  console.log(`Updating tray menu and icons (active=${isPreventingSleep})`);
+  
+  try {
+    // Update the icon based on current state
+    const basePath = app.getAppPath();
+    let iconPath = '';
+    
+    if (process.platform === 'win32') {
+      // Use .ico files from win folder with absolute paths
+      const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+      
+      // Handle packaged vs development paths
+      if (app.isPackaged) {
+        // In packaged app, check these locations in order
+        const possiblePaths = [
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', iconName),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', iconName),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico')
+        ];
+        
+        // Use the first path that exists
+        for (const testPath of possiblePaths) {
+          if (fs.existsSync(testPath)) {
+            iconPath = testPath;
+            break;
+          }
+        }
+        
+        // If no icon found, default to PNG
+        if (!iconPath) {
+          iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.png');
+        }
+      } else {
+        // Development paths
+        iconPath = path.join(basePath, 'build', 'icons', 'win', iconName);
+        
+        if (!fs.existsSync(iconPath)) {
+          iconPath = path.join(basePath, 'build', 'icons', 'win', 'icon.ico');
+          
+          if (!fs.existsSync(iconPath)) {
+            iconPath = path.join(basePath, 'public', 'icon.png');
+          }
+        }
+      }
+    } else {
+      // For other platforms, use SVG
+      const iconName = isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg';
+      
+      if (app.isPackaged) {
+        iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', iconName);
+      } else {
+        iconPath = path.join(basePath, 'public', iconName);
+      }
+    }
+    
+    if (fs.existsSync(iconPath)) {
+      console.log(`Setting tray icon to: ${iconPath}`);
+      
+      // For Windows, read the file directly to avoid caching
+      if (process.platform === 'win32' && tray) {
+        const buffer = fs.readFileSync(iconPath);
+        const freshIcon = nativeImage.createFromBuffer(buffer);
+        const resizedIcon = freshIcon.resize({ width: 16, height: 16 });
+        tray.setImage(resizedIcon);
+      } else if (tray) {
+        const trayIconImage = nativeImage.createFromPath(iconPath);
+        tray.setImage(trayIconImage);
+      }
+    }
+    
+    // Also update the window icon
+    if (mainWindow && process.platform === 'win32') {
+      // For taskbar icon - use absolute paths
+      const taskbarIconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+      let taskbarIconPath;
+      
+      if (app.isPackaged) {
+        taskbarIconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', taskbarIconName);
+        
+        if (!fs.existsSync(taskbarIconPath)) {
+          taskbarIconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico');
+        }
+      } else {
+        taskbarIconPath = path.join(basePath, 'build', 'icons', 'win', taskbarIconName);
+        
+        if (!fs.existsSync(taskbarIconPath)) {
+          taskbarIconPath = path.join(basePath, 'build', 'icons', 'win', 'icon.ico');
+        }
+      }
+      
+      if (fs.existsSync(taskbarIconPath)) {
+        console.log(`Updating taskbar icon to: ${taskbarIconPath}`);
+        const windowIcon = nativeImage.createFromPath(taskbarIconPath);
+        mainWindow.setIcon(windowIcon);
+        
+        // Apply overlay icon for active state (useful visual indicator)
+        if (isPreventingSleep) {
+          // Use a small overlay with green indicator
+          try {
+            const overlayPath = path.join(path.dirname(taskbarIconPath), 'icon-active.ico');
+            if (fs.existsSync(overlayPath)) {
+              const overlayIcon = nativeImage.createFromPath(overlayPath).resize({ width: 16, height: 16 });
+              mainWindow.setOverlayIcon(overlayIcon, 'Sleep Prevention Active');
+            }
+          } catch (err) {
+            console.error('Failed to set overlay icon:', err);
+          }
+        } else {
+          // Clear overlay when inactive
+          mainWindow.setOverlayIcon(null, '');
+        }
+      } else {
+        console.warn(`Taskbar icon not found at: ${taskbarIconPath}`);
+        // Try using PNG as fallback
+        const pngPath = app.isPackaged
+          ? path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.png')
+          : path.join(basePath, 'public', 'icon.png');
+        
+        if (fs.existsSync(pngPath)) {
+          console.log(`Using PNG fallback for taskbar: ${pngPath}`);
+          mainWindow.setIcon(nativeImage.createFromPath(pngPath));
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to update tray icon:', error);
+  }
+  
+  // Create the context menu
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Open NoDoze', 
+      click: () => { mainWindow?.show(); }
+    },
+    { 
+      type: 'separator' 
+    },
+    { 
+      label: 'Prevent Sleep', 
+      type: 'checkbox',
+      checked: isPreventingSleep,
+      click: async (menuItem) => {
+        if (menuItem.checked) {
+          await preventSleep();
+        } else {
+          await allowSleep();
+        }
+        updateTrayMenu();
+        mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+      }
+    },
+    { 
+      type: 'separator' 
+    },
+    {
+      label: 'Quick Timer',
+      submenu: [
+        {
+          label: '15 Minutes',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 15);
+            
+            // Set a timeout to disable sleep prevention
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 15 * 60 * 1000);
+          }
+        },
+        {
+          label: '30 Minutes',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 30);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 30 * 60 * 1000);
+          }
+        },
+        {
+          label: '1 Hour',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 60);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 60 * 60 * 1000);
+          }
+        },
+        {
+          label: '2 Hours',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 120);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 120 * 60 * 1000);
+          }
+        }
+      ]
+    },
+    { 
+      type: 'separator' 
+    },
+    {
+      label: 'Launch at Startup',
+      type: 'checkbox',
+      checked: app.getLoginItemSettings().openAtLogin,
+      click: (menuItem) => {
+        app.setLoginItemSettings({
+          openAtLogin: menuItem.checked,
+          openAsHidden: menuItem.checked // Start minimized in tray
+        });
+      }
+    },
+    { 
+      type: 'separator' 
+    },
+    { 
+      label: 'Quit', 
+      click: async () => { 
+        await allowSleep();
+        app.quit(); 
+      }
+    }
+  ]);
+  
+  if (tray) {
+    tray.setContextMenu(contextMenu);
+    tray.setToolTip(`NoDoze - ${isPreventingSleep ? 'Sleep Prevention Active' : 'Idle'}`);
+  }
+})`);
+    // First, update the tray icon
+  updateTrayIcon(tray, isPreventingSleep);
+  
+  // Then, update the window icon if needed
+  updateWindowIcon(mainWindow, isPreventingSleep);
+  
+  // Create the context menutry {
+    // Call our helper functions to update the icons
+    updateTrayIcon(tray, isPreventingSleep);
+    updateWindowIcon(mainWindow, isPreventingSleep);
+    
+    if (process.platform === 'win32') {
+      // Use .ico files from win folder with absolute paths
+      const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+      
+      // Handle packaged vs development paths
+      if (app.isPackaged) {
+        // In packaged app, check these locations in order
+        const possiblePaths = [
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', iconName),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', iconName),
+          path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico')
+        ];
+        
+        // Use the first path that exists
+        for (const testPath of possiblePaths) {
+          console.log(`Checking for packaged app tray menu icon at: ${testPath}`);
+          if (fs.existsSync(testPath)) {
+            iconPath = testPath;
+            console.log(`Found tray menu icon at: ${iconPath}`);
+            break;
+          }
+        }
+        
+        // If no icon found, default to PNG
+        if (!iconPath) {
+          iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.png');
+          console.warn(`No ICO icon found, defaulting to: ${iconPath}`);
+        }
+      } else {
+        // Development paths
+        iconPath = path.join(basePath, 'build', 'icons', 'win', iconName);
+        
+        console.log(`Checking for tray menu icon at: ${iconPath}`);
+        if (!fs.existsSync(iconPath)) {
+          console.warn(`Tray menu icon not found at ${iconPath}, trying fallback`);
+          iconPath = path.join(basePath, 'build', 'icons', 'win', 'icon.ico');
+          
+          if (!fs.existsSync(iconPath)) {
+            console.warn(`All ICO fallbacks failed, using PNG`);
+            iconPath = path.join(basePath, 'public', 'icon.png');
+          }
+        }
+      }
+    } else {
+      // For other platforms, use SVG
+      const iconName = isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg';
+      
+      if (app.isPackaged) {
+        iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'public', iconName);
+      } else {
+        iconPath = path.join(basePath, 'public', iconName);
+      }
+    }      if (fs.existsSync(iconPath)) {
+        console.log(`Setting tray icon to: ${iconPath}`);
+        
+        // For Windows, read the file directly to avoid caching
+        if (process.platform === 'win32') {
+          const buffer = fs.readFileSync(iconPath);
+          const freshIcon = nativeImage.createFromBuffer(buffer);
+          const resizedIcon = freshIcon.resize({ width: 16, height: 16 });
+          tray.setImage(resizedIcon);
+          console.log('Set tray icon with fresh buffer');
+        } else {
+          const trayIconImage = nativeImage.createFromPath(iconPath);
+          tray.setImage(trayIconImage);
+        }
+      }
+      
+      // Also update the window icon
+    if (mainWindow && process.platform === 'win32') {
+      // For taskbar icon - use absolute paths
+      const taskbarIconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+      const taskbarIconPath = path.join(basePath, 'build', 'icons', 'win', taskbarIconName);
+      console.log(`Checking for taskbar icon at: ${taskbarIconPath}`);
+      
+      if (fs.existsSync(taskbarIconPath)) {
+        console.log(`Updating taskbar icon to: ${taskbarIconPath}`);
+        const windowIcon = nativeImage.createFromPath(taskbarIconPath);
+        mainWindow.setIcon(windowIcon);
+        
+        // Apply overlay icon for active state (useful visual indicator)
+        if (isPreventingSleep) {
+          // Use a small overlay with green indicator
+          try {
+            const overlayPath = path.join(basePath, 'build', 'icons', 'win', 'icon-active.ico');
+            const overlayIcon = nativeImage.createFromPath(overlayPath).resize({ width: 16, height: 16 });
+            mainWindow.setOverlayIcon(overlayIcon, 'Sleep Prevention Active');
+          } catch (err) {
+            console.error('Failed to set overlay icon:', err);
+          }
+        } else {
+          // Clear overlay when inactive
+          mainWindow.setOverlayIcon(null, '');
+        }
+      } else {
+        console.warn(`Taskbar icon not found at: ${taskbarIconPath}`);
+        // Try using PNG as fallback
+        const pngPath = path.join(basePath, 'public', 'icon.png');
+        if (fs.existsSync(pngPath)) {
+          console.log(`Using PNG fallback for taskbar: ${pngPath}`);
+          mainWindow.setIcon(nativeImage.createFromPath(pngPath));
+        }      }
+    }
+  } catch (error) {
+    console.error('Failed to update tray icon:', error);
+  }
+  
+  // Create the context menu
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Open NoDoze', 
+      click: () => { mainWindow?.show(); }
+    },
+    { 
+      type: 'separator' 
+    },
+    { 
+      label: 'Prevent Sleep', 
+      type: 'checkbox',
+      checked: isPreventingSleep,
+      click: async (menuItem) => {
+        if (menuItem.checked) {
+          await preventSleep();
+        } else {
+          await allowSleep();
+        }
+        updateTrayMenu();
+        mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+      }
+    },
+    { 
+      type: 'separator' 
+    },
+    {
+      label: 'Quick Timer',
+      submenu: [
+        {
+          label: '15 Minutes',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 15);
+            
+            // Set a timeout to disable sleep prevention
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 15 * 60 * 1000);
+          }
+        },
+        {
+          label: '30 Minutes',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 30);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 30 * 60 * 1000);
+          }
+        },
+        {
+          label: '1 Hour',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 60);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 60 * 60 * 1000);
+          }
+        },
+        {
+          label: '2 Hours',
+          click: async () => {
+            await preventSleep();
+            updateTrayMenu();
+            mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            mainWindow?.webContents.send('set-quick-timer', 120);
+            
+            setTimeout(async () => {
+              await allowSleep();
+              updateTrayMenu();
+              mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+            }, 120 * 60 * 1000);
+          }
+        }
+      ]
+    },
+    { 
+      type: 'separator' 
+    },
+    {
+      label: 'Launch at Startup',
+      type: 'checkbox',
+      checked: app.getLoginItemSettings().openAtLogin,
+      click: (menuItem) => {
+        app.setLoginItemSettings({
+          openAtLogin: menuItem.checked,
+          openAsHidden: menuItem.checked // Start minimized in tray
+        });
+      }
+    },
+    { 
+      type: 'separator' 
+    },
+    { 
+      label: 'Quit', 
+      click: async () => { 
+        await allowSleep();
+        app.quit(); 
+      }
+    }  ]);
+  
+  // Handle setting tray properties safely with null check
+  if (tray) {
+    tray.setContextMenu(contextMenu);
+    
+    // Update tray tooltip based on sleep prevention state
+    tray.setToolTip(`NoDoze - ${isPreventingSleep ? 'Sleep Prevention Active' : 'Idle'}`);
+  }
+}
+
+function createWindow() {
+  // Determine which icon to use based on current state
+  let iconPath;
+  if (process.platform === 'win32') {
+    // For Windows, we'll use an .ico file in both production and development
+    if (app.isPackaged) {
+      iconPath = path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico');
+    } else {
+      // For Windows development, ALWAYS use the icon.ico from the win folder first
+      // as this is more reliable for taskbar icons
+      const winFolderIcon = path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon.ico');
+      if (fs.existsSync(winFolderIcon)) {
+        iconPath = winFolderIcon;
+        console.log('Using Windows-specific taskbar icon from win folder');
+      } else {
+        // Fallback to the state-specific icons
+        const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
+        iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', iconName);
+        
+        // If that doesn't exist, try the build folder
+        if (!fs.existsSync(iconPath)) {
+          iconPath = path.join(__dirname, '..', '..', 'build', iconName);
+        }
+      }
+    }
+  } else {
+    // For other platforms, use the SVG
+    const iconName = isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg';
+    iconPath = path.join(
+      app.isPackaged ? path.dirname(app.getPath('exe')) : path.join(__dirname, '..'),
+      'public', iconName
+    );
+  }
+  console.log(`Using icon path: ${iconPath}`);
+  
+  // Check if icon exists and get detailed info
+  const iconExists = debugIconPath(iconPath);
+  
+  // If icon doesn't exist, try a fallback
+  if (!iconExists) {
+    console.log("Attempting to use fallback icon...");
+    if (process.platform === 'win32') {
+      iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon.ico');
+      if (!fs.existsSync(iconPath)) {
+        iconPath = path.join(__dirname, '..', '..', 'build', 'icon.ico');
+      }
+    } else {
+      iconPath = path.join(__dirname, '..', 'public', 'icon.svg');
+    }
+    debugIconPath(iconPath);
+  }
+
+  // Create the browser window with the icon
+  mainWindow = new BrowserWindow({
+    width: 380,
+    height: 450,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+    icon: iconPath, // Set the icon directly here for taskbar
+    frame: false, // Remove default window frame
+    resizable: false,
+    transparent: false,
+    hasShadow: true,
+  });
+  
+  // Set the title
+  mainWindow.setTitle('NoDoze');
+  
+  // Force the icon to be set after window creation (helps with Windows)
+  try {
+    // For Windows, we need to be more explicit about setting the icon
+    if (process.platform === 'win32') {
+      // Windows requires special handling for taskbar icons
+      // Technique 1: Create an empty app.ico in app directory (for development)
+      if (!app.isPackaged) {
+        try {
+          // Copy our icon to app.ico in the application path
+          const appIcoPath = path.join(path.dirname(process.execPath), 'app.ico');
+          fs.copyFileSync(iconPath, appIcoPath);
+          console.log(`Copied app icon to: ${appIcoPath} (helps Windows find it)`);
+        } catch (copyError) {
+          console.log('Failed to copy app.ico:', copyError);
+        }
+      }
+      
+      // Technique 2: Set all possible icon variants
+      const icon = nativeImage.createFromPath(iconPath);
+      if (!icon.isEmpty() && mainWindow) {
+        // Set the icon multiple times with different sizes
+        mainWindow.setIcon(icon);
+        
+        // Add various sized icons - Windows may use different sizes in different contexts
+        [16, 24, 32, 48, 64, 128].forEach(size => {
+          try {
+            const sizedIcon = icon.resize({ width: size, height: size });
+            if (mainWindow) {
+              mainWindow.setIcon(sizedIcon);
+              console.log(`Set ${size}x${size} icon for Windows`);
+            }
+          } catch (e) {
+            // Ignore resize errors
+          }
+        });
+        
+        console.log(`Icons set successfully from: ${iconPath}`);
+      } else {
+        console.warn(`Created an empty icon from: ${iconPath}`);
+        
+        // Try loading the icon.png directly as fallback
+        const pngPath = path.join(__dirname, '..', 'public', 'icon.png');
+        if (debugIconPath(pngPath)) {
+          const pngIcon = nativeImage.createFromPath(pngPath);
+          if (!pngIcon.isEmpty() && mainWindow) {
+            mainWindow.setIcon(pngIcon);
+            console.log(`Successfully set PNG icon as fallback`);
+          }
+        }
+      }
+    } else {
+      // For non-Windows platforms, simpler icon setting is sufficient
+      const icon = nativeImage.createFromPath(iconPath);
+      if (!icon.isEmpty() && mainWindow) {
+        mainWindow.setIcon(icon);
+        console.log(`Icon set successfully from: ${iconPath}`);
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to set icon from ${iconPath}:`, error);
+  }
+  
+  console.log('Window title and icon set for NoDoze');
+  
+  // Load the index.html file
+  const indexPath = app.isPackaged 
+    ? path.join(__dirname, 'index.html')
+    : path.join(__dirname, '../dist/index.html');
+    
+  console.log('Loading index.html from:', indexPath);
+  
+  // In development mode, use a file URL with query param to avoid caching
+  if (process.env.NODE_ENV === 'development' && mainWindow) {
+    const fileUrl = `file://${indexPath}?time=${new Date().getTime()}`;
+    mainWindow.loadURL(fileUrl).then(() => {
+      console.log('Successfully loaded index.html (dev mode)');
+    }).catch((error: Error) => {
+      console.error('Failed to load index.html (dev mode):', error);
+      showErrorInWindow(error);
+    });
+  } else if (mainWindow) {
+    mainWindow.loadFile(indexPath).then(() => {
+      console.log('Successfully loaded index.html');
+    }).catch((error: Error) => {
+      console.error('Failed to load index.html:', error);
+      showErrorInWindow(error);
+    });
+  }
+  
+  // Open DevTools for debugging in development mode
+  if (!app.isPackaged && mainWindow) {
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    console.log('DevTools opened');
+  }
+  
+  // Handle window close event - hide instead of close
+  if (mainWindow) {
+    mainWindow.on('close', (event: Electron.Event) => {
+      if (!isAppQuitting) {
+        event.preventDefault();
+        mainWindow?.hide();
+        return false;
+      }
+      return true;
+    });
+  }
+}
+
+// Initialize platform-specific implementations
+const initializePlatform = () => {
+  const platformImpl = getPlatformImpl();
+  if (platformImpl) {
+    try {
+      platformImpl.initialize();
+      console.log(`Platform ${process.platform} initialized`);
+    } catch (error) {
+      console.error('Error initializing platform:', error);
+    }
+  }
+};
+
+/**
+ * Helper function to show errors in the window
+ */
+function showErrorInWindow(error: Error) {
+  if (mainWindow) {
+    mainWindow.webContents.executeJavaScript(`
+      document.body.innerHTML = '<div style="padding: 20px; font-family: Arial, sans-serif;">
+        <h2>Failed to load application</h2>
+        <p>${error.toString()}</p>
+        <p>Please check the console for more details.</p>
+      </div>';
+    `);
+  }
+}
+
+// Helper function to debug icon paths and errors
+function debugIconPath(iconPath: string) {
+  try {
+    if (fs.existsSync(iconPath)) {
+      const stats = fs.statSync(iconPath);
+      console.log(`Icon file exists: ${iconPath}`);
+      console.log(`  - Size: ${stats.size} bytes`);
+      console.log(`  - Created: ${stats.birthtime}`);
+      console.log(`  - Modified: ${stats.mtime}`);
+      return true;
+    } else {
+      console.error(`Icon file does not exist: ${iconPath}`);
+      
+      // Try to list files in the directory
+      try {
+        const dir = path.dirname(iconPath);
+        if (fs.existsSync(dir)) {
+          const files = fs.readdirSync(dir);
+          console.log(`Files in directory ${dir}:`);
+          files.forEach((file: string) => console.log(`  - ${file}`));
+        } else {
+          console.error(`Directory does not exist: ${dir}`);
+        }
+      } catch (dirError) {
+        console.error(`Error listing directory:`, dirError);
+      }
+      return false;
+    }
+  } catch (error) {
+    console.error(`Error checking icon path ${iconPath}:`, error);
+    return false;
+  }
+}
+
+// This method will be called when Electron has finished initialization
+app.whenReady().then(() => {
+  initializePlatform();
+  createWindow();
+  createTray();
+  
+  // Apply our special Windows taskbar icon fix
+  if (process.platform === 'win32' && mainWindow) {
+    // First apply the standard fix
+    fixWindowsTaskbarIcon(mainWindow);
+    console.log('Applied Windows-specific taskbar icon fix');
+    
+    // Then use our more aggressive approach
+    forceWindowsTaskbarIconUpdate(mainWindow, isPreventingSleep);
+    console.log('Applied aggressive Windows taskbar icon update');
+    
+    // Schedule additional icon updates to overcome Windows caching
+    // Sometimes Windows Explorer needs more time to properly initialize
+    const refreshTimes = [1000, 3000, 5000];
+    refreshTimes.forEach(delay => {
+      setTimeout(() => {
+        if (mainWindow) {
+          console.log(`Performing scheduled icon refresh after ${delay}ms`);
+          forceWindowsTaskbarIconUpdate(mainWindow, isPreventingSleep);
+        }
+      }, delay);
+    });
+  }
+
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window when the dock icon is clicked
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+
+// Quit when all windows are closed, except on macOS
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+// IPC handlers for renderer process communication
+ipcMain.on('toggle-sleep-prevention', async (_, shouldPrevent) => {
+  if (shouldPrevent) {
+    await preventSleep();
+  } else {
+    await allowSleep();
+  }
+  
+  // Update the tray menu with the new state
+  updateTrayMenu();
+  
+  // Notify renderer of status change
+  mainWindow?.webContents.send('sleep-status-changed', isPreventingSleep);
+  
+  // Special case for Windows - double check the taskbar icon after a short delay
+  // This helps in cases where the OS might have ignored the initial icon change
+  if (process.platform === 'win32' && mainWindow) {
+    setTimeout(() => {
+      try {
+        console.log('Performing delayed taskbar icon verification...');
+        forceWindowsTaskbarIconUpdate(mainWindow, shouldPrevent);
+      } catch (err) {
+        console.error('Failed during delayed taskbar icon update:', err);
+      }
+    }, 1000);
+  }
+});
+
+ipcMain.handle('get-sleep-status', () => {
+  return isPreventingSleep;
+});
+
+// Handle window control events
+ipcMain.on('window-minimize', () => {
+  if (mainWindow) {
+    mainWindow.minimize();
+  }
+});
+
+ipcMain.on('window-corner', () => {
+  if (mainWindow) {
+    try {
+      // Get display where the window is currently located
+      const windowBounds = mainWindow.getBounds();
+      const currentDisplay = screen.getDisplayNearestPoint({ 
+        x: windowBounds.x + windowBounds.width / 2, 
+        y: windowBounds.y + windowBounds.height / 2
+      });
+      
+      // Get the work area (screen size minus taskbar/dock)
+      const { workArea } = currentDisplay;
+      const windowSize = mainWindow.getSize();
+      
+      // Calculate position to place window in lower right corner with a small margin
+      const margin = 20;
+      const xPosition = workArea.x + workArea.width - windowSize[0] - margin;
+      const yPosition = workArea.y + workArea.height - windowSize[1] - margin;
+      
+      // Store current position for potential future toggle
+      // (We don't use this yet, but could be useful for adding a toggle feature later)
+      const currentPosition = mainWindow.getPosition();
+      
+      // Ensure the window is visible and not minimized
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      if (!mainWindow.isVisible()) {
+        mainWindow.show();
+      }
+      
+      // Move the window to the lower right corner with animated effect
+      // by moving it in small increments
+      const animateWindow = (fromX: number, fromY: number, toX: number, toY: number, steps: number = 15) => {
+        const stepX = (toX - fromX) / steps;
+        const stepY = (toY - fromY) / steps;
+        let currentStep = 0;
+        
+        const moveStep = () => {
+          if (currentStep <= steps && mainWindow) {
+            const nextX = Math.round(fromX + stepX * currentStep);
+            const nextY = Math.round(fromY + stepY * currentStep);
+            mainWindow.setPosition(nextX, nextY, true);
+            currentStep++;
+            setTimeout(moveStep, 10);
+          }
+        };
+        
+        moveStep();
+      };
+      
+      const [currentX, currentY] = mainWindow.getPosition();
+      animateWindow(currentX, currentY, xPosition, yPosition);
+      
+      console.log(`Moving window to corner position: (${xPosition}, ${yPosition})`);
+    } catch (error) {
+      console.error('Error moving window to corner:', error);
+      
+      // Fallback to simpler positioning if the animated approach fails
+      try {
+        const { workAreaSize } = screen.getPrimaryDisplay();
+        const windowSize = mainWindow.getSize();
+        mainWindow.setPosition(
+          workAreaSize.width - windowSize[0] - 10,
+          workAreaSize.height - windowSize[1] - 10
+        );
+      } catch (fallbackError) {
+        console.error('Fallback positioning also failed:', fallbackError);
+      }
+    }
+  }
+});
+
+ipcMain.on('window-close', () => {
+  if (mainWindow) {
+    // Don't actually quit the app, just hide the window
+    mainWindow.hide();
+  }
+});
+
+// Clean up before quitting
+app.on('before-quit', async () => {
+  // Mark the app as quitting to allow window close
+  isAppQuitting = true;
+  
+  await allowSleep();
+  
+  // Clean up platform-specific resources
+  const platformImpl = getPlatformImpl();
+  if (platformImpl && platformImpl.cleanup) {
+    try {
+      await platformImpl.cleanup();
+    } catch (error) {
+      console.error('Error during platform cleanup:', error);
+    }
+  }
+  
+  // Destroy the tray icon
+  if (tray) {
+    tray.destroy();
+    tray = null;
+  }
+});
