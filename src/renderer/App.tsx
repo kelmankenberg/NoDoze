@@ -167,26 +167,26 @@ const App: React.FC = () => {
     <div className="app-container">
       <div className="fixed-header-container">
         <TitleBar title="NoDoze" />
-        <header className="app-header">
+        {/* <header className="app-header">
           <h1>NoDoze</h1>
           <p className="subtitle">Keep your computer awake</p>
-        </header>
+        </header> */}
       </div>
-      
+
       <div className="control-section">
-        <div className="toggle-container">
-          <button 
-            className={`toggle-button ${statusColors.buttonClass}`}
-            style={{ backgroundColor: statusColors.buttonColor }}
+        {/* Activate Button (on top) */}
+        <div className="activate-section">
+          <button
+            className={`activate-button${isActive ? ' active' : ''}`}
             onClick={() => handleToggle(!isActive)}
           >
-            {isActive ? 'ACTIVE' : 'INACTIVE'}
+            {isActive ? 'Deactivate' : 'Activate'}
           </button>
           <p className="status-text">
             {statusColors.statusEmoji} {statusColors.statusText}
           </p>
         </div>
-        
+
         {/* Sleep Prevention Mode Toggle */}
         <div className="mode-toggle-section">
           <SleepPreventionModeToggle
@@ -195,41 +195,41 @@ const App: React.FC = () => {
             disabled={false}
           />
         </div>
-        
-        <div className="timer-section">
+
+        {/* <div className="timer-section">
           <div className="timer-header">
             <h3>Timer Mode</h3>
             <label className="switch">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 checked={timerMode}
                 onChange={handleTimerToggle}
               />
               <span className="slider round"></span>
             </label>
           </div>
-          
+
           {timerMode && (
             <div className="timer-controls">
               <div className="timer-input">
                 <label>Duration (minutes):</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={timerDuration}
                   onChange={handleTimerChange}
                   min="1"
                   disabled={isActive}
                 />
               </div>
-              
+
               {isActive && timeRemaining > 0 && (
                 <div className="timer-display">
                   <p>Time remaining: {formatTime(timeRemaining)}</p>
                   <div className="progress-bar">
-                    <div 
-                      className="progress" 
-                      style={{ 
-                        width: `${(timeRemaining / (timerDuration * 60)) * 100}%` 
+                    <div
+                      className="progress"
+                      style={{
+                        width: `${(timeRemaining / (timerDuration * 60)) * 100}%`
                       }}
                     ></div>
                   </div>
@@ -237,9 +237,9 @@ const App: React.FC = () => {
               )}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
-      
+
       <footer className="app-footer">
         <p>NoDoze v1.0.0</p>
         <div className="footer-actions">
@@ -252,9 +252,9 @@ const App: React.FC = () => {
       </footer>
 
       {/* About dialog */}
-      <AboutDialog 
-        isOpen={showAbout} 
-        onClose={() => setShowAbout(false)} 
+      <AboutDialog
+        isOpen={showAbout}
+        onClose={() => setShowAbout(false)}
       />
     </div>
   );
