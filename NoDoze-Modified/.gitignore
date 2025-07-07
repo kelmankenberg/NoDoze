@@ -1,0 +1,73 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+release/
+build/icons/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Test coverage
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Electron-specific files
+*.asar
+*.asar.unpacked
+
+# Generated files
+public/icon.ico
+public/icon.icns
+public/icon.png
+public/icon.svg
+
+# Jest cache
+jest-cache/
+jest-config/
+
+# Ignore compiled TypeScript files
+*.js.map
+*.d.ts
+
+# Ignore Electron Builder artifacts
+*.blockmap
+*.snap
+*.AppImage
+*.deb
+*.rpm
+*.dmg
+*.exe
+*.zip
+*.tar.gz
+
+# Ignore generated icons
+build/icons/png/
+build/icons/mac/
+build/icons/win/
+
+# Ignore Electron Builder config artifacts
+electron-builder.yml
+
+# Ignore generated plist files
+build/entitlements.mac.plist
