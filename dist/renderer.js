@@ -16,10 +16,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./theme.css */ "./node_modules/css-loader/dist/cjs.js!./src/renderer/theme.css");
 // Imports
 
 
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__["default"]);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles */
 
@@ -55,14 +58,14 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
 .toggle-title {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
   letter-spacing: 0.5px;
 }
 
 .toggle-subtitle {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
   font-weight: 400;
 }
@@ -393,7 +396,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
     animation: none;
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/renderer/SleepPreventionModeToggle.css"],"names":[],"mappings":"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","sourcesContent":["/* Sleep Prevention Mode Toggle Styles */\r\n\r\n.sleep-mode-toggle {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  padding: 20px;\r\n  background: rgba(0, 0, 0, 0.05);\r\n  border: 1px solid rgba(0, 0, 0, 0.1);\r\n  border-radius: 16px;\r\n  backdrop-filter: blur(10px);\r\n  transition: all 0.3s ease;\r\n  color: #333;\r\n}\r\n\r\n.sleep-mode-toggle:hover {\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-color: rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.sleep-mode-toggle.disabled {\r\n  opacity: 0.6;\r\n  pointer-events: none;\r\n}\r\n\r\n/* Header */\r\n.toggle-header {\r\n  text-align: center;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.toggle-title {\r\n  font-size: 16px;\r\n  font-weight: 600;\r\n  color: #333;\r\n  margin: 0 0 4px 0;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n.toggle-subtitle {\r\n  font-size: 12px;\r\n  color: #666;\r\n  margin: 0;\r\n  font-weight: 400;\r\n}\r\n\r\n/* Toggle Container */\r\n.toggle-container {\r\n  display: flex;\r\n  gap: 16px;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n/* Toggle Track */\r\n.toggle-track {\r\n  position: relative;\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-radius: 24px;\r\n  padding: 6px;\r\n  border: 1px solid rgba(0, 0, 0, 0.15);\r\n  height: 80px;\r\n  width: 240px;\r\n  min-width: 240px;\r\n  max-width: 240px;\r\n  flex-shrink: 0;\r\n  display: flex;\r\n  flex-direction: row;\r\n}\r\n\r\n/* Animated Thumb */\r\n.toggle-thumb {\r\n  position: absolute;\r\n  top: 6px;\r\n  left: 6px;\r\n  bottom: 6px;\r\n  width: 76px;\r\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\r\n  border-radius: 18px;\r\n  box-shadow: \r\n    0 4px 12px rgba(102, 126, 234, 0.3),\r\n    0 2px 4px rgba(0, 0, 0, 0.1);\r\n  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;\r\n  z-index: 1;\r\n  transform: translateX(0);\r\n}\r\n\r\n.toggle-thumb.transitioning {\r\n  box-shadow: \r\n    0 6px 20px rgba(102, 126, 234, 0.4),\r\n    0 4px 8px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n/* Toggle Options */\r\n.toggle-options {\r\n  display: flex;\r\n  flex-direction: row;\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  z-index: 2;\r\n}\r\n\r\n.toggle-option {\r\n  flex: 1;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  border-radius: 16px;\r\n  padding: 12px 8px;\r\n  transition: all 0.2s ease;\r\n  color: rgba(0, 0, 0, 0.6);\r\n  position: relative;\r\n  min-width: 54px;\r\n}\r\n\r\n.toggle-option:hover {\r\n  color: rgba(0, 0, 0, 0.8);\r\n  transform: scale(1.05);\r\n}\r\n\r\n.toggle-option.active {\r\n  color: #ffffff;\r\n  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);\r\n}\r\n\r\n.toggle-option.hovered:not(.active) {\r\n  background: rgba(0, 0, 0, 0.05);\r\n}\r\n\r\n.toggle-option:disabled {\r\n  cursor: not-allowed;\r\n  opacity: 0.5;\r\n}\r\n\r\n.option-icon {\r\n  font-size: 18px;\r\n  margin-bottom: 4px;\r\n  line-height: 1;\r\n  transition: transform 0.2s ease;\r\n}\r\n\r\n.toggle-option:hover .option-icon {\r\n  transform: scale(1.1);\r\n}\r\n\r\n.toggle-option.active .option-icon {\r\n  transform: scale(1.15);\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));\r\n}\r\n\r\n.option-label {\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  text-transform: uppercase;\r\n  line-height: 1.2;\r\n}\r\n\r\n/* Mode Details */\r\n.mode-details {\r\n  flex: 1;\r\n  position: relative;\r\n  min-height: 60px;\r\n}\r\n\r\n.mode-detail {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  opacity: 0;\r\n  transform: translateY(10px);\r\n  transition: all 0.3s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 16px;\r\n  background: rgba(255, 255, 255, 0.05);\r\n  border-radius: 12px;\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.mode-detail.active {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n  background: rgba(255, 255, 255, 0.08);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n.detail-icon {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));\r\n}\r\n\r\n.detail-text {\r\n  flex: 1;\r\n}\r\n\r\n.detail-label {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #ffffff;\r\n  margin-bottom: 2px;\r\n}\r\n\r\n.detail-description {\r\n  font-size: 11px;\r\n  color: rgba(255, 255, 255, 0.7);\r\n  line-height: 1.3;\r\n}\r\n\r\n/* Status Indicator */\r\n.toggle-status {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin-top: 8px;\r\n}\r\n\r\n.status-indicator {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  padding: 6px 12px;\r\n  border-radius: 20px;\r\n  background: rgba(255, 255, 255, 0.1);\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.status-dot {\r\n  width: 8px;\r\n  height: 8px;\r\n  border-radius: 50%;\r\n  background: #4ade80;\r\n  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);\r\n  animation: pulse 2s infinite;\r\n}\r\n\r\n.status-text {\r\n  font-weight: 500;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n/* Mode-specific status colors */\r\n.status-indicator.basic .status-dot {\r\n  background: #60a5fa;\r\n  box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);\r\n}\r\n\r\n.status-indicator.full .status-dot {\r\n  background: #a78bfa;\r\n  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);\r\n}\r\n\r\n.status-indicator.activity-only .status-dot {\r\n  background: #fbbf24;\r\n  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);\r\n}\r\n\r\n/* Animations */\r\n@keyframes pulse {\r\n  0%, 100% {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n  50% {\r\n    opacity: 0.7;\r\n    transform: scale(1.1);\r\n  }\r\n}\r\n\r\n/* Responsive Design */\r\n@media (max-width: 400px) {\r\n  .sleep-mode-toggle {\r\n    padding: 16px;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-container {\r\n    flex-direction: column;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-track {\r\n    width: 100%;\r\n    height: 60px;\r\n    flex-direction: row;\r\n    min-height: auto;\r\n  }\r\n  \r\n  .toggle-thumb {\r\n    top: 6px;\r\n    bottom: 6px;\r\n    left: 6px;\r\n    /* width: calc(33.33% - 4px); */\r\n    height: auto;\r\n    transform: translateX(0);\r\n  }\r\n  \r\n  .toggle-options {\r\n    flex-direction: row;\r\n    width: 100%;\r\n    height: 100%;\r\n  }\r\n  \r\n  .toggle-option {\r\n    min-height: auto;\r\n    padding: 8px 4px;\r\n  }\r\n  \r\n  .option-icon {\r\n    font-size: 16px;\r\n  }\r\n  \r\n  .option-label {\r\n    font-size: 9px;\r\n  }\r\n}\r\n\r\n/* Accessibility */\r\n.toggle-option:focus {\r\n  outline: 2px solid rgba(255, 255, 255, 0.5);\r\n  outline-offset: 2px;\r\n}\r\n\r\n.toggle-option:focus-visible {\r\n  outline: 2px solid #667eea;\r\n  outline-offset: 2px;\r\n}\r\n\r\n/* High contrast mode support */\r\n@media (prefers-contrast: high) {\r\n  .sleep-mode-toggle {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n  \r\n  .toggle-track {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.9);\r\n  }\r\n  \r\n  .toggle-option {\r\n    color: #ffffff;\r\n  }\r\n  \r\n  .mode-detail {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n}\r\n\r\n/* Reduced motion support */\r\n@media (prefers-reduced-motion: reduce) {\r\n  .toggle-thumb,\r\n  .toggle-option,\r\n  .mode-detail,\r\n  .status-indicator {\r\n    transition: none;\r\n  }\r\n  \r\n  .status-dot {\r\n    animation: none;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/renderer/SleepPreventionModeToggle.css"],"names":[],"mappings":"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","sourcesContent":["/* Sleep Prevention Mode Toggle Styles */\r\n@import './theme.css';\r\n\r\n.sleep-mode-toggle {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  padding: 20px;\r\n  background: rgba(0, 0, 0, 0.05);\r\n  border: 1px solid rgba(0, 0, 0, 0.1);\r\n  border-radius: 16px;\r\n  backdrop-filter: blur(10px);\r\n  transition: all 0.3s ease;\r\n  color: #333;\r\n}\r\n\r\n.sleep-mode-toggle:hover {\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-color: rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.sleep-mode-toggle.disabled {\r\n  opacity: 0.6;\r\n  pointer-events: none;\r\n}\r\n\r\n/* Header */\r\n.toggle-header {\r\n  text-align: center;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.toggle-title {\r\n  font-size: 16px;\r\n  font-weight: 600;\r\n  color: var(--text-primary);\r\n  margin: 0 0 4px 0;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n.toggle-subtitle {\r\n  font-size: 12px;\r\n  color: var(--text-secondary);\r\n  margin: 0;\r\n  font-weight: 400;\r\n}\r\n\r\n/* Toggle Container */\r\n.toggle-container {\r\n  display: flex;\r\n  gap: 16px;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n/* Toggle Track */\r\n.toggle-track {\r\n  position: relative;\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-radius: 24px;\r\n  padding: 6px;\r\n  border: 1px solid rgba(0, 0, 0, 0.15);\r\n  height: 80px;\r\n  width: 240px;\r\n  min-width: 240px;\r\n  max-width: 240px;\r\n  flex-shrink: 0;\r\n  display: flex;\r\n  flex-direction: row;\r\n}\r\n\r\n/* Animated Thumb */\r\n.toggle-thumb {\r\n  position: absolute;\r\n  top: 6px;\r\n  left: 6px;\r\n  bottom: 6px;\r\n  width: 76px;\r\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\r\n  border-radius: 18px;\r\n  box-shadow: \r\n    0 4px 12px rgba(102, 126, 234, 0.3),\r\n    0 2px 4px rgba(0, 0, 0, 0.1);\r\n  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;\r\n  z-index: 1;\r\n  transform: translateX(0);\r\n}\r\n\r\n.toggle-thumb.transitioning {\r\n  box-shadow: \r\n    0 6px 20px rgba(102, 126, 234, 0.4),\r\n    0 4px 8px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n/* Toggle Options */\r\n.toggle-options {\r\n  display: flex;\r\n  flex-direction: row;\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  z-index: 2;\r\n}\r\n\r\n.toggle-option {\r\n  flex: 1;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  border-radius: 16px;\r\n  padding: 12px 8px;\r\n  transition: all 0.2s ease;\r\n  color: rgba(0, 0, 0, 0.6);\r\n  position: relative;\r\n  min-width: 54px;\r\n}\r\n\r\n.toggle-option:hover {\r\n  color: rgba(0, 0, 0, 0.8);\r\n  transform: scale(1.05);\r\n}\r\n\r\n.toggle-option.active {\r\n  color: #ffffff;\r\n  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);\r\n}\r\n\r\n.toggle-option.hovered:not(.active) {\r\n  background: rgba(0, 0, 0, 0.05);\r\n}\r\n\r\n.toggle-option:disabled {\r\n  cursor: not-allowed;\r\n  opacity: 0.5;\r\n}\r\n\r\n.option-icon {\r\n  font-size: 18px;\r\n  margin-bottom: 4px;\r\n  line-height: 1;\r\n  transition: transform 0.2s ease;\r\n}\r\n\r\n.toggle-option:hover .option-icon {\r\n  transform: scale(1.1);\r\n}\r\n\r\n.toggle-option.active .option-icon {\r\n  transform: scale(1.15);\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));\r\n}\r\n\r\n.option-label {\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  text-transform: uppercase;\r\n  line-height: 1.2;\r\n}\r\n\r\n/* Mode Details */\r\n.mode-details {\r\n  flex: 1;\r\n  position: relative;\r\n  min-height: 60px;\r\n}\r\n\r\n.mode-detail {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  opacity: 0;\r\n  transform: translateY(10px);\r\n  transition: all 0.3s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 16px;\r\n  background: rgba(255, 255, 255, 0.05);\r\n  border-radius: 12px;\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.mode-detail.active {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n  background: rgba(255, 255, 255, 0.08);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n.detail-icon {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));\r\n}\r\n\r\n.detail-text {\r\n  flex: 1;\r\n}\r\n\r\n.detail-label {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #ffffff;\r\n  margin-bottom: 2px;\r\n}\r\n\r\n.detail-description {\r\n  font-size: 11px;\r\n  color: rgba(255, 255, 255, 0.7);\r\n  line-height: 1.3;\r\n}\r\n\r\n/* Status Indicator */\r\n.toggle-status {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin-top: 8px;\r\n}\r\n\r\n.status-indicator {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  padding: 6px 12px;\r\n  border-radius: 20px;\r\n  background: rgba(255, 255, 255, 0.1);\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.status-dot {\r\n  width: 8px;\r\n  height: 8px;\r\n  border-radius: 50%;\r\n  background: #4ade80;\r\n  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);\r\n  animation: pulse 2s infinite;\r\n}\r\n\r\n.status-text {\r\n  font-weight: 500;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n/* Mode-specific status colors */\r\n.status-indicator.basic .status-dot {\r\n  background: #60a5fa;\r\n  box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);\r\n}\r\n\r\n.status-indicator.full .status-dot {\r\n  background: #a78bfa;\r\n  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);\r\n}\r\n\r\n.status-indicator.activity-only .status-dot {\r\n  background: #fbbf24;\r\n  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);\r\n}\r\n\r\n/* Animations */\r\n@keyframes pulse {\r\n  0%, 100% {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n  50% {\r\n    opacity: 0.7;\r\n    transform: scale(1.1);\r\n  }\r\n}\r\n\r\n/* Responsive Design */\r\n@media (max-width: 400px) {\r\n  .sleep-mode-toggle {\r\n    padding: 16px;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-container {\r\n    flex-direction: column;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-track {\r\n    width: 100%;\r\n    height: 60px;\r\n    flex-direction: row;\r\n    min-height: auto;\r\n  }\r\n  \r\n  .toggle-thumb {\r\n    top: 6px;\r\n    bottom: 6px;\r\n    left: 6px;\r\n    /* width: calc(33.33% - 4px); */\r\n    height: auto;\r\n    transform: translateX(0);\r\n  }\r\n  \r\n  .toggle-options {\r\n    flex-direction: row;\r\n    width: 100%;\r\n    height: 100%;\r\n  }\r\n  \r\n  .toggle-option {\r\n    min-height: auto;\r\n    padding: 8px 4px;\r\n  }\r\n  \r\n  .option-icon {\r\n    font-size: 16px;\r\n  }\r\n  \r\n  .option-label {\r\n    font-size: 9px;\r\n  }\r\n}\r\n\r\n/* Accessibility */\r\n.toggle-option:focus {\r\n  outline: 2px solid rgba(255, 255, 255, 0.5);\r\n  outline-offset: 2px;\r\n}\r\n\r\n.toggle-option:focus-visible {\r\n  outline: 2px solid #667eea;\r\n  outline-offset: 2px;\r\n}\r\n\r\n/* High contrast mode support */\r\n@media (prefers-contrast: high) {\r\n  .sleep-mode-toggle {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n  \r\n  .toggle-track {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.9);\r\n  }\r\n  \r\n  .toggle-option {\r\n    color: #ffffff;\r\n  }\r\n  \r\n  .mode-detail {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n}\r\n\r\n/* Reduced motion support */\r\n@media (prefers-reduced-motion: reduce) {\r\n  .toggle-thumb,\r\n  .toggle-option,\r\n  .mode-detail,\r\n  .status-indicator {\r\n    transition: none;\r\n  }\r\n  \r\n  .status-dot {\r\n    animation: none;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -414,12 +417,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./theme.css */ "./node_modules/css-loader/dist/cjs.js!./src/renderer/theme.css");
 // Imports
 
 
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `/* Reset and base styles */
+___CSS_LOADER_EXPORT___.push([module.id, `/* Import theme variables */
+
+/* Reset and base styles */
 html, body {
   margin: 0;
   padding: 0;
@@ -434,8 +442,8 @@ html, body {
   flex-direction: column;
   height: 720px; /* Increased height for more content visibility */
   width: 100vw;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
@@ -448,8 +456,8 @@ html, body {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: #2c3e50;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-title-bar);
+  box-shadow: var(--shadow-medium);
 }
 
 /* Title Bar styles */
@@ -458,8 +466,8 @@ html, body {
   justify-content: space-between;
   align-items: center;
   height: 38px;
-  background: #2c3e50;
-  color: white;
+  background: var(--bg-title-bar);
+  color: var(--text-title);
   -webkit-app-region: drag; /* Make the title bar draggable */
   user-select: none;
 }
@@ -488,7 +496,7 @@ html, body {
   background: transparent;
   border: none;
   outline: none;
-  color: white;
+  color: var(--text-title);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -497,23 +505,23 @@ html, body {
 }
 
 .title-bar-minimize:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .title-bar-corner:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .title-bar-close:hover {
-  background-color: #e81123;
+  background-color: var(--accent-danger);
 }
 
 /* Header styles */
 .app-header {
   text-align: center;
   padding: 0 0 1rem;
-  background-color: #2c3e50;
-  color: white;
+  background-color: var(--bg-header);
+  color: var(--text-header);
   border-top: none;
 }
 
@@ -582,35 +590,35 @@ html, body {
   border: none;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
-  background-color: #e74c3c;
+  background-color: #e74c3c; /* Red when inactive */
   color: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  box-shadow: var(--shadow-medium);
   margin-bottom: 0.75rem;
   letter-spacing: 0.5px;
 }
 .activate-button.active {
-  background-color: #2ecc71;
+  background-color: #2ecc71; /* Green when active */
   color: white;
 }
 
 .status-text {
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Timer section */
 .timer-section {
-  background-color: white;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-small);
 }
 
 .timer-header {
@@ -646,7 +654,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--toggle-track);
   transition: .4s;
 }
 
@@ -657,16 +665,16 @@ html, body {
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: var(--toggle-thumb);
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #2ecc71;
+  background-color: var(--toggle-active-bg);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2ecc71;
+  box-shadow: 0 0 1px var(--toggle-active-bg);
 }
 
 input:checked + .slider:before {
@@ -696,9 +704,11 @@ input:checked + .slider:before {
 .timer-input input {
   width: 80px;
   padding: 0.5rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   font-size: 1rem;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .timer-display {
@@ -707,7 +717,7 @@ input:checked + .slider:before {
 
 .progress-bar {
   height: 8px;
-  background-color: #eee;
+  background-color: var(--progress-bg);
   border-radius: 4px;
   margin-top: 0.5rem;
   overflow: hidden;
@@ -715,7 +725,7 @@ input:checked + .slider:before {
 
 .progress {
   height: 100%;
-  background-color: #3498db;
+  background-color: var(--progress-fill);
   transition: width 1s linear;
 }
 
@@ -723,9 +733,9 @@ input:checked + .slider:before {
 .app-footer {
   padding: 0.5rem;
   text-align: center;
-  background-color: #f8f9fa;
-  border-top: 1px solid #eee;
-  color: #777;
+  background-color: var(--bg-tertiary);
+  border-top: 1px solid var(--border-light);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -735,7 +745,7 @@ input:checked + .slider:before {
 }
 
 .footer-hint {
-  color: #999;
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
@@ -751,7 +761,7 @@ input:checked + .slider:before {
 .link-button {
   background: none;
   border: none;
-  color: #3498db;
+  color: var(--accent-primary);
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0;
@@ -760,7 +770,7 @@ input:checked + .slider:before {
 }
 
 .link-button:hover {
-  color: #2980b9;
+  color: var(--accent-secondary);
 }
 
 .footer-separator {
@@ -775,7 +785,7 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -783,12 +793,12 @@ input:checked + .slider:before {
 }
 
 .about-dialog {
-  background-color: white;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
   display: flex;
   flex-direction: column;
   animation: fade-in 0.2s ease-in-out;
@@ -799,13 +809,13 @@ input:checked + .slider:before {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .about-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .close-button {
@@ -813,12 +823,12 @@ input:checked + .slider:before {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #7f8c8d;
+  color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .close-button:hover {
-  color: #34495e;
+  color: var(--text-primary);
 }
 
 .about-content {
@@ -834,27 +844,27 @@ input:checked + .slider:before {
 .about-section h3 {
   margin: 0 0 0.5rem;
   font-size: 1.1rem;
-  color: #3498db;
+  color: var(--accent-primary);
 }
 
 .about-section p {
   margin: 0;
   line-height: 1.5;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .about-section ul {
   margin: 0;
   padding-left: 1.5rem;
   line-height: 1.6;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .about-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-light);
   text-align: center;
-  color: #95a5a6;
+  color: var(--text-tertiary);
   font-size: 0.9rem;
 }
 
@@ -875,7 +885,195 @@ input:checked + .slider:before {
   padding: 0 10px;
 }
 
-/* Rest of existing styles... */`, "",{"version":3,"sources":["webpack://./src/renderer/styles.css"],"names":[],"mappings":"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","sourcesContent":["/* Reset and base styles */\r\nhtml, body {\r\n  margin: 0;\r\n  padding: 0;\r\n  overflow: hidden; /* Prevent scrolling at body level */\r\n  height: 100%;\r\n  width: 100%;\r\n}\r\n\r\n/* Main container styles */\r\n.app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  height: 720px; /* Increased height for more content visibility */\r\n  width: 100vw;\r\n  background-color: #f5f5f5;\r\n  color: #333;\r\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Fixed header container for title bar and app header - absolutely positioned */\r\n.fixed-header-container {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  width: 100%;\r\n  z-index: 1000;\r\n  background-color: #2c3e50;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);\r\n}\r\n\r\n/* Title Bar styles */\r\n.title-bar {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  height: 38px;\r\n  background: #2c3e50;\r\n  color: white;\r\n  -webkit-app-region: drag; /* Make the title bar draggable */\r\n  user-select: none;\r\n}\r\n\r\n.title-bar-drag-area {\r\n  flex: 1;\r\n  display: flex;\r\n  align-items: center;\r\n  margin-left: 12px;\r\n}\r\n\r\n.title-bar-title {\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n\r\n.title-bar-controls {\r\n  display: flex;\r\n  align-items: center;\r\n  -webkit-app-region: no-drag; /* Make buttons clickable */\r\n}\r\n\r\n.title-bar-button {\r\n  width: 46px;\r\n  height: 32px;\r\n  background: transparent;\r\n  border: none;\r\n  outline: none;\r\n  color: white;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  transition: background-color 0.2s;\r\n}\r\n\r\n.title-bar-minimize:hover {\r\n  background-color: rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.title-bar-corner:hover {\r\n  background-color: rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.title-bar-close:hover {\r\n  background-color: #e81123;\r\n}\r\n\r\n/* Header styles */\r\n.app-header {\r\n  text-align: center;\r\n  padding: 0 0 1rem;\r\n  background-color: #2c3e50;\r\n  color: white;\r\n  border-top: none;\r\n}\r\n\r\n.app-header h1 {\r\n  margin: 0;\r\n  font-size: 2.2rem;\r\n  font-weight: 500;\r\n}\r\n\r\n.subtitle {\r\n  margin: 0.5rem 0 0;\r\n  font-size: 0.9rem;\r\n  opacity: 0.8;\r\n}\r\n\r\n/* Main content - scrollable area */\r\n.control-section {\r\n  flex: 1;\r\n  padding: 1.5rem 2rem 2rem 2rem;\r\n  margin-top: 40px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 1.25rem;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Ensure activate and mode toggle sections never scroll */\r\n.activate-section, .mode-toggle-section {\r\n  flex-shrink: 0;\r\n  margin-bottom: 0.5rem;\r\n}\r\n\r\n/* Timer section scrolls if needed */\r\n/* Timer section scrolls if needed */\r\n.timer-section {\r\n  flex: 1 1 auto;\r\n  min-height: 0;\r\n  overflow-y: auto;\r\n  max-height: 100%;\r\n}\r\n\r\n/* Toggle button */\r\n.toggle-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n\r\n/* Activate Button Styles */\r\n.activate-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  /* margin-bottom: 1.5rem; */\r\n}\r\n\r\n.activate-button {\r\n  width: 220px;\r\n  height: 56px;\r\n  border-radius: 12px;\r\n  font-size: 1.25rem;\r\n  font-weight: bold;\r\n  border: none;\r\n  cursor: pointer;\r\n  transition: background 0.2s, box-shadow 0.2s;\r\n  background-color: #e74c3c;\r\n  color: white;\r\n  box-shadow: 0 4px 12px rgba(0,0,0,0.10);\r\n  margin-bottom: 0.75rem;\r\n  letter-spacing: 0.5px;\r\n}\r\n.activate-button.active {\r\n  background-color: #2ecc71;\r\n  color: white;\r\n}\r\n\r\n.status-text {\r\n  margin-top: 1rem;\r\n  font-size: 0.9rem;\r\n  color: #2c3e50;\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);\r\n}\r\n\r\n/* Timer section */\r\n.timer-section {\r\n  background-color: white;\r\n  border-radius: 8px;\r\n  padding: 1.5rem;\r\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);\r\n}\r\n\r\n.timer-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-header h3 {\r\n  margin: 0;\r\n  font-size: 1.1rem;\r\n}\r\n\r\n/* Switch toggle */\r\n.switch {\r\n  position: relative;\r\n  display: inline-block;\r\n  width: 48px;\r\n  height: 24px;\r\n}\r\n\r\n.switch input {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n}\r\n\r\n.slider {\r\n  position: absolute;\r\n  cursor: pointer;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: #ccc;\r\n  transition: .4s;\r\n}\r\n\r\n.slider:before {\r\n  position: absolute;\r\n  content: \"\";\r\n  height: 18px;\r\n  width: 18px;\r\n  left: 3px;\r\n  bottom: 3px;\r\n  background-color: white;\r\n  transition: .4s;\r\n}\r\n\r\ninput:checked + .slider {\r\n  background-color: #2ecc71;\r\n}\r\n\r\ninput:focus + .slider {\r\n  box-shadow: 0 0 1px #2ecc71;\r\n}\r\n\r\ninput:checked + .slider:before {\r\n  transform: translateX(24px);\r\n}\r\n\r\n.slider.round {\r\n  border-radius: 24px;\r\n}\r\n\r\n.slider.round:before {\r\n  border-radius: 50%;\r\n}\r\n\r\n/* Timer controls */\r\n.timer-controls {\r\n  padding-top: 1rem;\r\n}\r\n\r\n.timer-input {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 1rem;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-input input {\r\n  width: 80px;\r\n  padding: 0.5rem;\r\n  border: 1px solid #ddd;\r\n  border-radius: 4px;\r\n  font-size: 1rem;\r\n}\r\n\r\n.timer-display {\r\n  margin-top: 1rem;\r\n}\r\n\r\n.progress-bar {\r\n  height: 8px;\r\n  background-color: #eee;\r\n  border-radius: 4px;\r\n  margin-top: 0.5rem;\r\n  overflow: hidden;\r\n}\r\n\r\n.progress {\r\n  height: 100%;\r\n  background-color: #3498db;\r\n  transition: width 1s linear;\r\n}\r\n\r\n/* Footer */\r\n.app-footer {\r\n  padding: 0.5rem;\r\n  text-align: center;\r\n  background-color: #f8f9fa;\r\n  border-top: 1px solid #eee;\r\n  color: #777;\r\n  font-size: 0.8rem;\r\n  display: flex;\r\n  flex-direction: column;\r\n  /* gap: 0.25rem; */\r\n  position: relative; /* Keep the footer in the normal flow */\r\n  z-index: 900; /* Below the header but above content */\r\n}\r\n\r\n.footer-hint {\r\n  color: #999;\r\n  font-style: italic;\r\n}\r\n\r\n/* Footer actions */\r\n.footer-actions {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  /* margin-top: 0.25rem; */\r\n}\r\n\r\n.link-button {\r\n  background: none;\r\n  border: none;\r\n  color: #3498db;\r\n  cursor: pointer;\r\n  font-size: 0.9rem;\r\n  padding: 0;\r\n  text-decoration: underline;\r\n  transition: color 0.2s;\r\n}\r\n\r\n.link-button:hover {\r\n  color: #2980b9;\r\n}\r\n\r\n.footer-separator {\r\n  color: #ccc;\r\n  margin: 0 0.25rem;\r\n}\r\n\r\n/* About Dialog Styles */\r\n.about-dialog-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 1000;\r\n}\r\n\r\n.about-dialog {\r\n  background-color: white;\r\n  border-radius: 8px;\r\n  width: 90%;\r\n  max-width: 500px;\r\n  max-height: 90vh;\r\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: fade-in 0.2s ease-in-out;\r\n}\r\n\r\n.about-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 1rem 1.5rem;\r\n  border-bottom: 1px solid #eee;\r\n}\r\n\r\n.about-header h2 {\r\n  margin: 0;\r\n  font-size: 1.5rem;\r\n  color: #2c3e50;\r\n}\r\n\r\n.close-button {\r\n  background: none;\r\n  border: none;\r\n  font-size: 1.5rem;\r\n  cursor: pointer;\r\n  color: #7f8c8d;\r\n  transition: color 0.2s;\r\n}\r\n\r\n.close-button:hover {\r\n  color: #34495e;\r\n}\r\n\r\n.about-content {\r\n  padding: 1.5rem;\r\n  overflow-y: auto;\r\n  flex: 1;\r\n}\r\n\r\n.about-section {\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n.about-section h3 {\r\n  margin: 0 0 0.5rem;\r\n  font-size: 1.1rem;\r\n  color: #3498db;\r\n}\r\n\r\n.about-section p {\r\n  margin: 0;\r\n  line-height: 1.5;\r\n  color: #555;\r\n}\r\n\r\n.about-section ul {\r\n  margin: 0;\r\n  padding-left: 1.5rem;\r\n  line-height: 1.6;\r\n  color: #555;\r\n}\r\n\r\n.about-footer {\r\n  padding: 1rem 1.5rem;\r\n  border-top: 1px solid #eee;\r\n  text-align: center;\r\n  color: #95a5a6;\r\n  font-size: 0.9rem;\r\n}\r\n\r\n@keyframes fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: translateY(0);\r\n  }\r\n}\r\n\r\n/* Sleep Prevention Mode Toggle Section */\r\n.mode-toggle-section {\r\n  /* margin: 20px 0; */\r\n  padding: 0 10px;\r\n}\r\n\r\n/* Rest of existing styles... */"],"sourceRoot":""}]);
+/* Rest of existing styles... */`, "",{"version":3,"sources":["webpack://./src/renderer/styles.css"],"names":[],"mappings":"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","sourcesContent":["/* Import theme variables */\r\n@import './theme.css';\r\n\r\n/* Reset and base styles */\r\nhtml, body {\r\n  margin: 0;\r\n  padding: 0;\r\n  overflow: hidden; /* Prevent scrolling at body level */\r\n  height: 100%;\r\n  width: 100%;\r\n}\r\n\r\n/* Main container styles */\r\n.app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  height: 720px; /* Increased height for more content visibility */\r\n  width: 100vw;\r\n  background-color: var(--bg-primary);\r\n  color: var(--text-primary);\r\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Fixed header container for title bar and app header - absolutely positioned */\r\n.fixed-header-container {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  width: 100%;\r\n  z-index: 1000;\r\n  background-color: var(--bg-title-bar);\r\n  box-shadow: var(--shadow-medium);\r\n}\r\n\r\n/* Title Bar styles */\r\n.title-bar {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  height: 38px;\r\n  background: var(--bg-title-bar);\r\n  color: var(--text-title);\r\n  -webkit-app-region: drag; /* Make the title bar draggable */\r\n  user-select: none;\r\n}\r\n\r\n.title-bar-drag-area {\r\n  flex: 1;\r\n  display: flex;\r\n  align-items: center;\r\n  margin-left: 12px;\r\n}\r\n\r\n.title-bar-title {\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n\r\n.title-bar-controls {\r\n  display: flex;\r\n  align-items: center;\r\n  -webkit-app-region: no-drag; /* Make buttons clickable */\r\n}\r\n\r\n.title-bar-button {\r\n  width: 46px;\r\n  height: 32px;\r\n  background: transparent;\r\n  border: none;\r\n  outline: none;\r\n  color: var(--text-title);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  transition: background-color 0.2s;\r\n}\r\n\r\n.title-bar-minimize:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-corner:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-close:hover {\r\n  background-color: var(--accent-danger);\r\n}\r\n\r\n/* Header styles */\r\n.app-header {\r\n  text-align: center;\r\n  padding: 0 0 1rem;\r\n  background-color: var(--bg-header);\r\n  color: var(--text-header);\r\n  border-top: none;\r\n}\r\n\r\n.app-header h1 {\r\n  margin: 0;\r\n  font-size: 2.2rem;\r\n  font-weight: 500;\r\n}\r\n\r\n.subtitle {\r\n  margin: 0.5rem 0 0;\r\n  font-size: 0.9rem;\r\n  opacity: 0.8;\r\n}\r\n\r\n/* Main content - scrollable area */\r\n.control-section {\r\n  flex: 1;\r\n  padding: 1.5rem 2rem 2rem 2rem;\r\n  margin-top: 40px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 1.25rem;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Ensure activate and mode toggle sections never scroll */\r\n.activate-section, .mode-toggle-section {\r\n  flex-shrink: 0;\r\n  margin-bottom: 0.5rem;\r\n}\r\n\r\n/* Timer section scrolls if needed */\r\n/* Timer section scrolls if needed */\r\n.timer-section {\r\n  flex: 1 1 auto;\r\n  min-height: 0;\r\n  overflow-y: auto;\r\n  max-height: 100%;\r\n}\r\n\r\n/* Toggle button */\r\n.toggle-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n\r\n/* Activate Button Styles */\r\n.activate-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  /* margin-bottom: 1.5rem; */\r\n}\r\n\r\n.activate-button {\r\n  width: 220px;\r\n  height: 56px;\r\n  border-radius: 12px;\r\n  font-size: 1.25rem;\r\n  font-weight: bold;\r\n  border: none;\r\n  cursor: pointer;\r\n  transition: background 0.2s, box-shadow 0.2s;\r\n  background-color: #e74c3c; /* Red when inactive */\r\n  color: white;\r\n  box-shadow: var(--shadow-medium);\r\n  margin-bottom: 0.75rem;\r\n  letter-spacing: 0.5px;\r\n}\r\n.activate-button.active {\r\n  background-color: #2ecc71; /* Green when active */\r\n  color: white;\r\n}\r\n\r\n.status-text {\r\n  margin-top: 1rem;\r\n  font-size: 0.9rem;\r\n  color: var(--text-primary);\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n/* Timer section */\r\n.timer-section {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  padding: 1.5rem;\r\n  box-shadow: var(--shadow-small);\r\n}\r\n\r\n.timer-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-header h3 {\r\n  margin: 0;\r\n  font-size: 1.1rem;\r\n}\r\n\r\n/* Switch toggle */\r\n.switch {\r\n  position: relative;\r\n  display: inline-block;\r\n  width: 48px;\r\n  height: 24px;\r\n}\r\n\r\n.switch input {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n}\r\n\r\n.slider {\r\n  position: absolute;\r\n  cursor: pointer;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--toggle-track);\r\n  transition: .4s;\r\n}\r\n\r\n.slider:before {\r\n  position: absolute;\r\n  content: \"\";\r\n  height: 18px;\r\n  width: 18px;\r\n  left: 3px;\r\n  bottom: 3px;\r\n  background-color: var(--toggle-thumb);\r\n  transition: .4s;\r\n}\r\n\r\ninput:checked + .slider {\r\n  background-color: var(--toggle-active-bg);\r\n}\r\n\r\ninput:focus + .slider {\r\n  box-shadow: 0 0 1px var(--toggle-active-bg);\r\n}\r\n\r\ninput:checked + .slider:before {\r\n  transform: translateX(24px);\r\n}\r\n\r\n.slider.round {\r\n  border-radius: 24px;\r\n}\r\n\r\n.slider.round:before {\r\n  border-radius: 50%;\r\n}\r\n\r\n/* Timer controls */\r\n.timer-controls {\r\n  padding-top: 1rem;\r\n}\r\n\r\n.timer-input {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 1rem;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-input input {\r\n  width: 80px;\r\n  padding: 0.5rem;\r\n  border: 1px solid var(--border-light);\r\n  border-radius: 4px;\r\n  font-size: 1rem;\r\n  background-color: var(--bg-tertiary);\r\n  color: var(--text-primary);\r\n}\r\n\r\n.timer-display {\r\n  margin-top: 1rem;\r\n}\r\n\r\n.progress-bar {\r\n  height: 8px;\r\n  background-color: var(--progress-bg);\r\n  border-radius: 4px;\r\n  margin-top: 0.5rem;\r\n  overflow: hidden;\r\n}\r\n\r\n.progress {\r\n  height: 100%;\r\n  background-color: var(--progress-fill);\r\n  transition: width 1s linear;\r\n}\r\n\r\n/* Footer */\r\n.app-footer {\r\n  padding: 0.5rem;\r\n  text-align: center;\r\n  background-color: var(--bg-tertiary);\r\n  border-top: 1px solid var(--border-light);\r\n  color: var(--text-secondary);\r\n  font-size: 0.8rem;\r\n  display: flex;\r\n  flex-direction: column;\r\n  /* gap: 0.25rem; */\r\n  position: relative; /* Keep the footer in the normal flow */\r\n  z-index: 900; /* Below the header but above content */\r\n}\r\n\r\n.footer-hint {\r\n  color: var(--text-tertiary);\r\n  font-style: italic;\r\n}\r\n\r\n/* Footer actions */\r\n.footer-actions {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  /* margin-top: 0.25rem; */\r\n}\r\n\r\n.link-button {\r\n  background: none;\r\n  border: none;\r\n  color: var(--accent-primary);\r\n  cursor: pointer;\r\n  font-size: 0.9rem;\r\n  padding: 0;\r\n  text-decoration: underline;\r\n  transition: color 0.2s;\r\n}\r\n\r\n.link-button:hover {\r\n  color: var(--accent-secondary);\r\n}\r\n\r\n.footer-separator {\r\n  color: #ccc;\r\n  margin: 0 0.25rem;\r\n}\r\n\r\n/* About Dialog Styles */\r\n.about-dialog-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--overlay-bg);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 1000;\r\n}\r\n\r\n.about-dialog {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  width: 90%;\r\n  max-width: 500px;\r\n  max-height: 90vh;\r\n  box-shadow: var(--shadow-medium);\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: fade-in 0.2s ease-in-out;\r\n}\r\n\r\n.about-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 1rem 1.5rem;\r\n  border-bottom: 1px solid var(--border-light);\r\n}\r\n\r\n.about-header h2 {\r\n  margin: 0;\r\n  font-size: 1.5rem;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.close-button {\r\n  background: none;\r\n  border: none;\r\n  font-size: 1.5rem;\r\n  cursor: pointer;\r\n  color: var(--text-secondary);\r\n  transition: color 0.2s;\r\n}\r\n\r\n.close-button:hover {\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-content {\r\n  padding: 1.5rem;\r\n  overflow-y: auto;\r\n  flex: 1;\r\n}\r\n\r\n.about-section {\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n.about-section h3 {\r\n  margin: 0 0 0.5rem;\r\n  font-size: 1.1rem;\r\n  color: var(--accent-primary);\r\n}\r\n\r\n.about-section p {\r\n  margin: 0;\r\n  line-height: 1.5;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-section ul {\r\n  margin: 0;\r\n  padding-left: 1.5rem;\r\n  line-height: 1.6;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-footer {\r\n  padding: 1rem 1.5rem;\r\n  border-top: 1px solid var(--border-light);\r\n  text-align: center;\r\n  color: var(--text-tertiary);\r\n  font-size: 0.9rem;\r\n}\r\n\r\n@keyframes fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: translateY(0);\r\n  }\r\n}\r\n\r\n/* Sleep Prevention Mode Toggle Section */\r\n.mode-toggle-section {\r\n  /* margin: 20px 0; */\r\n  padding: 0 10px;\r\n}\r\n\r\n/* Rest of existing styles... */"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/renderer/theme.css":
+/*!**********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/renderer/theme.css ***!
+  \**********************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `/**
+ * NoDoze Theme System
+ * This file defines CSS variables for light and dark themes
+ */
+
+:root {
+  /* Animation durations */
+  --theme-transition-time: 0.3s;
+  
+  /* Default to light theme variables */
+  --bg-title-bar: #e0e0e0;
+  --text-title: #333333;
+}
+
+/* Light Theme (default) */
+.theme-light {
+  /* Background colors */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+  --bg-title-bar: #e0e0e0;
+  --bg-header: #2c3e50;
+  --bg-tooltip: rgba(97, 97, 97, 0.9);
+  
+  /* Text colors */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-light: #ffffff;
+  --text-header: #ffffff;
+  --text-title: #333333;
+  
+  /* Accent colors */
+  --accent-primary: #3498db;
+  --accent-secondary: #2ecc71;
+  --accent-danger: #e74c3c;
+  --accent-warning: #f39c12;
+  --accent-info: #1abc9c;
+  
+  /* Border colors */
+  --border-light: #dddddd;
+  --border-medium: #cccccc;
+  --border-dark: #999999;
+  
+  /* Button colors */
+  --button-bg-default: #f0f0f0;
+  --button-bg-hover: #e0e0e0;
+  --button-bg-active: #d0d0d0;
+  --button-text: #333333;
+  
+  /* Toggle button colors */
+  --toggle-active-bg: #2ecc71;
+  --toggle-inactive-bg: #e74c3c;
+  --toggle-active-text: #ffffff;
+  --toggle-inactive-text: #ffffff;
+  --toggle-thumb: #ffffff;
+  --toggle-track: #cccccc;
+  
+  /* Shadow effects */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* Sleep prevention mode toggle */
+  --mode-toggle-bg: rgba(0, 0, 0, 0.05);
+  --mode-toggle-border: rgba(0, 0, 0, 0.1);
+  --mode-toggle-track: rgba(0, 0, 0, 0.08);
+  --mode-toggle-text: rgba(0, 0, 0, 0.6);
+  --mode-toggle-thumb-gradient-start: #667eea;
+  --mode-toggle-thumb-gradient-end: #764ba2;
+  
+  /* Progress bars */
+  --progress-bg: #eeeeee;
+  --progress-fill: #3498db;
+  
+  /* Overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Theme */
+.theme-dark {
+  /* Background colors */
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #282838;
+  --bg-tertiary: #313145;
+  --bg-title-bar: #181825;
+  --bg-header: #181825;
+  --bg-tooltip: rgba(42, 42, 62, 0.9);
+  
+  /* Text colors */
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --text-light: #ffffff;
+  --text-header: #ffffff;
+  --text-title: #ffffff;
+  
+  /* Accent colors */
+  --accent-primary: #61afef;
+  --accent-secondary: #98c379;
+  --accent-danger: #e06c75;
+  --accent-warning: #e5c07b;
+  --accent-info: #56b6c2;
+  
+  /* Border colors */
+  --border-light: #3a3a4a;
+  --border-medium: #4a4a5a;
+  --border-dark: #5a5a6a;
+  
+  /* Button colors */
+  --button-bg-default: #3a3a4a;
+  --button-bg-hover: #4a4a5a;
+  --button-bg-active: #5a5a6a;
+  --button-text: #e0e0e0;
+  
+  /* Toggle button colors */
+  --toggle-active-bg: #98c379;
+  --toggle-inactive-bg: #e06c75;
+  --toggle-active-text: #ffffff;
+  --toggle-inactive-text: #ffffff;
+  --toggle-thumb: #ffffff;
+  --toggle-track: #3a3a4a;
+  
+  /* Shadow effects */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);
+  
+  /* Sleep prevention mode toggle */
+  --mode-toggle-bg: rgba(255, 255, 255, 0.05);
+  --mode-toggle-border: rgba(255, 255, 255, 0.1);
+  --mode-toggle-track: rgba(255, 255, 255, 0.08);
+  --mode-toggle-text: rgba(255, 255, 255, 0.8);
+  --mode-toggle-thumb-gradient-start: #8a7efa;
+  --mode-toggle-thumb-gradient-end: #a66dc2;
+  
+  /* Progress bars */
+  --progress-bg: #3a3a4a;
+  --progress-fill: #61afef;
+  
+  /* Overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* Apply transition to all themed elements for smooth theme changes */
+body {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease;
+}
+
+* {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease,
+              box-shadow var(--theme-transition-time) ease;
+}
+
+/* Skip transitions on specific elements that shouldn't animate */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}
+`, "",{"version":3,"sources":["webpack://./src/renderer/theme.css"],"names":[],"mappings":"AAAA;;;EAGE;;AAEF;EACE,wBAAwB;EACxB,6BAA6B;;EAE7B,qCAAqC;EACrC,uBAAuB;EACvB,qBAAqB;AACvB;;AAEA,0BAA0B;AAC1B;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,4CAA4C;EAC5C,6CAA6C;EAC7C,6CAA6C;;EAE7C,iCAAiC;EACjC,qCAAqC;EACrC,wCAAwC;EACxC,wCAAwC;EACxC,sCAAsC;EACtC,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,eAAe;AACf;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,6CAA6C;EAC7C,8CAA8C;EAC9C,8CAA8C;;EAE9C,iCAAiC;EACjC,2CAA2C;EAC3C,8CAA8C;EAC9C,8CAA8C;EAC9C,4CAA4C;EAC5C,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,qEAAqE;AACrE;EACE;qDACmD;AACrD;;AAEA;EACE;;;0DAGwD;AAC1D;;AAEA,iEAAiE;AACjE;;EAEE,2BAA2B;AAC7B","sourcesContent":["/**\r\n * NoDoze Theme System\r\n * This file defines CSS variables for light and dark themes\r\n */\r\n\r\n:root {\r\n  /* Animation durations */\r\n  --theme-transition-time: 0.3s;\r\n  \r\n  /* Default to light theme variables */\r\n  --bg-title-bar: #e0e0e0;\r\n  --text-title: #333333;\r\n}\r\n\r\n/* Light Theme (default) */\r\n.theme-light {\r\n  /* Background colors */\r\n  --bg-primary: #f5f5f5;\r\n  --bg-secondary: #ffffff;\r\n  --bg-tertiary: #f0f0f0;\r\n  --bg-title-bar: #e0e0e0;\r\n  --bg-header: #2c3e50;\r\n  --bg-tooltip: rgba(97, 97, 97, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #333333;\r\n  --text-secondary: #666666;\r\n  --text-tertiary: #999999;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #333333;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #3498db;\r\n  --accent-secondary: #2ecc71;\r\n  --accent-danger: #e74c3c;\r\n  --accent-warning: #f39c12;\r\n  --accent-info: #1abc9c;\r\n  \r\n  /* Border colors */\r\n  --border-light: #dddddd;\r\n  --border-medium: #cccccc;\r\n  --border-dark: #999999;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #f0f0f0;\r\n  --button-bg-hover: #e0e0e0;\r\n  --button-bg-active: #d0d0d0;\r\n  --button-text: #333333;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #2ecc71;\r\n  --toggle-inactive-bg: #e74c3c;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #cccccc;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(0, 0, 0, 0.05);\r\n  --mode-toggle-border: rgba(0, 0, 0, 0.1);\r\n  --mode-toggle-track: rgba(0, 0, 0, 0.08);\r\n  --mode-toggle-text: rgba(0, 0, 0, 0.6);\r\n  --mode-toggle-thumb-gradient-start: #667eea;\r\n  --mode-toggle-thumb-gradient-end: #764ba2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #eeeeee;\r\n  --progress-fill: #3498db;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n/* Dark Theme */\r\n.theme-dark {\r\n  /* Background colors */\r\n  --bg-primary: #1e1e2e;\r\n  --bg-secondary: #282838;\r\n  --bg-tertiary: #313145;\r\n  --bg-title-bar: #181825;\r\n  --bg-header: #181825;\r\n  --bg-tooltip: rgba(42, 42, 62, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #e0e0e0;\r\n  --text-secondary: #b0b0b0;\r\n  --text-tertiary: #808080;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #ffffff;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #61afef;\r\n  --accent-secondary: #98c379;\r\n  --accent-danger: #e06c75;\r\n  --accent-warning: #e5c07b;\r\n  --accent-info: #56b6c2;\r\n  \r\n  /* Border colors */\r\n  --border-light: #3a3a4a;\r\n  --border-medium: #4a4a5a;\r\n  --border-dark: #5a5a6a;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #3a3a4a;\r\n  --button-bg-hover: #4a4a5a;\r\n  --button-bg-active: #5a5a6a;\r\n  --button-text: #e0e0e0;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #98c379;\r\n  --toggle-inactive-bg: #e06c75;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #3a3a4a;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(255, 255, 255, 0.05);\r\n  --mode-toggle-border: rgba(255, 255, 255, 0.1);\r\n  --mode-toggle-track: rgba(255, 255, 255, 0.08);\r\n  --mode-toggle-text: rgba(255, 255, 255, 0.8);\r\n  --mode-toggle-thumb-gradient-start: #8a7efa;\r\n  --mode-toggle-thumb-gradient-end: #a66dc2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #3a3a4a;\r\n  --progress-fill: #61afef;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.7);\r\n}\r\n\r\n/* Apply transition to all themed elements for smooth theme changes */\r\nbody {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease;\r\n}\r\n\r\n* {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Skip transitions on specific elements that shouldn't animate */\r\n.no-transition,\r\n.no-transition * {\r\n  transition: none !important;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -29027,7 +29225,7 @@ const App = () => {
         }
     };
     const statusColors = getStatusColors();
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "app-container", children: [(0, jsx_runtime_1.jsx)("div", { className: "fixed-header-container", children: (0, jsx_runtime_1.jsx)(TitleBar_1.default, { title: "NoDoze" }) }), (0, jsx_runtime_1.jsxs)("div", { className: "control-section", children: [(0, jsx_runtime_1.jsxs)("div", { className: "activate-section", children: [(0, jsx_runtime_1.jsx)("button", { className: `activate-button${isActive ? ' active' : ''}`, onClick: () => handleToggle(!isActive), children: isActive ? 'Deactivate' : 'Activate' }), (0, jsx_runtime_1.jsxs)("p", { className: "status-text", children: [statusColors.statusEmoji, " ", statusColors.statusText] })] }), (0, jsx_runtime_1.jsx)("div", { className: "mode-toggle-section", children: (0, jsx_runtime_1.jsx)(SleepPreventionModeToggle_1.default, { currentMode: sleepPreventionState.mode, onModeChange: handleModeChange, disabled: false }) })] }), (0, jsx_runtime_1.jsxs)("footer", { className: "app-footer", children: [(0, jsx_runtime_1.jsx)("p", { children: "NoDoze v1.0.0" }), (0, jsx_runtime_1.jsxs)("div", { className: "footer-actions", children: [(0, jsx_runtime_1.jsx)("button", { className: "link-button", onClick: () => setShowAbout(true), children: "About" }), (0, jsx_runtime_1.jsx)("span", { className: "footer-separator", children: "|" }), (0, jsx_runtime_1.jsx)("small", { children: "Close this window to minimize to system tray" })] })] }), (0, jsx_runtime_1.jsx)(AboutDialog_1.default, { isOpen: showAbout, onClose: () => setShowAbout(false) })] }));
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "app-container theme-light", children: [(0, jsx_runtime_1.jsx)("div", { className: "fixed-header-container", children: (0, jsx_runtime_1.jsx)(TitleBar_1.default, { title: "NoDoze" }) }), (0, jsx_runtime_1.jsxs)("div", { className: "control-section", children: [(0, jsx_runtime_1.jsxs)("div", { className: "activate-section", children: [(0, jsx_runtime_1.jsx)("button", { className: `activate-button${isActive ? ' active' : ''}`, onClick: () => handleToggle(!isActive), children: isActive ? 'Deactivate' : 'Activate' }), (0, jsx_runtime_1.jsxs)("p", { className: "status-text", children: [statusColors.statusEmoji, " ", statusColors.statusText] })] }), (0, jsx_runtime_1.jsx)("div", { className: "mode-toggle-section", children: (0, jsx_runtime_1.jsx)(SleepPreventionModeToggle_1.default, { currentMode: sleepPreventionState.mode, onModeChange: handleModeChange, disabled: false }) })] }), (0, jsx_runtime_1.jsxs)("footer", { className: "app-footer", children: [(0, jsx_runtime_1.jsx)("p", { children: "NoDoze v1.0.0" }), (0, jsx_runtime_1.jsxs)("div", { className: "footer-actions", children: [(0, jsx_runtime_1.jsx)("button", { className: "link-button", onClick: () => setShowAbout(true), children: "About" }), (0, jsx_runtime_1.jsx)("span", { className: "footer-separator", children: "|" }), (0, jsx_runtime_1.jsx)("small", { children: "Close this window to minimize to system tray" })] })] }), (0, jsx_runtime_1.jsx)(AboutDialog_1.default, { isOpen: showAbout, onClose: () => setShowAbout(false) })] }));
 };
 exports["default"] = App;
 
@@ -29243,6 +29441,8 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const client_1 = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 const App_1 = __importDefault(__webpack_require__(/*! ./App */ "./src/renderer/App.tsx"));
 __webpack_require__(/*! ./styles.css */ "./src/renderer/styles.css");
+// Apply theme class to HTML element
+document.documentElement.classList.add('theme-light');
 const container = document.getElementById('root');
 const root = (0, client_1.createRoot)(container);
 root.render((0, jsx_runtime_1.jsx)(react_1.default.StrictMode, { children: (0, jsx_runtime_1.jsx)(App_1.default, {}) }));

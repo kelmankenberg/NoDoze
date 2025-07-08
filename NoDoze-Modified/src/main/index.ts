@@ -315,9 +315,9 @@ function createWindow() {
   });
 
   // Open DevTools for debugging in development mode
-  if (!app.isPackaged) {
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
-  }
+  // if (!app.isPackaged) {
+  //   mainWindow.webContents.openDevTools({ mode: 'detach' });
+  // }
   
   // Handle window close event - hide instead of close
   mainWindow.on('close', (event) => {
