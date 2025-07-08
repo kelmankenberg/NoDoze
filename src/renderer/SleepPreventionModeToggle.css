@@ -1,21 +1,22 @@
 /* Sleep Prevention Mode Toggle Styles */
+@import './theme.css';
 
 .sleep-mode-toggle {
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--mode-toggle-bg);
+  border: 1px solid var(--mode-toggle-border);
   border-radius: 16px;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .sleep-mode-toggle:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--mode-toggle-bg);
+  border-color: var(--border-medium);
 }
 
 .sleep-mode-toggle.disabled {
@@ -32,14 +33,14 @@
 .toggle-title {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
   letter-spacing: 0.5px;
 }
 
 .toggle-subtitle {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
   font-weight: 400;
 }
@@ -55,10 +56,10 @@
 /* Toggle Track */
 .toggle-track {
   position: relative;
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--mode-toggle-track);
   border-radius: 24px;
   padding: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--mode-toggle-border);
   height: 80px;
   width: 240px;
   min-width: 240px;
@@ -75,20 +76,16 @@
   left: 6px;
   bottom: 6px;
   width: 76px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--mode-toggle-thumb-gradient-start) 0%, var(--mode-toggle-thumb-gradient-end) 100%);
   border-radius: 18px;
-  box-shadow: 
-    0 4px 12px rgba(102, 126, 234, 0.3),
-    0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-medium);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   z-index: 1;
   transform: translateX(0);
 }
 
 .toggle-thumb.transitioning {
-  box-shadow: 
-    0 6px 20px rgba(102, 126, 234, 0.4),
-    0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-large);
 }
 
 /* Toggle Options */
@@ -113,23 +110,23 @@
   border-radius: 16px;
   padding: 12px 8px;
   transition: all 0.2s ease;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mode-toggle-text);
   position: relative;
   min-width: 54px;
 }
 
 .toggle-option:hover {
-  color: rgba(0, 0, 0, 0.8);
+  color: var(--text-primary);
   transform: scale(1.05);
 }
 
 .toggle-option.active {
-  color: #ffffff;
+  color: var(--text-light);
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 .toggle-option.hovered:not(.active) {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--mode-toggle-track);
 }
 
 .toggle-option:disabled {

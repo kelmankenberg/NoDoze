@@ -1,3 +1,6 @@
+/* Import theme variables */
+@import './theme.css';
+
 /* Reset and base styles */
 html, body {
   margin: 0;
@@ -13,8 +16,8 @@ html, body {
   flex-direction: column;
   height: 720px; /* Increased height for more content visibility */
   width: 100vw;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
@@ -27,8 +30,8 @@ html, body {
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: #2c3e50;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-title-bar);
+  box-shadow: var(--shadow-medium);
 }
 
 /* Title Bar styles */
@@ -37,8 +40,8 @@ html, body {
   justify-content: space-between;
   align-items: center;
   height: 38px;
-  background: #2c3e50;
-  color: white;
+  background: var(--bg-title-bar);
+  color: var(--text-title);
   -webkit-app-region: drag; /* Make the title bar draggable */
   user-select: none;
 }
@@ -67,7 +70,7 @@ html, body {
   background: transparent;
   border: none;
   outline: none;
-  color: white;
+  color: var(--text-title);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,15 +87,15 @@ html, body {
 }
 
 .title-bar-close:hover {
-  background-color: #e81123;
+  background-color: var(--accent-danger);
 }
 
 /* Header styles */
 .app-header {
   text-align: center;
   padding: 0 0 1rem;
-  background-color: #2c3e50;
-  color: white;
+  background-color: var(--bg-header);
+  color: var(--text-header);
   border-top: none;
 }
 
@@ -161,35 +164,35 @@ html, body {
   border: none;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
-  background-color: #e74c3c;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  background-color: var(--toggle-inactive-bg);
+  color: var(--toggle-inactive-text);
+  box-shadow: var(--shadow-medium);
   margin-bottom: 0.75rem;
   letter-spacing: 0.5px;
 }
 .activate-button.active {
-  background-color: #2ecc71;
-  color: white;
+  background-color: var(--toggle-active-bg);
+  color: var(--toggle-active-text);
 }
 
 .status-text {
   margin-top: 1rem;
   font-size: 0.9rem;
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Timer section */
 .timer-section {
-  background-color: white;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-small);
 }
 
 .timer-header {
@@ -225,7 +228,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--toggle-track);
   transition: .4s;
 }
 
@@ -236,16 +239,16 @@ html, body {
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background-color: var(--toggle-thumb);
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #2ecc71;
+  background-color: var(--toggle-active-bg);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2ecc71;
+  box-shadow: 0 0 1px var(--toggle-active-bg);
 }
 
 input:checked + .slider:before {
@@ -275,9 +278,11 @@ input:checked + .slider:before {
 .timer-input input {
   width: 80px;
   padding: 0.5rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   font-size: 1rem;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .timer-display {
@@ -286,7 +291,7 @@ input:checked + .slider:before {
 
 .progress-bar {
   height: 8px;
-  background-color: #eee;
+  background-color: var(--progress-bg);
   border-radius: 4px;
   margin-top: 0.5rem;
   overflow: hidden;
@@ -294,7 +299,7 @@ input:checked + .slider:before {
 
 .progress {
   height: 100%;
-  background-color: #3498db;
+  background-color: var(--progress-fill);
   transition: width 1s linear;
 }
 
@@ -302,9 +307,9 @@ input:checked + .slider:before {
 .app-footer {
   padding: 0.5rem;
   text-align: center;
-  background-color: #f8f9fa;
-  border-top: 1px solid #eee;
-  color: #777;
+  background-color: var(--bg-tertiary);
+  border-top: 1px solid var(--border-light);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -314,7 +319,7 @@ input:checked + .slider:before {
 }
 
 .footer-hint {
-  color: #999;
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
@@ -330,7 +335,7 @@ input:checked + .slider:before {
 .link-button {
   background: none;
   border: none;
-  color: #3498db;
+  color: var(--accent-primary);
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0;
@@ -339,7 +344,7 @@ input:checked + .slider:before {
 }
 
 .link-button:hover {
-  color: #2980b9;
+  color: var(--accent-secondary);
 }
 
 .footer-separator {
@@ -354,7 +359,7 @@ input:checked + .slider:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -362,12 +367,12 @@ input:checked + .slider:before {
 }
 
 .about-dialog {
-  background-color: white;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
   display: flex;
   flex-direction: column;
   animation: fade-in 0.2s ease-in-out;
@@ -378,13 +383,13 @@ input:checked + .slider:before {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .about-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .close-button {
@@ -392,12 +397,12 @@ input:checked + .slider:before {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #7f8c8d;
+  color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .close-button:hover {
-  color: #34495e;
+  color: var(--text-primary);
 }
 
 .about-content {
@@ -413,27 +418,27 @@ input:checked + .slider:before {
 .about-section h3 {
   margin: 0 0 0.5rem;
   font-size: 1.1rem;
-  color: #3498db;
+  color: var(--accent-primary);
 }
 
 .about-section p {
   margin: 0;
   line-height: 1.5;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .about-section ul {
   margin: 0;
   padding-left: 1.5rem;
   line-height: 1.6;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .about-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-light);
   text-align: center;
-  color: #95a5a6;
+  color: var(--text-tertiary);
   font-size: 0.9rem;
 }
 

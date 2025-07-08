@@ -159,11 +159,11 @@ This document defines the requirements for implementing a "More" menu in the NoD
 
 ## Implementation Timeline
 
-1. Add theme variables to CSS - 1 day
-2. Create MoreMenu component and integrate with TitleBar - 1 day
-3. Implement ThemeContext and theme switching logic - 1 day
-4. Update SettingsManager for theme persistence - 0.5 day
-5. Test theme support across all components - 1 day
-6. Final adjustments and bug fixes - 0.5 day
+- [x] 1. Add theme variables to CSS - 1 day
+- [ ] 2. Create MoreMenu component and integrate with TitleBar - 1 day
+- [ ] 3. Implement ThemeContext and theme switching logic - 1 day
+- [ ] 4. Update SettingsManager for theme persistence - 0.5 day
+- [ ] 5. Test theme support across all components - 1 day
+- [ ] 6. Final adjustments and bug fixes - 0.5 day
 
 **Total Estimated Time:** 5 days

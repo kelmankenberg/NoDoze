@@ -1,0 +1,158 @@
+/**
+ * NoDoze Theme System
+ * This file defines CSS variables for light and dark themes
+ */
+
+:root {
+  /* Animation durations */
+  --theme-transition-time: 0.3s;
+}
+
+/* Light Theme (default) */
+.theme-light {
+  /* Background colors */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+  --bg-title-bar: #2c3e50;
+  --bg-header: #2c3e50;
+  --bg-tooltip: rgba(97, 97, 97, 0.9);
+  
+  /* Text colors */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-light: #ffffff;
+  --text-header: #ffffff;
+  --text-title: #ffffff;
+  
+  /* Accent colors */
+  --accent-primary: #3498db;
+  --accent-secondary: #2ecc71;
+  --accent-danger: #e74c3c;
+  --accent-warning: #f39c12;
+  --accent-info: #1abc9c;
+  
+  /* Border colors */
+  --border-light: #dddddd;
+  --border-medium: #cccccc;
+  --border-dark: #999999;
+  
+  /* Button colors */
+  --button-bg-default: #f0f0f0;
+  --button-bg-hover: #e0e0e0;
+  --button-bg-active: #d0d0d0;
+  --button-text: #333333;
+  
+  /* Toggle button colors */
+  --toggle-active-bg: #2ecc71;
+  --toggle-inactive-bg: #e74c3c;
+  --toggle-active-text: #ffffff;
+  --toggle-inactive-text: #ffffff;
+  --toggle-thumb: #ffffff;
+  --toggle-track: #cccccc;
+  
+  /* Shadow effects */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* Sleep prevention mode toggle */
+  --mode-toggle-bg: rgba(0, 0, 0, 0.05);
+  --mode-toggle-border: rgba(0, 0, 0, 0.1);
+  --mode-toggle-track: rgba(0, 0, 0, 0.08);
+  --mode-toggle-text: rgba(0, 0, 0, 0.6);
+  --mode-toggle-thumb-gradient-start: #667eea;
+  --mode-toggle-thumb-gradient-end: #764ba2;
+  
+  /* Progress bars */
+  --progress-bg: #eeeeee;
+  --progress-fill: #3498db;
+  
+  /* Overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Theme */
+.theme-dark {
+  /* Background colors */
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #282838;
+  --bg-tertiary: #313145;
+  --bg-title-bar: #181825;
+  --bg-header: #181825;
+  --bg-tooltip: rgba(42, 42, 62, 0.9);
+  
+  /* Text colors */
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --text-light: #ffffff;
+  --text-header: #ffffff;
+  --text-title: #ffffff;
+  
+  /* Accent colors */
+  --accent-primary: #61afef;
+  --accent-secondary: #98c379;
+  --accent-danger: #e06c75;
+  --accent-warning: #e5c07b;
+  --accent-info: #56b6c2;
+  
+  /* Border colors */
+  --border-light: #3a3a4a;
+  --border-medium: #4a4a5a;
+  --border-dark: #5a5a6a;
+  
+  /* Button colors */
+  --button-bg-default: #3a3a4a;
+  --button-bg-hover: #4a4a5a;
+  --button-bg-active: #5a5a6a;
+  --button-text: #e0e0e0;
+  
+  /* Toggle button colors */
+  --toggle-active-bg: #98c379;
+  --toggle-inactive-bg: #e06c75;
+  --toggle-active-text: #ffffff;
+  --toggle-inactive-text: #ffffff;
+  --toggle-thumb: #ffffff;
+  --toggle-track: #3a3a4a;
+  
+  /* Shadow effects */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);
+  
+  /* Sleep prevention mode toggle */
+  --mode-toggle-bg: rgba(255, 255, 255, 0.05);
+  --mode-toggle-border: rgba(255, 255, 255, 0.1);
+  --mode-toggle-track: rgba(255, 255, 255, 0.08);
+  --mode-toggle-text: rgba(255, 255, 255, 0.8);
+  --mode-toggle-thumb-gradient-start: #8a7efa;
+  --mode-toggle-thumb-gradient-end: #a66dc2;
+  
+  /* Progress bars */
+  --progress-bg: #3a3a4a;
+  --progress-fill: #61afef;
+  
+  /* Overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* Apply transition to all themed elements for smooth theme changes */
+body {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease;
+}
+
+* {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease,
+              box-shadow var(--theme-transition-time) ease;
+}
+
+/* Skip transitions on specific elements that shouldn't animate */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}
