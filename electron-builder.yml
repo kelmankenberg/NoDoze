@@ -11,9 +11,22 @@ files:
   - public/**/*
   - build/**/*.ico
   - build/**/*.svg
+  - build/eye-*.ico
   - "!**/*.{ts,map}"
   - "!*.{js,ts}"
   - "!{tsconfig.json,tslint.json,package-lock.json,yarn.lock}"
+  
+extraResources:
+  - from: build/
+    to: build/
+    filter:
+      - "**/*.ico"
+      - "**/*.svg"
+  - from: public/
+    to: public/
+    filter:
+      - "**/*.svg"
+      - "**/*.png"
 
 asar: true
 
@@ -22,7 +35,7 @@ win:
   target:
     - nsis
     - portable
-  icon: build/icons/win/icon.ico
+  icon: build/icons/win/eye-active.ico
   artifactName: ${productName}-${version}-${os}-${arch}.${ext}
 
 # macOS Configuration

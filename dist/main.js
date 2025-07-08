@@ -6863,7 +6863,8 @@ class SettingsManager {
             },
             ui: {
                 minimizeToTray: true,
-                showNotifications: true
+                showNotifications: true,
+                theme: 'light'
             },
             version: '1.0.0'
         };
@@ -6874,22 +6875,53 @@ class SettingsManager {
     loadSettings() {
         try {
             if (fs.existsSync(this.settingsPath)) {
+                console.log(`SettingsManager: Loading settings from ${this.settingsPath}`);
                 const data = fs.readFileSync(this.settingsPath, 'utf8');
                 const loadedSettings = JSON.parse(data);
-                // Merge with defaults to ensure all properties exist
-                this.settings = {
-                    ...this.getDefaultSettings(),
-                    ...loadedSettings
+                console.log('SettingsManager: Loaded settings:', JSON.stringify(loadedSettings, null, 2));
+                // Get default settings
+                const defaultSettings = this.getDefaultSettings();
+                console.log('SettingsManager: Default settings:', JSON.stringify(defaultSettings, null, 2));
+                // Deep merge settings recursively to preserve all nested properties
+                const deepMerge = (target, source) => {
+                    for (const key in source) {
+                        if (source.hasOwnProperty(key)) {
+                            if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+                                // If property is an object, recursively merge
+                                target[key] = target[key] || {};
+                                target[key] = deepMerge(target[key], source[key]);
+                            }
+                            else {
+                                // Otherwise, overwrite with source value
+                                target[key] = source[key];
+                            }
+                        }
+                    }
+                    return target;
                 };
-                console.log('Settings loaded successfully');
+                // Apply deep merge with defaults and loaded settings
+                this.settings = deepMerge(JSON.parse(JSON.stringify(defaultSettings)), loadedSettings);
+                console.log('SettingsManager: Merged settings:', JSON.stringify(this.settings, null, 2));
+                console.log('SettingsManager: Theme after loading:', this.settings.ui?.theme);
+                // Ensure theme property exists
+                if (!this.settings.ui) {
+                    console.log('SettingsManager: ui object missing, creating it');
+                    this.settings.ui = defaultSettings.ui;
+                }
+                if (!this.settings.ui.theme) {
+                    console.log('SettingsManager: theme property missing, using default');
+                    this.settings.ui.theme = defaultSettings.ui.theme;
+                }
+                console.log('SettingsManager: Settings loaded successfully');
             }
             else {
-                console.log('No settings file found, using defaults');
+                console.log('SettingsManager: No settings file found, using defaults');
+                this.settings = this.getDefaultSettings();
                 this.saveSettings(); // Create initial settings file
             }
         }
         catch (error) {
-            console.error('Error loading settings:', error);
+            console.error('SettingsManager: Error loading settings:', error);
             this.settings = this.getDefaultSettings();
         }
     }
@@ -6898,15 +6930,29 @@ class SettingsManager {
      */
     saveSettings() {
         try {
+            console.log(`SettingsManager: Saving settings to ${this.settingsPath}`);
+            console.log('SettingsManager: Settings to save:', JSON.stringify(this.settings, null, 2));
             const settingsDir = path.dirname(this.settingsPath);
             if (!fs.existsSync(settingsDir)) {
+                console.log(`SettingsManager: Creating settings directory: ${settingsDir}`);
                 fs.mkdirSync(settingsDir, { recursive: true });
             }
+            // Make sure the theme property exists before saving
+            if (!this.settings.ui.hasOwnProperty('theme')) {
+                console.log('SettingsManager: Theme property missing, adding default');
+                this.settings.ui.theme = 'light';
+            }
             fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2));
-            console.log('Settings saved successfully');
+            console.log('SettingsManager: Settings saved successfully');
+            // Verify the file was written correctly
+            if (fs.existsSync(this.settingsPath)) {
+                const savedData = fs.readFileSync(this.settingsPath, 'utf8');
+                const savedSettings = JSON.parse(savedData);
+                console.log('SettingsManager: Verified saved settings:', JSON.stringify(savedSettings, null, 2));
+            }
         }
         catch (error) {
-            console.error('Error saving settings:', error);
+            console.error('SettingsManager: Error saving settings:', error);
         }
     }
     /**
@@ -6987,6 +7033,35 @@ class SettingsManager {
         this.saveSettings();
     }
     /**
+     * Get theme preference
+     */
+    getTheme() {
+        console.log('SettingsManager: Getting theme preference, current settings:', JSON.stringify(this.settings, null, 2));
+        const theme = this.settings.ui.theme || 'light';
+        console.log(`SettingsManager: Current theme is ${theme}`);
+        return theme;
+    }
+    /**
+     * Set theme preference
+     */
+    setTheme(theme) {
+        console.log(`SettingsManager: Setting theme to ${theme}`);
+        if (!this.settings.ui) {
+            console.log('SettingsManager: ui object is missing, creating it');
+            this.settings.ui = {
+                minimizeToTray: true,
+                showNotifications: true,
+                theme: theme
+            };
+        }
+        else {
+            console.log('SettingsManager: Updating ui.theme property');
+            this.settings.ui.theme = theme;
+        }
+        console.log('SettingsManager: Settings after update:', JSON.stringify(this.settings, null, 2));
+        this.saveSettings();
+    }
+    /**
      * Reset settings to defaults
      */
     resetSettings() {
@@ -7030,15 +7105,35 @@ class SettingsManager {
     validateSettings(settings) {
         try {
             // Check required properties exist
-            return (typeof settings === 'object' &&
+            const basicValidation = (typeof settings === 'object' &&
                 typeof settings.sleepPreventionMode === 'string' &&
                 Object.values(SleepPreventionManager_1.SleepPreventionMode).includes(settings.sleepPreventionMode) &&
                 typeof settings.activitySimulation === 'object' &&
                 typeof settings.activitySimulation.interval === 'number' &&
                 typeof settings.activitySimulation.activityType === 'string' &&
                 ['mouse', 'keyboard', 'both'].includes(settings.activitySimulation.activityType));
+            // Don't strictly require the theme property, but validate it if it exists
+            if (basicValidation) {
+                // If ui or ui.theme doesn't exist, that's fine - we'll use defaults
+                if (!settings.ui || !settings.ui.theme) {
+                    console.log('SettingsManager: Theme not found in settings, will use default');
+                    return true;
+                }
+                // If theme exists, make sure it's a valid value
+                if (typeof settings.ui.theme === 'string' &&
+                    ['light', 'dark'].includes(settings.ui.theme)) {
+                    console.log(`SettingsManager: Valid theme found in settings: ${settings.ui.theme}`);
+                    return true;
+                }
+                else {
+                    console.log(`SettingsManager: Invalid theme value found: ${settings.ui.theme}`);
+                    return false;
+                }
+            }
+            return basicValidation;
         }
-        catch {
+        catch (error) {
+            console.error('SettingsManager: Error validating settings:', error);
             return false;
         }
     }
@@ -8295,14 +8390,160 @@ exports.WindowsActivitySimulator = WindowsActivitySimulator;
 
 /***/ }),
 
-/***/ "./src/main/icon-manager.ts":
-/*!**********************************!*\
-  !*** ./src/main/icon-manager.ts ***!
-  \**********************************/
+/***/ "./src/main/ensure-icons-available.js":
+/*!********************************************!*\
+  !*** ./src/main/ensure-icons-available.js ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+/**
+ * Ensure Icons Available
+ *
+ * This utility copies icon files to the expected production locations
+ * to ensure that the taskbar icon can be properly updated in a built app.
+ */
+const { app } = __webpack_require__(/*! electron */ "electron");
+const fs = __webpack_require__(/*! fs */ "fs");
+const path = __webpack_require__(/*! path */ "path");
+/**
+ * Copies icon files to production locations to ensure they're available
+ * This is particularly important for electron-builder packaged apps
+ */
+async function ensureIconsAvailable() {
+    console.log('Ensuring icon files are available in production environment...');
+    try {
+        const isProduction = app.isPackaged;
+        if (!isProduction) {
+            console.log('Development mode detected, skipping production icon setup');
+            return;
+        }
+        console.log('Production mode detected, ensuring icon files are available');
+        // Source icon paths (look in multiple possible locations)
+        const sourcePaths = [
+            app.getAppPath(),
+            path.join(path.dirname(app.getPath('exe')), 'resources'),
+            path.join(path.dirname(app.getPath('exe')), 'resources', 'app.asar.unpacked'),
+            path.dirname(app.getPath('exe'))
+        ];
+        // Find source icons
+        let eyeActiveIcoPath = null;
+        let eyeInactiveIcoPath = null;
+        for (const basePath of sourcePaths) {
+            // Check different possible locations
+            const possibleActivePaths = [
+                path.join(basePath, 'build', 'icons', 'win', 'eye-active.ico'),
+                path.join(basePath, 'build', 'eye-active.ico'),
+                path.join(basePath, 'eye-active.ico')
+            ];
+            const possibleInactivePaths = [
+                path.join(basePath, 'build', 'icons', 'win', 'eye-inactive.ico'),
+                path.join(basePath, 'build', 'eye-inactive.ico'),
+                path.join(basePath, 'eye-inactive.ico')
+            ];
+            // Look for active icon
+            for (const p of possibleActivePaths) {
+                try {
+                    if (fs.existsSync(p)) {
+                        eyeActiveIcoPath = p;
+                        console.log(`Found active icon at: ${p}`);
+                        break;
+                    }
+                }
+                catch (err) {
+                    // Ignore errors
+                }
+            }
+            // Look for inactive icon
+            for (const p of possibleInactivePaths) {
+                try {
+                    if (fs.existsSync(p)) {
+                        eyeInactiveIcoPath = p;
+                        console.log(`Found inactive icon at: ${p}`);
+                        break;
+                    }
+                }
+                catch (err) {
+                    // Ignore errors
+                }
+            }
+            // If we found both icons, we can stop searching
+            if (eyeActiveIcoPath && eyeInactiveIcoPath)
+                break;
+        }
+        if (!eyeActiveIcoPath || !eyeInactiveIcoPath) {
+            console.error('Could not find source icon files');
+            // Try to find any .ico files as a fallback
+            if (!eyeActiveIcoPath) {
+                for (const basePath of sourcePaths) {
+                    try {
+                        const files = fs.readdirSync(basePath);
+                        for (const file of files) {
+                            if (file.endsWith('.ico')) {
+                                eyeActiveIcoPath = path.join(basePath, file);
+                                console.log(`Using fallback active icon: ${eyeActiveIcoPath}`);
+                                break;
+                            }
+                        }
+                        if (eyeActiveIcoPath)
+                            break;
+                    }
+                    catch (err) {
+                        // Ignore errors
+                    }
+                }
+            }
+            if (!eyeInactiveIcoPath && eyeActiveIcoPath) {
+                // Use the active icon for inactive as well if needed
+                eyeInactiveIcoPath = eyeActiveIcoPath;
+                console.log(`Using active icon for inactive as well`);
+            }
+            if (!eyeActiveIcoPath) {
+                console.error('Could not find any icons, giving up');
+                return;
+            }
+        }
+        // Target paths where icons should be copied
+        const exeDir = path.dirname(app.getPath('exe'));
+        const targetPaths = [
+            { source: eyeActiveIcoPath, dest: path.join(exeDir, 'eye-active.ico') },
+            { source: eyeInactiveIcoPath, dest: path.join(exeDir, 'eye-inactive.ico') },
+            { source: eyeActiveIcoPath, dest: path.join(exeDir, 'app.ico') }
+        ];
+        // Copy the icons
+        for (const { source, dest } of targetPaths) {
+            try {
+                fs.copyFileSync(source, dest);
+                console.log(`✓ Copied ${source} to ${dest}`);
+            }
+            catch (err) {
+                console.error(`✗ Failed to copy ${source} to ${dest}: ${err.message}`);
+            }
+        }
+        console.log('Finished ensuring icon files are available');
+    }
+    catch (err) {
+        console.error('Error ensuring icons available:', err);
+    }
+}
+module.exports = { ensureIconsAvailable };
+
+
+/***/ }),
+
+/***/ "./src/main/force-taskbar-icon-update.ts":
+/*!***********************************************!*\
+  !*** ./src/main/force-taskbar-icon-update.ts ***!
+  \***********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+/**
+ * Special utility for forcing Windows taskbar icon updates
+ * This uses aggressive techniques to overcome Windows icon caching issues
+ */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -8337,292 +8578,486 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.forceWindowsTaskbarIconUpdate = forceWindowsTaskbarIconUpdate;
+const electron_1 = __webpack_require__(/*! electron */ "electron");
+const path = __importStar(__webpack_require__(/*! path */ "path"));
+const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
+/**
+ * Force update the Windows taskbar icon to reflect the current state
+ * @param window The main application window
+ * @param isActive Whether sleep prevention is active
+ * @returns True if successful, false otherwise
+ */
+function forceWindowsTaskbarIconUpdate(window, isActive) {
+    if (!window || process.platform !== 'win32')
+        return false;
+    console.log(`Forcing Windows taskbar icon update (active=${isActive})`);
+    try { // 1. Determine the correct icon path
+        const iconName = isActive ? 'icon-active.ico' : 'icon-inactive.ico';
+        let iconPath = '';
+        // ALWAYS use absolute paths via app.getAppPath()
+        const appPath = electron_1.app.getAppPath(); // Get the application's root directory
+        console.log(`App path for icon search: ${appPath}`);
+        // Check for icons in production vs development locations
+        const possiblePaths = electron_1.app.isPackaged
+            ? [
+                // Production paths
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', iconName),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', iconName),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico'),
+                // PNG fallbacks
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', 'icon.png')
+            ]
+            : [
+                // Development paths
+                path.join(appPath, 'build', 'icons', 'win', iconName),
+                path.join(appPath, 'build', 'icons', 'win', 'icon.ico'),
+                path.join(appPath, 'build', iconName),
+                path.join(appPath, 'build', 'icon.ico'),
+                // PNG fallback
+                path.join(appPath, 'public', 'icon.png')
+            ];
+        for (const testPath of possiblePaths) {
+            if (fs.existsSync(testPath)) {
+                iconPath = testPath;
+                console.log(`Using icon from: ${iconPath}`);
+                break;
+            }
+        }
+        if (!iconPath) {
+            console.error('No suitable icon found for Windows taskbar update');
+            return false;
+        }
+        // 2. Load the icon with all possible sizes
+        const icon = electron_1.nativeImage.createFromPath(iconPath);
+        if (icon.isEmpty()) {
+            console.error(`Failed to load icon from ${iconPath}`);
+            return false;
+        }
+        // 3. Apply multiple aggressive techniques to force the update
+        // Technique 1: Set the window icon multiple times with different sizes
+        window.setIcon(icon);
+        // Windows uses different icon sizes in different contexts, so set multiple sizes
+        const sizes = [16, 24, 32, 48, 64, 128, 256];
+        for (const size of sizes) {
+            try {
+                const resizedIcon = icon.resize({ width: size, height: size });
+                window.setIcon(resizedIcon);
+            }
+            catch (e) {
+                // Ignore resize errors
+            }
+        }
+        // Technique 2: Use overlay icon as a trigger to refresh the taskbar
+        try {
+            // First set an overlay
+            const overlayIcon = icon.resize({ width: 16, height: 16 });
+            window.setOverlayIcon(overlayIcon, isActive ? 'Active' : 'Inactive');
+            // Then clear it after a delay
+            setTimeout(() => {
+                if (isActive) {
+                    // If active, keep a small overlay to indicate status
+                    const smallOverlay = icon.resize({ width: 10, height: 10 });
+                    window.setOverlayIcon(smallOverlay, 'Active');
+                }
+                else {
+                    window.setOverlayIcon(null, '');
+                }
+            }, 500);
+        }
+        catch (e) {
+            console.warn('Overlay icon technique failed:', e);
+        } // Technique 3: Copy to Electron executable directory (extreme fallback)
+        try {
+            // This technique can be useful in both production and development
+            const execPath = process.execPath;
+            const appDir = path.dirname(execPath);
+            const appIconPath = path.join(appDir, 'app.ico');
+            console.log(`Attempting to copy ${iconPath} to ${appIconPath}`);
+            // Verify icon exists before copying
+            if (fs.existsSync(iconPath)) {
+                fs.copyFileSync(iconPath, appIconPath);
+                console.log(`Copied icon to Electron exe directory: ${appIconPath}`);
+            }
+            else {
+                console.warn(`Source icon doesn't exist at ${iconPath}, skipping copy`);
+            }
+        }
+        catch (e) {
+            console.warn('Failed to copy icon to exe directory:', e);
+        }
+        // Technique 4: Window manipulation to force a refresh
+        try {
+            // Save current state
+            const wasVisible = window.isVisible();
+            const wasFocused = window.isFocused();
+            const bounds = window.getBounds();
+            // Force a slight resize to trigger a window update
+            window.setBounds({
+                x: bounds.x,
+                y: bounds.y,
+                width: bounds.width + 1,
+                height: bounds.height
+            });
+            // Restore original size after a short delay
+            setTimeout(() => {
+                window.setBounds(bounds);
+                // Ensure window state is preserved
+                if (wasVisible && !window.isVisible())
+                    window.show();
+                if (wasFocused && !window.isFocused())
+                    window.focus();
+            }, 100);
+        }
+        catch (e) {
+            console.warn('Window manipulation technique failed:', e);
+        }
+        console.log('Windows taskbar icon update applied successfully');
+        return true;
+    }
+    catch (error) {
+        console.error('Failed to update Windows taskbar icon:', error);
+        return false;
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/main/icon-manager-improved.ts":
+/*!*******************************************!*\
+  !*** ./src/main/icon-manager-improved.ts ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+/**
+ * Improved Icon Manager
+ * Handles loading and management of application icons for tray and taskbar/dock
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IconManager = void 0;
 exports.createTrayIcon = createTrayIcon;
 exports.createAppIcon = createAppIcon;
 exports.updateAppIcons = updateAppIcons;
 const electron_1 = __webpack_require__(/*! electron */ "electron");
 const path = __importStar(__webpack_require__(/*! path */ "path"));
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
-const windows_taskbar_icon_fix_1 = __webpack_require__(/*! ./windows-taskbar-icon-fix */ "./src/main/windows-taskbar-icon-fix.ts");
+const windows_taskbar_icon_fix_improved_1 = __webpack_require__(/*! ./windows-taskbar-icon-fix-improved */ "./src/main/windows-taskbar-icon-fix-improved.ts");
 /**
- * Creates a tray icon based on the active state
+ * Icon configuration for the application
  */
-function createTrayIcon(active = false) {
-    let iconName;
-    let iconDir;
-    console.log(`Creating tray icon (active=${active})`);
-    // Get the application's root directory
-    const appPath = electron_1.app.getAppPath();
-    console.log(`App base path for tray icon: ${appPath}`);
-    // For Windows, use ICO files for better compatibility in development mode
-    if (process.platform === 'win32') {
-        // Try the win folder icons first (best practice)
-        iconName = active ? 'icon-active.ico' : 'icon-inactive.ico';
-        if (electron_1.app.isPackaged) {
-            // In packaged app, resources folder contains our assets
-            iconDir = path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win');
+const iconConfig = {
+    basePaths: {
+        development: {
+            win32: [
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win'),
+                path.join(electron_1.app.getAppPath(), 'build'),
+                path.join(electron_1.app.getAppPath(), 'public')
+            ],
+            darwin: [
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'mac'),
+                path.join(electron_1.app.getAppPath(), 'public')
+            ],
+            linux: [
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'linux'),
+                path.join(electron_1.app.getAppPath(), 'public')
+            ]
+        },
+        production: {
+            win32: [
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win'),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build'),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public')
+            ],
+            darwin: [
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'mac'),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public')
+            ],
+            linux: [
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'linux'),
+                path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public')
+            ]
         }
-        else {
-            // In development, use direct path from app root
-            iconDir = path.join(appPath, 'build', 'icons', 'win');
-        }
-        // Check if the icon exists in the win folder
-        const iconPath = path.join(iconDir, iconName);
-        console.log(`Checking for tray icon at: ${iconPath}`);
-        if (!fs.existsSync(iconPath)) {
-            console.log(`Tray icon not found at ${iconPath}, trying build folder`);
-            // Fallback to the build folder
-            if (electron_1.app.isPackaged) {
-                iconDir = path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build');
+    },
+    fileNames: {
+        active: {
+            win32: {
+                tray: ['eye-active.ico', 'eye-active.svg', 'icon.png'],
+                app: ['eye-active.ico', 'eye-active.svg', 'icon.png'],
+                overlay: ['eye-active.ico', 'eye-active.svg']
+            },
+            darwin: {
+                tray: ['eye-active.svg', 'icon-active.svg', 'icon.png'],
+                app: ['eye-active.svg', 'icon-active.svg', 'icon.icns', 'icon.png']
+            },
+            linux: {
+                tray: ['eye-active.svg', 'icon-active.svg', 'icon.png', 'icon.svg'],
+                app: ['eye-active.svg', 'icon-active.svg', 'icon.png', 'icon.svg']
             }
-            else {
-                iconDir = path.join(appPath, 'build');
+        },
+        inactive: {
+            win32: {
+                tray: ['eye-inactive.ico', 'eye-inactive.svg', 'icon.png'],
+                app: ['eye-inactive.ico', 'eye-inactive.svg', 'icon.png'],
+                overlay: ['eye-inactive.ico', 'eye-inactive.svg']
+            },
+            darwin: {
+                tray: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png'],
+                app: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.icns', 'icon.png']
+            },
+            linux: {
+                tray: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png', 'icon.svg'],
+                app: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png', 'icon.svg']
             }
         }
-    }
-    else {
-        // For other platforms, use SVG
-        iconName = active ? 'eye-active.svg' : 'eye-inactive.svg';
-        if (electron_1.app.isPackaged) {
-            iconDir = path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public');
+    },
+    fallbackPaths: {
+        win32: {
+            tray: ['public/icon.png', 'public/icon.svg'],
+            app: ['public/icon.png', 'public/icon.svg'],
+            overlay: ['public/icon.png', 'public/icon.svg']
+        },
+        darwin: {
+            tray: ['public/icon.png', 'public/icon.svg'],
+            app: ['public/icon.png', 'public/icon.svg']
+        },
+        linux: {
+            tray: ['public/icon.png', 'public/icon.svg'],
+            app: ['public/icon.png', 'public/icon.svg']
         }
-        else {
-            iconDir = path.join(appPath, 'public');
-        }
-    }
-    // Combine directory and filename
-    const iconPath = path.join(iconDir, iconName);
-    try {
-        // Create a native image from the file
-        const icon = electron_1.nativeImage.createFromPath(iconPath);
-        // For macOS, make it a template image
-        if (process.platform === 'darwin') {
-            icon.setTemplateImage(true);
-        }
-        // Special handling for high-DPI on Windows
-        if (process.platform === 'win32') {
-            // Resize to appropriate size for Windows tray
-            return icon.resize({ width: 16, height: 16 });
-        }
-        return icon;
-    }
-    catch (error) {
-        console.error(`Failed to load tray icon (${iconName}):`, error);
-        // Try using the default PNG icon as fallback (better compatibility)
-        try {
-            const fallbackPath = path.join(electron_1.app.isPackaged
-                ? path.dirname(electron_1.app.getPath('exe'))
-                : path.join(__dirname, '..'), 'public', 'icon.png');
-            console.log(`Trying PNG fallback for tray icon: ${fallbackPath}`);
-            const pngIcon = electron_1.nativeImage.createFromPath(fallbackPath);
-            if (!pngIcon.isEmpty()) {
-                if (process.platform === 'win32') {
-                    return pngIcon.resize({ width: 16, height: 16 });
-                }
-                return pngIcon;
-            }
-            // If PNG fails, try SVG as a last resort
-            const svgFallbackPath = path.join(electron_1.app.isPackaged
-                ? path.dirname(electron_1.app.getPath('exe'))
-                : path.join(__dirname, '..'), 'public', 'icon.svg');
-            console.log(`Trying SVG fallback for tray icon: ${svgFallbackPath}`);
-            return electron_1.nativeImage.createFromPath(svgFallbackPath);
-        }
-        catch (fallbackError) {
-            // Return a small empty image as last resort fallback
-            console.error('All tray icon fallbacks failed:', fallbackError);
-            return electron_1.nativeImage.createEmpty();
+    },
+    sizes: {
+        win32: {
+            tray: { width: 16, height: 16 },
+            app: { width: 64, height: 64 },
+            overlay: { width: 16, height: 16 }
+        },
+        darwin: {
+            tray: { width: 22, height: 22 }
+        },
+        linux: {
+            tray: { width: 24, height: 24 }
         }
     }
-}
+};
 /**
- * Creates an app window icon based on the active state
+ * Icon Manager class for handling all icon-related functionality
  */
-function createAppIcon(active = false) {
-    // Get the application's root directory
-    const appPath = electron_1.app.getAppPath();
-    console.log(`App base path for app icon: ${appPath}`);
-    if (process.platform === 'win32') {
+class IconManager {
+    constructor() {
+        this.platform = process.platform;
+        this.isPackaged = electron_1.app.isPackaged;
+    }
+    /**
+     * Load an icon based on state, type and platform
+     */
+    loadIcon(state, type) {
+        console.log(`Loading ${type} icon for state: ${state} on platform: ${this.platform}`);
         try {
-            // Always use the state-specific .ico files for Windows when possible
-            const icoName = active ? 'icon-active.ico' : 'icon-inactive.ico';
-            let icoPath;
-            if (electron_1.app.isPackaged) {
-                // In packaged app, check multiple resource locations
-                const possiblePaths = [
-                    path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', icoName),
-                    path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
-                    path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', icoName),
-                    path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico')
-                ];
-                // Find the first path that exists
-                for (const testPath of possiblePaths) {
-                    if (fs.existsSync(testPath)) {
-                        icoPath = testPath;
-                        break;
-                    }
-                }
-                if (!icoPath) {
-                    icoPath = possiblePaths[0]; // Default to first path even if not found
-                }
+            // Get icon paths for the current platform and state
+            const iconPath = this.findIconPath(state, type);
+            if (!iconPath) {
+                console.error(`No suitable icon found for ${type} (${state})`);
+                return this.createEmptyIcon();
             }
-            else {
-                // In development, look in multiple common locations
-                const possiblePaths = [
-                    path.join(appPath, 'build', 'icons', 'win', icoName),
-                    path.join(appPath, 'build', 'icons', 'win', 'icon.ico'),
-                    path.join(appPath, 'build', icoName),
-                    path.join(appPath, 'build', 'icon.ico')
-                ];
-                // Find the first path that exists
-                for (const testPath of possiblePaths) {
-                    if (fs.existsSync(testPath)) {
-                        icoPath = testPath;
-                        break;
-                    }
-                }
-                // Default to first path if none found
-                if (!icoPath) {
-                    icoPath = possiblePaths[0];
-                }
+            console.log(`Found icon at: ${iconPath}`);
+            let icon = electron_1.nativeImage.createFromPath(iconPath);
+            // Resize icon if needed
+            icon = this.resizeIconIfNeeded(icon, type);
+            // Special handling for macOS template images
+            if (this.platform === 'darwin' && type === 'tray') {
+                icon.setTemplateImage(true);
             }
-            console.log(`Loading Windows taskbar icon from: ${icoPath}`);
-            if (fs.existsSync(icoPath)) {
-                const icon = electron_1.nativeImage.createFromPath(icoPath);
-                if (!icon.isEmpty()) {
-                    return icon;
-                }
-                console.log('Windows ICO icon was empty, falling back to next option');
-            }
-            else {
-                console.log(`ICO file not found at ${icoPath}, falling back to next option`);
-            }
+            return icon;
         }
         catch (error) {
-            console.error('Failed to load Windows ICO icon:', error);
-            // Fall through to fallback handling
+            console.error(`Failed to load ${type} icon (${state}):`, error);
+            return this.loadFallbackIcon(type);
         }
     }
-    // For non-Windows platforms or as fallback, use SVG
-    let iconName = active ? 'eye-active.svg' : 'eye-inactive.svg';
-    // Determine the correct path to the icon based on whether the app is packaged
-    let iconPath;
-    if (electron_1.app.isPackaged) {
-        iconPath = path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', iconName);
+    /**
+     * Find the path to an icon based on state and type
+     */
+    findIconPath(state, type) {
+        // Get base paths for the current environment
+        const basePaths = this.isPackaged
+            ? iconConfig.basePaths.production[this.platform] || []
+            : iconConfig.basePaths.development[this.platform] || [];
+        // Get file names for the current state and platform
+        const fileNames = iconConfig.fileNames[state][this.platform]?.[type] || [];
+        // Try each base path with each file name
+        for (const basePath of basePaths) {
+            for (const fileName of fileNames) {
+                const iconPath = path.join(basePath, fileName);
+                if (fs.existsSync(iconPath)) {
+                    return iconPath;
+                }
+            }
+        }
+        return null;
     }
-    else {
-        iconPath = path.join(appPath, 'public', iconName);
+    /**
+     * Load a fallback icon when the primary icon can't be found
+     */
+    loadFallbackIcon(type) {
+        console.log(`Attempting to load fallback icon for ${type}`);
+        // Get fallback paths for the current platform
+        const fallbackPaths = iconConfig.fallbackPaths[this.platform]?.[type] || [];
+        for (const relativePath of fallbackPaths) {
+            try {
+                const basePath = this.isPackaged
+                    ? path.dirname(electron_1.app.getPath('exe'))
+                    : electron_1.app.getAppPath();
+                const iconPath = path.join(basePath, relativePath);
+                if (fs.existsSync(iconPath)) {
+                    console.log(`Using fallback icon: ${iconPath}`);
+                    let icon = electron_1.nativeImage.createFromPath(iconPath);
+                    // Resize fallback icon if needed
+                    icon = this.resizeIconIfNeeded(icon, type);
+                    return icon;
+                }
+            }
+            catch (error) {
+                console.error(`Failed to load fallback icon from ${relativePath}:`, error);
+            }
+        }
+        console.error(`All fallback icons failed for ${type}`);
+        return this.createEmptyIcon();
     }
-    try {
-        // Create a native image from the file
-        const icon = electron_1.nativeImage.createFromPath(iconPath);
-        // For Windows, we need specific sizes for the taskbar icon
-        if (process.platform === 'win32') {
-            console.log(`Loading Windows SVG taskbar icon from: ${iconPath}`);
-            // Create a larger icon for Windows taskbar
-            return icon.resize({ width: 64, height: 64 });
+    /**
+     * Resize an icon based on platform and type requirements
+     */
+    resizeIconIfNeeded(icon, type) {
+        const size = iconConfig.sizes[this.platform]?.[type];
+        if (size && !icon.isEmpty()) {
+            return icon.resize(size);
         }
         return icon;
     }
-    catch (error) {
-        console.error(`Failed to load app icon (${iconName}):`, error);
-        // Return default PNG icon as fallback
-        try {
-            const fallbackPath = path.join(electron_1.app.isPackaged
-                ? path.dirname(electron_1.app.getPath('exe'))
-                : path.join(__dirname, '..'), 'public', 'icon.png');
-            console.log(`Trying PNG fallback icon: ${fallbackPath}`);
-            const pngIcon = electron_1.nativeImage.createFromPath(fallbackPath);
-            if (!pngIcon.isEmpty()) {
-                if (process.platform === 'win32') {
-                    return pngIcon.resize({ width: 64, height: 64 });
-                }
-                return pngIcon;
+    /**
+     * Create an empty icon (last resort fallback)
+     */
+    createEmptyIcon() {
+        console.warn('Creating empty icon as last resort fallback');
+        return electron_1.nativeImage.createEmpty();
+    }
+    /**
+     * Get a tray icon based on active state
+     */
+    getTrayIcon(active) {
+        return this.loadIcon(active ? 'active' : 'inactive', 'tray');
+    }
+    /**
+     * Get an app icon based on active state
+     */
+    getAppIcon(active) {
+        return this.loadIcon(active ? 'active' : 'inactive', 'app');
+    }
+    /**
+     * Get an overlay icon based on active state
+     */
+    getOverlayIcon(active) {
+        return this.loadIcon(active ? 'active' : 'inactive', 'overlay');
+    }
+    /**
+     * Update all application icons based on active state
+     */
+    updateAppIcons(mainWindow, tray, active) {
+        console.log(`Updating all app icons - active status: ${active}`);
+        // Update tray icon
+        if (tray) {
+            try {
+                const trayIcon = this.getTrayIcon(active);
+                tray.setImage(trayIcon);
+                tray.setToolTip(`NoDoze - ${active ? 'Sleep Prevention Active' : 'Sleep Prevention Inactive'}`);
+                console.log('Tray icon updated successfully');
             }
-            // If PNG fails, try SVG as a last resort
-            const svgFallbackPath = path.join(electron_1.app.isPackaged
-                ? path.dirname(electron_1.app.getPath('exe'))
-                : path.join(__dirname, '..'), 'public', 'icon.svg');
-            console.log(`Trying SVG fallback icon: ${svgFallbackPath}`);
-            return electron_1.nativeImage.createFromPath(svgFallbackPath);
+            catch (trayErr) {
+                console.error('Failed to update tray icon:', trayErr);
+            }
         }
-        catch (fallbackError) {
-            console.error('All fallback icons failed:', fallbackError);
-            return electron_1.nativeImage.createEmpty();
+        // Update window icon
+        if (mainWindow) {
+            try {
+                const appIcon = this.getAppIcon(active);
+                mainWindow.setIcon(appIcon);
+                console.log('Main window icon updated successfully');
+                // For Windows, clear any overlay icon as we're using full icon replacement instead
+                if (this.platform === 'win32') {
+                    try {
+                        // Remove any overlay icons - we're using full icon replacement instead
+                        mainWindow.setOverlayIcon(null, '');
+                        console.log('Cleared overlay icon (using full icon replacement for status indication)');
+                    }
+                    catch (overlayErr) {
+                        console.error('Failed to clear overlay icon:', overlayErr);
+                    }
+                }
+            }
+            catch (appIconErr) {
+                console.error('Failed to update app icon:', appIconErr);
+            }
+            // Apply Windows-specific taskbar icon fixes
+            if (this.platform === 'win32') {
+                try {
+                    (0, windows_taskbar_icon_fix_improved_1.fixWindowsTaskbarIcon)(mainWindow);
+                }
+                catch (fixErr) {
+                    console.error('Failed to apply Windows taskbar icon fix:', fixErr);
+                }
+            }
         }
     }
 }
-/**
- * Updates app and tray icons based on active state
- */
+exports.IconManager = IconManager;
+// Create and export a singleton instance
+const iconManager = new IconManager();
+exports["default"] = iconManager;
+// Legacy API for backward compatibility
+function createTrayIcon(active = false) {
+    return iconManager.getTrayIcon(active);
+}
+function createAppIcon(active = false) {
+    return iconManager.getAppIcon(active);
+}
 function updateAppIcons(mainWindow, tray, active) {
-    console.log(`Updating app icons - active status: ${active}`);
-    // Update tray icon
-    if (tray) {
-        try {
-            const trayIcon = createTrayIcon(active);
-            tray.setImage(trayIcon);
-            tray.setToolTip(`NoDoze - ${active ? 'Sleep Prevention Active' : 'Sleep Prevention Inactive'}`);
-            console.log('Tray icon updated successfully');
-        }
-        catch (trayErr) {
-            console.error('Failed to update tray icon:', trayErr);
-        }
-    }
-    // Update window icon
-    if (mainWindow) {
-        try {
-            const appIcon = createAppIcon(active);
-            mainWindow.setIcon(appIcon);
-            console.log('Main window icon updated successfully');
-            // For Windows, also add an overlay icon when active to make change more visible
-            if (process.platform === 'win32') {
-                try {
-                    if (active) {
-                        // Find a suitable overlay icon
-                        let overlayPath = '';
-                        const possibleOverlayPaths = [
-                            // First try the ico files for Windows
-                            path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon-active.ico'),
-                            path.join(__dirname, '..', '..', 'build', 'icon-active.ico'),
-                            // Then try SVG and PNG
-                            path.join(__dirname, '..', 'public', 'eye-active.svg'),
-                            path.join(__dirname, '..', 'public', 'icon.png')
-                        ];
-                        for (const testPath of possibleOverlayPaths) {
-                            if (fs.existsSync(testPath)) {
-                                overlayPath = testPath;
-                                break;
-                            }
-                        }
-                        if (overlayPath) {
-                            const overlayIcon = electron_1.nativeImage.createFromPath(overlayPath).resize({ width: 16, height: 16 });
-                            mainWindow.setOverlayIcon(overlayIcon, 'Sleep Prevention Active');
-                            console.log(`Set overlay icon from: ${overlayPath}`);
-                        }
-                        else {
-                            console.warn('No suitable overlay icon found');
-                        }
-                    }
-                    else {
-                        mainWindow.setOverlayIcon(null, '');
-                        console.log('Cleared overlay icon');
-                    }
-                    // Explicitly refresh taskbar icon
-                    if (process.platform === 'win32') {
-                        (0, windows_taskbar_icon_fix_1.fixWindowsTaskbarIcon)(mainWindow);
-                    }
-                }
-                catch (err) {
-                    console.error('Error setting overlay icon:', err);
-                    mainWindow.setOverlayIcon(null, '');
-                }
-            }
-        }
-        catch (windowErr) {
-            console.error('Failed to update window icon:', windowErr);
-        }
-    }
+    iconManager.updateAppIcons(mainWindow, tray, active);
 }
 
 
@@ -8673,11 +9108,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const electron_1 = __webpack_require__(/*! electron */ "electron");
 const path = __importStar(__webpack_require__(/*! path */ "path"));
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
-const icon_manager_1 = __webpack_require__(/*! ./icon-manager */ "./src/main/icon-manager.ts");
-const windows_taskbar_icon_fix_1 = __webpack_require__(/*! ./windows-taskbar-icon-fix */ "./src/main/windows-taskbar-icon-fix.ts");
+const icon_manager_improved_1 = __webpack_require__(/*! ./icon-manager-improved */ "./src/main/icon-manager-improved.ts");
+const windows_taskbar_icon_fix_improved_1 = __webpack_require__(/*! ./windows-taskbar-icon-fix-improved */ "./src/main/windows-taskbar-icon-fix-improved.ts");
 const SleepPreventionManager_1 = __webpack_require__(/*! ./activity/SleepPreventionManager */ "./src/main/activity/SleepPreventionManager.ts");
 const ActivitySimulatorFactory_1 = __webpack_require__(/*! ./activity/ActivitySimulatorFactory */ "./src/main/activity/ActivitySimulatorFactory.ts");
 const SettingsManager_1 = __webpack_require__(/*! ./SettingsManager */ "./src/main/SettingsManager.ts");
+// Import icon utilities
+const { forceTaskbarIconUpdate } = __webpack_require__(/*! ./force-taskbar-icon-update */ "./src/main/force-taskbar-icon-update.ts");
+const { ensureIconsAvailable } = __webpack_require__(/*! ./ensure-icons-available */ "./src/main/ensure-icons-available.js");
 // Setup live reload for development
 if (true) {
     try {
@@ -8740,7 +9178,17 @@ const preventSleep = async () => {
         }
         isPreventingSleep = true;
         // Update both tray and taskbar icons
-        (0, icon_manager_1.updateAppIcons)(mainWindow, tray, true);
+        (0, icon_manager_improved_1.updateAppIcons)(mainWindow, tray, true);
+        // Force Windows taskbar icon update
+        if (process.platform === 'win32' && mainWindow) {
+            // First apply the regular update
+            const appIcon = (0, icon_manager_improved_1.createAppIcon)(true);
+            mainWindow.setIcon(appIcon);
+            // Then force a taskbar refresh using multiple techniques
+            setTimeout(async () => {
+                await forceTaskbarIconUpdate(mainWindow, true);
+            }, 100);
+        }
         console.log(`Sleep prevention enabled on ${process.platform} (mode: ${currentMode})`);
     }
     catch (error) {
@@ -8763,7 +9211,17 @@ const allowSleep = async () => {
         }
         isPreventingSleep = false;
         // Update both tray and taskbar icons
-        (0, icon_manager_1.updateAppIcons)(mainWindow, tray, false);
+        (0, icon_manager_improved_1.updateAppIcons)(mainWindow, tray, false);
+        // Force Windows taskbar icon update
+        if (process.platform === 'win32' && mainWindow) {
+            // First apply the regular update
+            const appIcon = (0, icon_manager_improved_1.createAppIcon)(false);
+            mainWindow.setIcon(appIcon);
+            // Then force a taskbar refresh using multiple techniques
+            setTimeout(async () => {
+                await forceTaskbarIconUpdate(mainWindow, false);
+            }, 100);
+        }
         console.log(`Sleep prevention disabled on ${process.platform}`);
     }
     catch (error) {
@@ -8778,7 +9236,7 @@ function createTray() {
     if (tray !== null)
         return;
     // Create the tray icon
-    const icon = (0, icon_manager_1.createTrayIcon)(isPreventingSleep);
+    const icon = (0, icon_manager_improved_1.createTrayIcon)(isPreventingSleep);
     tray = new electron_1.Tray(icon);
     tray.setToolTip('NoDoze - Keep Your Computer Awake');
     // Update the context menu
@@ -8800,7 +9258,7 @@ function updateTrayMenu() {
     if (!tray)
         return;
     // Update both tray and app icons based on current state
-    (0, icon_manager_1.updateAppIcons)(mainWindow, tray, isPreventingSleep);
+    (0, icon_manager_improved_1.updateAppIcons)(mainWindow, tray, isPreventingSleep);
     const state = sleepPreventionManager.getState();
     const contextMenu = electron_1.Menu.buildFromTemplate([
         {
@@ -8956,54 +9414,9 @@ function updateTrayMenu() {
     tray.setToolTip(`NoDoze - ${isPreventingSleep ? 'Sleep Prevention Active' : 'Idle'}`);
 }
 function createWindow() {
-    // Determine which icon to use based on current state
-    let iconPath;
-    if (process.platform === 'win32') {
-        // For Windows, we'll use an .ico file in both production and development
-        if (electron_1.app.isPackaged) {
-            iconPath = path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico');
-        }
-        else {
-            // For Windows development, ALWAYS use the icon.ico from the win folder first
-            // as this is more reliable for taskbar icons
-            const winFolderIcon = path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon.ico');
-            if (fs.existsSync(winFolderIcon)) {
-                iconPath = winFolderIcon;
-                console.log('Using Windows-specific taskbar icon from win folder');
-            }
-            else {
-                // Fallback to the state-specific icons
-                const iconName = isPreventingSleep ? 'icon-active.ico' : 'icon-inactive.ico';
-                iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', iconName);
-                // If that doesn't exist, try the build folder
-                if (!fs.existsSync(iconPath)) {
-                    iconPath = path.join(__dirname, '..', '..', 'build', iconName);
-                }
-            }
-        }
-    }
-    else {
-        // For other platforms, use the SVG
-        const iconName = isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg';
-        iconPath = path.join(electron_1.app.isPackaged ? path.dirname(electron_1.app.getPath('exe')) : path.join(__dirname, '..'), 'public', iconName);
-    }
-    console.log(`Using icon path: ${iconPath}`);
-    // Check if icon exists and get detailed info
-    const iconExists = debugIconPath(iconPath);
-    // If icon doesn't exist, try a fallback
-    if (!iconExists) {
-        console.log("Attempting to use fallback icon...");
-        if (process.platform === 'win32') {
-            iconPath = path.join(__dirname, '..', '..', 'build', 'icons', 'win', 'icon.ico');
-            if (!fs.existsSync(iconPath)) {
-                iconPath = path.join(__dirname, '..', '..', 'build', 'icon.ico');
-            }
-        }
-        else {
-            iconPath = path.join(__dirname, '..', 'public', 'icon.svg');
-        }
-        debugIconPath(iconPath);
-    }
+    console.log('Creating main window with improved icon management');
+    // Get appropriate app icon using our improved icon manager with eye icons
+    const appIcon = (0, icon_manager_improved_1.createAppIcon)(isPreventingSleep);
     // Create the browser window with the icon
     mainWindow = new electron_1.BrowserWindow({
         width: 380,
@@ -9012,7 +9425,7 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
         },
-        icon: iconPath, // Set the icon directly here for taskbar
+        icon: appIcon, // Set the icon directly using our improved icon manager with eye icons
         frame: false, // Remove default window frame
         resizable: false,
         transparent: false,
@@ -9020,68 +9433,52 @@ function createWindow() {
     });
     // Set the title
     mainWindow.setTitle('NoDoze');
-    // Force the icon to be set after window creation (helps with Windows)
-    try {
-        // For Windows, we need to be more explicit about setting the icon
-        if (process.platform === 'win32') {
-            // Windows requires special handling for taskbar icons
-            // Technique 1: Create an empty app.ico in app directory (for development)
-            if (!electron_1.app.isPackaged) {
-                try {
-                    // Copy our icon to app.ico in the application path
-                    const appIcoPath = path.join(path.dirname(process.execPath), 'app.ico');
-                    fs.copyFileSync(iconPath, appIcoPath);
-                    console.log(`Copied app icon to: ${appIcoPath} (helps Windows find it)`);
-                }
-                catch (copyError) {
-                    console.log('Failed to copy app.ico:', copyError);
-                }
-            }
-            // Technique 2: Set all possible icon variants
-            const icon = electron_1.nativeImage.createFromPath(iconPath);
-            if (!icon.isEmpty() && mainWindow) {
-                // Set the icon multiple times with different sizes
-                mainWindow.setIcon(icon);
-                // Add various sized icons - Windows may use different sizes in different contexts
-                [16, 24, 32, 48, 64, 128].forEach(size => {
-                    try {
-                        const sizedIcon = icon.resize({ width: size, height: size });
-                        if (mainWindow) {
-                            mainWindow.setIcon(sizedIcon);
-                            console.log(`Set ${size}x${size} icon for Windows`);
-                        }
-                    }
-                    catch (e) {
-                        // Ignore resize errors
-                    }
-                });
-                console.log(`Icons set successfully from: ${iconPath}`);
-            }
-            else {
-                console.warn(`Created an empty icon from: ${iconPath}`);
-                // Try loading the icon.png directly as fallback
-                const pngPath = path.join(__dirname, '..', 'public', 'icon.png');
-                if (debugIconPath(pngPath)) {
-                    const pngIcon = electron_1.nativeImage.createFromPath(pngPath);
-                    if (!pngIcon.isEmpty() && mainWindow) {
-                        mainWindow.setIcon(pngIcon);
-                        console.log(`Successfully set PNG icon as fallback`);
-                    }
+    // Apply Windows-specific taskbar icon fixes
+    if (process.platform === 'win32') {
+        // Direct approach for Windows taskbar icon
+        try {
+            // Try several icon paths in order of preference, prioritizing eye icons
+            const iconPaths = [
+                path.join(electron_1.app.getAppPath(), 'app.ico'), // This should be eye-active.ico (copied by setup-eye-icons.js)
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'eye-active.ico'),
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'eye-inactive.ico'),
+                path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'icon.ico'),
+                path.join(electron_1.app.getAppPath(), 'public', 'icon.png')
+            ];
+            // Find the first icon that exists
+            let foundIcon = null;
+            for (const iconPath of iconPaths) {
+                if (fs.existsSync(iconPath)) {
+                    console.log(`Found icon at: ${iconPath}`);
+                    foundIcon = iconPath;
+                    break;
                 }
             }
+            if (foundIcon) {
+                const icon = electron_1.nativeImage.createFromPath(foundIcon);
+                if (!icon.isEmpty()) {
+                    mainWindow.setIcon(icon);
+                    console.log('Set Windows taskbar icon directly from file');
+                }
+            }
+            // Set AppUserModelId for proper taskbar grouping
+            electron_1.app.setAppUserModelId('com.nodoze.app');
+            // Also use our improved taskbar icon fix utility
+            (0, windows_taskbar_icon_fix_improved_1.fixWindowsTaskbarIcon)(mainWindow).then(success => {
+                if (success) {
+                    console.log('Applied Windows taskbar icon fixes successfully');
+                }
+                else {
+                    console.warn('Windows taskbar icon fixes did not fully succeed');
+                }
+            });
         }
-        else {
-            // For non-Windows platforms, simpler icon setting is sufficient
-            const icon = electron_1.nativeImage.createFromPath(iconPath);
-            if (!icon.isEmpty() && mainWindow) {
-                mainWindow.setIcon(icon);
-                console.log(`Icon set successfully from: ${iconPath}`);
-            }
+        catch (error) {
+            console.error('Error setting direct Windows taskbar icon:', error);
         }
     }
-    catch (error) {
-        console.error(`Failed to set icon from ${iconPath}:`, error);
-    }
+    // Update both taskbar and tray icons based on current state
+    (0, icon_manager_improved_1.updateAppIcons)(mainWindow, tray, isPreventingSleep);
     console.log('Window title and icon set for NoDoze');
     // Load the index.html file
     const indexPath = electron_1.app.isPackaged
@@ -9124,12 +9521,15 @@ function createWindow() {
     }
 }
 /**
- * Initialize the sleep prevention manager and activity simulator
+ * Initialize the sleep prevention system
  */
 function initializeSleepPreventionSystem() {
+    console.log('Initializing sleep prevention system...');
     // Initialize settings manager
     settingsManager = new SettingsManager_1.SettingsManager();
-    // Initialize the sleep prevention manager with saved settings
+    // Debug settings file
+    debugSettingsFile();
+    // Create sleep prevention manager with settings
     const config = settingsManager.getSleepPreventionConfig();
     sleepPreventionManager = new SleepPreventionManager_1.SleepPreventionManager(config);
     // Add state change listener
@@ -9145,6 +9545,35 @@ function initializeSleepPreventionSystem() {
         updateTrayMenu();
     });
     console.log('Sleep prevention system initialized with saved settings');
+}
+/**
+ * Debug utility to log settings file info
+ */
+function debugSettingsFile() {
+    try {
+        const settingsPath = settingsManager.getSettingsPath();
+        console.log('=== DEBUG SETTINGS INFO ===');
+        console.log(`Settings file location: ${settingsPath}`);
+        if (fs.existsSync(settingsPath)) {
+            const settingsContent = fs.readFileSync(settingsPath, 'utf8');
+            console.log('Settings file content:');
+            console.log(settingsContent);
+            try {
+                const parsedSettings = JSON.parse(settingsContent);
+                console.log('Theme setting:', parsedSettings.ui?.theme || 'not set');
+            }
+            catch (parseError) {
+                console.error('Error parsing settings file:', parseError);
+            }
+        }
+        else {
+            console.log('Settings file does not exist yet');
+        }
+        console.log('=========================');
+    }
+    catch (error) {
+        console.error('Error debugging settings file:', error);
+    }
 }
 /**
  * Start activity simulation
@@ -9295,13 +9724,23 @@ function debugIconPath(iconPath) {
     }
 }
 // This method will be called when Electron has finished initialization
-electron_1.app.whenReady().then(() => {
+electron_1.app.whenReady().then(async () => {
+    // Ensure icon files are available in production environment
+    await ensureIconsAvailable();
     initializePlatform();
     createWindow();
     createTray();
     // Apply our special Windows taskbar icon fix
     if (process.platform === 'win32' && mainWindow) {
-        (0, windows_taskbar_icon_fix_1.fixWindowsTaskbarIcon)(mainWindow);
+        // Ensure icons are ready
+        if (electron_1.app.isPackaged) {
+            console.log('Production build detected - applying extra icon setup for Windows');
+            // Apply additional force update to ensure taskbar icon is set correctly at startup
+            setTimeout(async () => {
+                await forceTaskbarIconUpdate(mainWindow, isPreventingSleep);
+            }, 500);
+        }
+        (0, windows_taskbar_icon_fix_improved_1.fixWindowsTaskbarIcon)(mainWindow);
         console.log('Applied Windows-specific taskbar icon fix');
     }
     electron_1.app.on('activate', function () {
@@ -9436,6 +9875,7 @@ electron_1.app.on('before-quit', async () => {
 });
 // Initialize the sleep prevention system
 initializeSleepPreventionSystem();
+debugSettingsFile();
 // Handle sleep prevention mode changes
 electron_1.ipcMain.handle('set-sleep-prevention-mode', async (event, mode) => {
     try {
@@ -9534,6 +9974,34 @@ electron_1.ipcMain.handle('import-settings', (event, jsonString) => {
     catch (error) {
         console.error('Error importing settings:', error);
         return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+});
+// Handle theme preference operations
+electron_1.ipcMain.handle('get-theme-preference', () => {
+    console.log('Main: get-theme-preference IPC handler called');
+    try {
+        const theme = settingsManager.getTheme();
+        console.log(`Main: Current theme preference: ${theme}`);
+        return theme;
+    }
+    catch (error) {
+        console.error('Main: Error getting theme preference:', error);
+        return 'light'; // Default to light theme on error
+    }
+});
+electron_1.ipcMain.handle('set-theme-preference', (_, theme) => {
+    console.log(`Main: set-theme-preference IPC handler called with theme: ${theme}`);
+    try {
+        settingsManager.setTheme(theme);
+        console.log(`Main: Theme preference set to: ${theme}`);
+        return { success: true };
+    }
+    catch (error) {
+        console.error('Main: Error setting theme preference:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
     }
 });
 
@@ -9937,18 +10405,25 @@ exports.getPowerStatus = getPowerStatus;
 
 /***/ }),
 
-/***/ "./src/main/windows-taskbar-icon-fix.ts":
-/*!**********************************************!*\
-  !*** ./src/main/windows-taskbar-icon-fix.ts ***!
-  \**********************************************/
+/***/ "./src/main/windows-taskbar-icon-fix-improved.ts":
+/*!*******************************************************!*\
+  !*** ./src/main/windows-taskbar-icon-fix-improved.ts ***!
+  \*******************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
 /**
- * Special utility for fixing Windows taskbar icons
- * This addresses a common issue where Electron apps show the default Electron icon
- * in the Windows taskbar even when custom icons are set
+ * Enhanced Windows Taskbar Icon Fix
+ *
+ * This utility addresses the common issue where Electron apps show the default Electron icon
+ * in the Windows taskbar even when custom icons are set.
+ *
+ * Enhanced version with:
+ * - Improved icon detection
+ * - More robust fallback mechanisms
+ * - Better logging
+ * - Cleaner code organization
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -9989,152 +10464,255 @@ const electron_1 = __webpack_require__(/*! electron */ "electron");
 const path = __importStar(__webpack_require__(/*! path */ "path"));
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
 /**
- * Apply special Windows-specific fixes to ensure the taskbar icon shows correctly
+ * Apply Windows-specific fixes to ensure the taskbar icon shows correctly
  * Call this after creating your BrowserWindow
  */
-function fixWindowsTaskbarIcon(window) {
-    if (!window || process.platform !== 'win32')
-        return;
+async function fixWindowsTaskbarIcon(window) {
+    if (!window || process.platform !== 'win32') {
+        return false;
+    }
+    console.log('Applying Windows taskbar icon fixes...');
     // Get the application's root directory
     const appPath = electron_1.app.getAppPath();
     console.log(`App base path for taskbar fix: ${appPath}`);
+    // Define icon fixes in order of preference/effectiveness
+    const iconFixes = [
+        {
+            name: 'multi-size-icons',
+            execute: applyMultiSizeIcons,
+            description: 'Apply multiple icon sizes to window'
+        },
+        {
+            name: 'app-user-model-id',
+            execute: setAppUserModelId,
+            description: 'Set AppUserModelId for proper taskbar grouping'
+        },
+        {
+            name: 'copy-icon-to-exe-dir',
+            execute: copyIconToExeDir,
+            description: 'Copy icon to app.exe directory for direct access'
+        },
+        {
+            name: 'overlay-icon-refresh',
+            execute: applyOverlayIconRefresh,
+            description: 'Apply and clear overlay icons to refresh icon cache'
+        }
+    ];
+    let overallSuccess = false;
+    // Try each fix in sequence
+    for (const fix of iconFixes) {
+        try {
+            console.log(`Applying taskbar icon fix: ${fix.name} - ${fix.description}`);
+            const success = await fix.execute(window);
+            if (success) {
+                console.log(`Taskbar icon fix "${fix.name}" applied successfully`);
+                overallSuccess = true;
+            }
+            else {
+                console.warn(`Taskbar icon fix "${fix.name}" did not succeed`);
+            }
+        }
+        catch (error) {
+            console.error(`Error applying taskbar icon fix "${fix.name}":`, error);
+        }
+    }
+    if (overallSuccess) {
+        console.log('Windows taskbar icon fixes applied successfully');
+    }
+    else {
+        console.warn('All Windows taskbar icon fixes failed');
+    }
+    return overallSuccess;
+}
+/**
+ * Find a suitable icon file for the taskbar
+ * Returns the path to the icon file or null if not found
+ */
+async function findSuitableIcon() {
     // Try all possible icon paths in order of preference
     let possibleIconPaths;
     if (electron_1.app.isPackaged) {
         // Paths for packaged app (production)
         possibleIconPaths = [
-            // Check resources/build/icons/win folder first (typical for packaged app)
+            // Check for eye icons first in win folder (our preferred icons)
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'eye-active.ico'),
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'eye-inactive.ico'),
+            // Then check for eye icons in build folder
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'eye-active.ico'),
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'eye-inactive.ico'),
+            // Try app.ico in root as it's a common location
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'app.ico'),
+            // Check standard icon locations as fallbacks
             path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon-active.ico'),
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon-inactive.ico'),
-            // Try resources/app/build as alternative
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon.ico'),
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon-active.ico'),
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'app', 'build', 'icons', 'win', 'icon-inactive.ico'),
-            // Try direct resources directory icons
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'icon.ico'),
-            // Finally try PNG and SVG as last resorts
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'build', 'icon.ico'),
+            // Try public folder for fallbacks
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', 'eye-active.svg'),
             path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', 'icon.png'),
-            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', 'icon.svg')
+            path.join(path.dirname(electron_1.app.getPath('exe')), 'resources', 'public', 'icon.svg'),
         ];
     }
     else {
         // Paths for development
         possibleIconPaths = [
-            // Check the build/icons/win folder first (best for Windows)
-            path.join(appPath, 'build', 'icons', 'win', 'icon.ico'),
-            path.join(appPath, 'build', 'icons', 'win', 'icon-active.ico'),
-            path.join(appPath, 'build', 'icons', 'win', 'icon-inactive.ico'),
-            // Then try the standalone icons in build folder
-            path.join(appPath, 'build', 'icon.ico'),
-            path.join(appPath, 'build', 'icon-active.ico'),
-            path.join(appPath, 'build', 'icon-inactive.ico'),
-            // Finally try PNG and SVG as last resorts
-            path.join(appPath, 'public', 'icon.png'),
-            path.join(appPath, 'public', 'icon.svg')
+            // Check for eye icons first in win folder (our preferred icons)
+            path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'eye-active.ico'),
+            path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'eye-inactive.ico'),
+            // Then check for eye icons in build folder
+            path.join(electron_1.app.getAppPath(), 'build', 'eye-active.ico'),
+            path.join(electron_1.app.getAppPath(), 'build', 'eye-inactive.ico'),
+            // Try app.ico in root as it's a common location
+            path.join(electron_1.app.getAppPath(), 'app.ico'),
+            // Then check standard icon locations as fallbacks
+            path.join(electron_1.app.getAppPath(), 'build', 'icons', 'win', 'icon.ico'),
+            path.join(electron_1.app.getAppPath(), 'build', 'icon.ico'),
+            // Then try public folder
+            path.join(electron_1.app.getAppPath(), 'public', 'eye-active.svg'),
+            path.join(electron_1.app.getAppPath(), 'public', 'icon.png'),
+            path.join(electron_1.app.getAppPath(), 'public', 'icon.svg'),
         ];
     }
-    console.log('Attempting aggressive Windows taskbar icon fix...');
-    // Find first valid icon to use
-    let validIconPath = '';
+    // Find the first icon that exists
     for (const iconPath of possibleIconPaths) {
         try {
             if (fs.existsSync(iconPath)) {
-                console.log(`Found valid icon at: ${iconPath}`);
-                validIconPath = iconPath;
-                break;
+                console.log(`Found suitable icon at: ${iconPath}`);
+                return iconPath;
             }
         }
-        catch (error) {
-            // Skip errors and continue to next path
+        catch (e) {
+            console.error(`Error checking icon path: ${iconPath}`, e);
         }
     }
-    if (!validIconPath) {
-        console.warn('Could not find any suitable icons for Windows taskbar');
-        return;
-    }
-    // Apply the strongest possible icon-setting techniques
+    console.warn('Could not find any suitable icons for Windows taskbar');
+    return null;
+}
+/**
+ * Fix 1: Apply multiple icon sizes to the window
+ * This helps Windows properly display the icon in different contexts
+ */
+async function applyMultiSizeIcons(window) {
     try {
-        console.log(`Applying aggressive Windows taskbar icon fix with: ${validIconPath}`);
-        // Technique 1: Set icon through BrowserWindow options
-        // (This already happened during window creation, but we'll apply it again)
-        const icon = electron_1.nativeImage.createFromPath(validIconPath);
-        if (!icon.isEmpty()) {
-            // Apply the base icon
-            window.setIcon(icon);
-            // Technique 2: Apply multiple size variants for different Windows contexts
-            // Windows uses different sizes in different UI contexts
-            const sizesToApply = [16, 24, 32, 48, 64, 96, 128, 256];
-            for (const size of sizesToApply) {
-                try {
-                    const sizedIcon = icon.resize({ width: size, height: size });
-                    window.setIcon(sizedIcon);
-                    console.log(`Applied ${size}x${size} icon to Windows taskbar`);
-                }
-                catch (e) {
-                    // Ignore resize errors
-                }
-            }
-            // Technique 3: Copy to app.ico in Electron executable directory
-            // This is a known workaround for Windows taskbar icon issues
+        const iconPath = await findSuitableIcon();
+        if (!iconPath)
+            return false;
+        console.log(`Applying multiple icon sizes from: ${iconPath}`);
+        // For ICO files, Electron will automatically extract different sizes
+        if (path.extname(iconPath).toLowerCase() === '.ico') {
+            window.setIcon(iconPath);
+            console.log('Set ICO icon with multiple sizes');
+            return true;
+        }
+        // For other formats, we need to manually resize
+        const sizes = [16, 24, 32, 48, 64, 128];
+        let baseIcon = electron_1.nativeImage.createFromPath(iconPath);
+        if (baseIcon.isEmpty()) {
+            console.warn('Icon is empty, cannot resize');
+            return false;
+        }
+        // Apply each size to the window
+        for (const size of sizes) {
             try {
-                // Also place a copy in the directory with the executable
-                const appExePath = process.execPath;
-                const appDir = path.dirname(appExePath);
-                const appIcoPath = path.join(appDir, 'app.ico');
-                // Make sure the source icon exists before copying
-                if (fs.existsSync(validIconPath)) {
-                    fs.copyFileSync(validIconPath, appIcoPath);
-                    console.log(`Copied icon to ${appIcoPath} (Windows taskbar workaround)`);
-                    // For packaged apps, also try copying to resources directory
-                    if (electron_1.app.isPackaged) {
-                        try {
-                            const resourcesDir = path.join(appDir, 'resources');
-                            if (fs.existsSync(resourcesDir)) {
-                                const resourcesIconPath = path.join(resourcesDir, 'app.ico');
-                                fs.copyFileSync(validIconPath, resourcesIconPath);
-                                console.log(`Also copied icon to ${resourcesIconPath}`);
-                            }
-                        }
-                        catch (copyErr) {
-                            console.log('Failed to copy to resources directory:', copyErr);
-                        }
-                    }
-                }
-                else {
-                    console.warn(`Source icon doesn't exist at ${validIconPath}, can't copy to exe directory`);
-                }
+                const resizedIcon = baseIcon.resize({ width: size, height: size });
+                window.setIcon(resizedIcon);
+                console.log(`Applied ${size}x${size} icon to Windows taskbar`);
             }
             catch (err) {
-                console.log('Could not apply app.ico executable directory workaround:', err);
+                console.error(`Failed to resize icon to ${size}x${size}:`, err);
             }
-            // Technique 4: Use same icon as taskbar overlay and clear it
-            // Sometimes this helps "refresh" the taskbar icon cache
-            try {
-                const smallIcon = icon.resize({ width: 16, height: 16 });
-                window.setOverlayIcon(smallIcon, 'Taskbar Icon Fix');
-                // Clear the overlay after a short delay
-                setTimeout(() => {
-                    window.setOverlayIcon(null, '');
-                }, 1000);
-                console.log('Applied and cleared taskbar overlay icon as refresh technique');
+        }
+        return true;
+    }
+    catch (error) {
+        console.error('Error applying multi-size icons:', error);
+        return false;
+    }
+}
+/**
+ * Fix 2: Set AppUserModelId for proper taskbar grouping
+ * This helps Windows associate the window with the correct application
+ */
+async function setAppUserModelId(window) {
+    try {
+        // Get application name from package.json or use default
+        let appId = 'com.electron.nodozesleepprevention';
+        try {
+            const packageJsonPath = path.join(electron_1.app.getAppPath(), 'package.json');
+            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+            if (packageJson.name) {
+                appId = packageJson.name.replace(/[^a-zA-Z0-9]/g, '.');
+                if (packageJson.author) {
+                    const author = typeof packageJson.author === 'string' ?
+                        packageJson.author :
+                        packageJson.author.name;
+                    appId = `com.${author.replace(/[^a-zA-Z0-9]/g, '.')}.${appId}`;
+                }
+                else {
+                    appId = `com.electron.${appId}`;
+                }
             }
-            catch (overlayError) {
-                console.log('Overlay icon technique failed:', overlayError);
-            }
-            console.log('All Windows taskbar icon fix techniques applied successfully');
-            return; // Exit function successfully
+        }
+        catch (e) {
+            console.error('Error reading package.json:', e);
+        }
+        window.setAppDetails({ appId });
+        console.log(`Set AppUserModelId to: ${appId}`);
+        return true;
+    }
+    catch (error) {
+        console.error('Error setting AppUserModelId:', error);
+        return false;
+    }
+}
+/**
+ * Fix 3: Copy icon to app.exe directory for direct access
+ * This is a known workaround for Windows taskbar icon issues
+ */
+async function copyIconToExeDir(window) {
+    if (!electron_1.app.isPackaged) {
+        console.log('Skipping copy-to-exe-dir fix in development mode');
+        return false;
+    }
+    try {
+        const iconPath = await findSuitableIcon();
+        if (!iconPath)
+            return false;
+        // Copy the icon to the app.exe directory as app.ico
+        // This is a known workaround for Windows taskbar icon issues
+        const appExePath = electron_1.app.getPath('exe');
+        const appExeDir = path.dirname(appExePath);
+        const appIcoPath = path.join(appExeDir, 'app.ico');
+        // Only copy if source and destination are different
+        if (path.normalize(iconPath) !== path.normalize(appIcoPath)) {
+            fs.copyFileSync(iconPath, appIcoPath);
+            console.log(`Copied icon to ${appIcoPath} (Windows taskbar workaround)`);
+            // Apply this icon to the window
+            window.setIcon(appIcoPath);
+            return true;
         }
         else {
-            console.warn(`Icon at ${validIconPath} is empty, trying other techniques`);
+            console.log('Icon is already in the exe directory, skipping copy');
+            return false;
         }
     }
     catch (error) {
-        console.error(`Failed to apply icon ${validIconPath}:`, error);
+        console.error('Error copying icon to exe directory:', error);
+        return false;
     }
-    // Only show this warning if we didn't find any icons earlier
-    if (!validIconPath) {
-        console.warn('Could not find any suitable icons for Windows taskbar');
+}
+/**
+ * Fix 4: Apply and clear overlay icons to refresh icon cache
+ * Sometimes this helps "refresh" the taskbar icon cache
+ */
+async function applyOverlayIconRefresh(window) {
+    try {
+        // Skip this technique - we want to avoid using overlay icons completely
+        // as we're using full icon replacement to indicate application state
+        console.log('Skipping overlay icon refresh technique - using full icon replacement instead');
+        return false;
+    }
+    catch (error) {
+        console.error('Error applying overlay icon refresh:', error);
+        return false;
     }
 }
 

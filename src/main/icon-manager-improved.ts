@@ -6,7 +6,7 @@
 import { app, BrowserWindow, nativeImage, Tray } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { fixWindowsTaskbarIcon } from './windows-taskbar-icon-fix';
+import { fixWindowsTaskbarIcon } from './windows-taskbar-icon-fix-improved';
 
 // Types for icon system
 export type IconState = 'active' | 'inactive';
@@ -93,32 +93,32 @@ const iconConfig: IconConfig = {
   fileNames: {
     active: {
       win32: {
-        tray: ['icon-active.ico', 'icon-active.png', 'eye-active.svg'],
-        app: ['icon-active.ico', 'icon.ico', 'icon-active.png', 'icon.png'],
-        overlay: ['icon-active.ico', 'icon-active.png', 'eye-active.svg']
+        tray: ['eye-active.ico', 'eye-active.svg', 'icon.png'],
+        app: ['eye-active.ico', 'eye-active.svg', 'icon.png'],
+        overlay: ['eye-active.ico', 'eye-active.svg']
       },
       darwin: {
-        tray: ['icon-active.svg', 'eye-active.svg', 'icon-active.png', 'icon.png'],
-        app: ['icon-active.svg', 'icon-active.icns', 'icon.icns', 'icon-active.png', 'icon.png']
+        tray: ['eye-active.svg', 'icon-active.svg', 'icon.png'],
+        app: ['eye-active.svg', 'icon-active.svg', 'icon.icns', 'icon.png']
       },
       linux: {
-        tray: ['icon-active.png', 'icon-active.svg', 'icon.png', 'icon.svg'],
-        app: ['icon-active.png', 'icon.png', 'icon-active.svg', 'icon.svg']
+        tray: ['eye-active.svg', 'icon-active.svg', 'icon.png', 'icon.svg'],
+        app: ['eye-active.svg', 'icon-active.svg', 'icon.png', 'icon.svg']
       }
     },
     inactive: {
       win32: {
-        tray: ['icon-inactive.ico', 'icon-inactive.png', 'eye-inactive.svg'],
-        app: ['icon-inactive.ico', 'icon.ico', 'icon-inactive.png', 'icon.png'],
-        overlay: ['icon-inactive.ico', 'icon-inactive.png', 'eye-inactive.svg']
+        tray: ['eye-inactive.ico', 'eye-inactive.svg', 'icon.png'],
+        app: ['eye-inactive.ico', 'eye-inactive.svg', 'icon.png'],
+        overlay: ['eye-inactive.ico', 'eye-inactive.svg']
       },
       darwin: {
-        tray: ['icon-inactive.svg', 'eye-inactive.svg', 'icon-inactive.png', 'icon.png'],
-        app: ['icon-inactive.svg', 'icon-inactive.icns', 'icon.icns', 'icon-inactive.png', 'icon.png']
+        tray: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png'],
+        app: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.icns', 'icon.png']
       },
       linux: {
-        tray: ['icon-inactive.png', 'icon-inactive.svg', 'icon.png', 'icon.svg'],
-        app: ['icon-inactive.png', 'icon.png', 'icon-inactive.svg', 'icon.svg']
+        tray: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png', 'icon.svg'],
+        app: ['eye-inactive.svg', 'icon-inactive.svg', 'icon.png', 'icon.svg']
       }
     }
   },
@@ -326,19 +326,14 @@ export class IconManager {
         mainWindow.setIcon(appIcon);
         console.log('Main window icon updated successfully');
         
-        // For Windows, also add an overlay icon when active
+        // For Windows, clear any overlay icon as we're using full icon replacement instead
         if (this.platform === 'win32') {
           try {
-            if (active) {
-              const overlayIcon = this.getOverlayIcon(active);
-              mainWindow.setOverlayIcon(overlayIcon, 'Sleep Prevention Active');
-              console.log('Set overlay icon successfully');
-            } else {
-              mainWindow.setOverlayIcon(null, '');
-              console.log('Cleared overlay icon');
-            }
+            // Remove any overlay icons - we're using full icon replacement instead
+            mainWindow.setOverlayIcon(null, '');
+            console.log('Cleared overlay icon (using full icon replacement for status indication)');
           } catch (overlayErr) {
-            console.error('Failed to set overlay icon:', overlayErr);
+            console.error('Failed to clear overlay icon:', overlayErr);
           }
         }
       } catch (appIconErr) {

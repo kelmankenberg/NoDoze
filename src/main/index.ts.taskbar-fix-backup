@@ -7,10 +7,8 @@ import { SleepPreventionManager, SleepPreventionMode } from './activity/SleepPre
 import { ActivitySimulatorFactory } from './activity/ActivitySimulatorFactory';
 import { ActivitySimulator } from './activity/ActivitySimulator';
 import { SettingsManager } from './SettingsManager';
-// Import icon utilities
+// Import the force taskbar icon update utility
 const { forceTaskbarIconUpdate } = require('./force-taskbar-icon-update');
-const { ensureIconsAvailable } = require('./ensure-icons-available');
-const { extractAndCopyIcons } = require('./extract-and-copy-icons');
 
 // Setup live reload for development
 if (process.env.NODE_ENV === 'development') {
@@ -678,34 +676,13 @@ function debugIconPath(iconPath: string) {
 }
 
 // This method will be called when Electron has finished initialization
-app.whenReady().then(async () => {
-  // Extract icons from asar and copy them to accessible locations (production only)
-  await extractAndCopyIcons();
-  
-  // Ensure icon files are available in production environment
-  await ensureIconsAvailable();
-  
+app.whenReady().then(() => {
   initializePlatform();
   createWindow();
   createTray();
   
   // Apply our special Windows taskbar icon fix
   if (process.platform === 'win32' && mainWindow) {
-    // Ensure icons are ready
-    if (app.isPackaged) {
-      console.log('Production build detected - applying extra icon setup for Windows');
-      
-      // Wait longer in production to ensure icons are properly extracted
-      setTimeout(async () => {
-        // Apply both icon utilities
-        await extractAndCopyIcons();
-        await ensureIconsAvailable();
-        
-        // Force icon update with aggressive techniques
-        await forceTaskbarIconUpdate(mainWindow, isPreventingSleep);
-      }, 1000);
-    }
-    
     fixWindowsTaskbarIcon(mainWindow);
     console.log('Applied Windows-specific taskbar icon fix');
   }
@@ -1000,8 +977,3 @@ ipcMain.handle('set-theme-preference', (_, theme: 'light' | 'dark') => {
     };
   }
 });
-
-// Application icon state management
-// Note: In production builds, the taskbar icon may not update correctly despite our efforts
-// This is a known limitation due to Windows' aggressive icon caching and Electron packaging
-// The system tray icon works reliably and serves as the primary visual indicator of app state

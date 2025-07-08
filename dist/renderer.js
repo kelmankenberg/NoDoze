@@ -1227,12 +1227,27 @@ body {
               box-shadow var(--theme-transition-time) ease;
 }
 
+/* Specific transitions for common elements */
+button, .button {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease,
+              box-shadow var(--theme-transition-time) ease,
+              opacity var(--theme-transition-time) ease;
+}
+
+input, select, textarea {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease;
+}
+
 /* Skip transitions on specific elements that shouldn't animate */
 .no-transition,
 .no-transition * {
   transition: none !important;
 }
-`, "",{"version":3,"sources":["webpack://./src/renderer/theme.css"],"names":[],"mappings":"AAAA;;;EAGE;;AAEF;EACE,wBAAwB;EACxB,6BAA6B;;EAE7B,qCAAqC;EACrC,uBAAuB;EACvB,qBAAqB;AACvB;;AAEA,0BAA0B;AAC1B;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,4CAA4C;EAC5C,6CAA6C;EAC7C,6CAA6C;;EAE7C,iCAAiC;EACjC,qCAAqC;EACrC,wCAAwC;EACxC,wCAAwC;EACxC,sCAAsC;EACtC,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,eAAe;AACf;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,qBAAqB,EAAE,qDAAqD;EAC5E,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,6CAA6C;EAC7C,8CAA8C;EAC9C,8CAA8C;;EAE9C,iCAAiC;EACjC,2CAA2C;EAC3C,+CAA+C;EAC/C,6CAA6C;EAC7C,4CAA4C;EAC5C,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,qEAAqE;AACrE;EACE;qDACmD;AACrD;;AAEA;EACE;;;0DAGwD;AAC1D;;AAEA,iEAAiE;AACjE;;EAEE,2BAA2B;AAC7B","sourcesContent":["/**\r\n * NoDoze Theme System\r\n * This file defines CSS variables for light and dark themes\r\n */\r\n\r\n:root {\r\n  /* Animation durations */\r\n  --theme-transition-time: 0.3s;\r\n  \r\n  /* Default to light theme variables */\r\n  --bg-title-bar: #e0e0e0;\r\n  --text-title: #333333;\r\n}\r\n\r\n/* Light Theme (default) */\r\n.theme-light {\r\n  /* Background colors */\r\n  --bg-primary: #f5f5f5;\r\n  --bg-secondary: #ffffff;\r\n  --bg-tertiary: #f0f0f0;\r\n  --bg-title-bar: #e0e0e0;\r\n  --bg-header: #2c3e50;\r\n  --bg-tooltip: rgba(97, 97, 97, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #333333;\r\n  --text-secondary: #666666;\r\n  --text-tertiary: #999999;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #333333;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #3498db;\r\n  --accent-secondary: #2ecc71;\r\n  --accent-danger: #e74c3c;\r\n  --accent-warning: #f39c12;\r\n  --accent-info: #1abc9c;\r\n  \r\n  /* Border colors */\r\n  --border-light: #dddddd;\r\n  --border-medium: #cccccc;\r\n  --border-dark: #999999;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #f0f0f0;\r\n  --button-bg-hover: #e0e0e0;\r\n  --button-bg-active: #d0d0d0;\r\n  --button-text: #333333;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #2ecc71;\r\n  --toggle-inactive-bg: #e74c3c;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #cccccc;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(0, 0, 0, 0.05);\r\n  --mode-toggle-border: rgba(0, 0, 0, 0.1);\r\n  --mode-toggle-track: rgba(0, 0, 0, 0.08);\r\n  --mode-toggle-text: rgba(0, 0, 0, 0.6);\r\n  --mode-toggle-thumb-gradient-start: #667eea;\r\n  --mode-toggle-thumb-gradient-end: #764ba2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #eeeeee;\r\n  --progress-fill: #3498db;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n/* Dark Theme */\r\n.theme-dark {\r\n  /* Background colors */\r\n  --bg-primary: #1e1e2e;\r\n  --bg-secondary: #282838;\r\n  --bg-tertiary: #313145;\r\n  --bg-element: #363652; /* New variable for elements that need to stand out */\r\n  --bg-title-bar: #181825;\r\n  --bg-header: #181825;\r\n  --bg-tooltip: rgba(42, 42, 62, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #e0e0e0;\r\n  --text-secondary: #b0b0b0;\r\n  --text-tertiary: #808080;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #ffffff;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #61afef;\r\n  --accent-secondary: #98c379;\r\n  --accent-danger: #e06c75;\r\n  --accent-warning: #e5c07b;\r\n  --accent-info: #56b6c2;\r\n  \r\n  /* Border colors */\r\n  --border-light: #3a3a4a;\r\n  --border-medium: #4a4a5a;\r\n  --border-dark: #5a5a6a;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #3a3a4a;\r\n  --button-bg-hover: #4a4a5a;\r\n  --button-bg-active: #5a5a6a;\r\n  --button-text: #e0e0e0;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #98c379;\r\n  --toggle-inactive-bg: #e06c75;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #3a3a4a;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(255, 255, 255, 0.15);\r\n  --mode-toggle-border: rgba(255, 255, 255, 0.25);\r\n  --mode-toggle-track: rgba(255, 255, 255, 0.2);\r\n  --mode-toggle-text: rgba(255, 255, 255, 0.9);\r\n  --mode-toggle-thumb-gradient-start: #8a7efa;\r\n  --mode-toggle-thumb-gradient-end: #a66dc2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #3a3a4a;\r\n  --progress-fill: #61afef;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.7);\r\n}\r\n\r\n/* Apply transition to all themed elements for smooth theme changes */\r\nbody {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease;\r\n}\r\n\r\n* {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Skip transitions on specific elements that shouldn't animate */\r\n.no-transition,\r\n.no-transition * {\r\n  transition: none !important;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/renderer/theme.css"],"names":[],"mappings":"AAAA;;;EAGE;;AAEF;EACE,wBAAwB;EACxB,6BAA6B;;EAE7B,qCAAqC;EACrC,uBAAuB;EACvB,qBAAqB;AACvB;;AAEA,0BAA0B;AAC1B;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,4CAA4C;EAC5C,6CAA6C;EAC7C,6CAA6C;;EAE7C,iCAAiC;EACjC,qCAAqC;EACrC,wCAAwC;EACxC,wCAAwC;EACxC,sCAAsC;EACtC,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,eAAe;AACf;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,qBAAqB,EAAE,qDAAqD;EAC5E,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,6CAA6C;EAC7C,8CAA8C;EAC9C,8CAA8C;;EAE9C,iCAAiC;EACjC,2CAA2C;EAC3C,+CAA+C;EAC/C,6CAA6C;EAC7C,4CAA4C;EAC5C,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,qEAAqE;AACrE;EACE;qDACmD;AACrD;;AAEA;EACE;;;0DAGwD;AAC1D;;AAEA,6CAA6C;AAC7C;EACE;;;;uDAIqD;AACvD;;AAEA;EACE;;4DAE0D;AAC5D;;AAEA,iEAAiE;AACjE;;EAEE,2BAA2B;AAC7B","sourcesContent":["/**\r\n * NoDoze Theme System\r\n * This file defines CSS variables for light and dark themes\r\n */\r\n\r\n:root {\r\n  /* Animation durations */\r\n  --theme-transition-time: 0.3s;\r\n  \r\n  /* Default to light theme variables */\r\n  --bg-title-bar: #e0e0e0;\r\n  --text-title: #333333;\r\n}\r\n\r\n/* Light Theme (default) */\r\n.theme-light {\r\n  /* Background colors */\r\n  --bg-primary: #f5f5f5;\r\n  --bg-secondary: #ffffff;\r\n  --bg-tertiary: #f0f0f0;\r\n  --bg-title-bar: #e0e0e0;\r\n  --bg-header: #2c3e50;\r\n  --bg-tooltip: rgba(97, 97, 97, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #333333;\r\n  --text-secondary: #666666;\r\n  --text-tertiary: #999999;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #333333;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #3498db;\r\n  --accent-secondary: #2ecc71;\r\n  --accent-danger: #e74c3c;\r\n  --accent-warning: #f39c12;\r\n  --accent-info: #1abc9c;\r\n  \r\n  /* Border colors */\r\n  --border-light: #dddddd;\r\n  --border-medium: #cccccc;\r\n  --border-dark: #999999;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #f0f0f0;\r\n  --button-bg-hover: #e0e0e0;\r\n  --button-bg-active: #d0d0d0;\r\n  --button-text: #333333;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #2ecc71;\r\n  --toggle-inactive-bg: #e74c3c;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #cccccc;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(0, 0, 0, 0.05);\r\n  --mode-toggle-border: rgba(0, 0, 0, 0.1);\r\n  --mode-toggle-track: rgba(0, 0, 0, 0.08);\r\n  --mode-toggle-text: rgba(0, 0, 0, 0.6);\r\n  --mode-toggle-thumb-gradient-start: #667eea;\r\n  --mode-toggle-thumb-gradient-end: #764ba2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #eeeeee;\r\n  --progress-fill: #3498db;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n/* Dark Theme */\r\n.theme-dark {\r\n  /* Background colors */\r\n  --bg-primary: #1e1e2e;\r\n  --bg-secondary: #282838;\r\n  --bg-tertiary: #313145;\r\n  --bg-element: #363652; /* New variable for elements that need to stand out */\r\n  --bg-title-bar: #181825;\r\n  --bg-header: #181825;\r\n  --bg-tooltip: rgba(42, 42, 62, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #e0e0e0;\r\n  --text-secondary: #b0b0b0;\r\n  --text-tertiary: #808080;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #ffffff;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #61afef;\r\n  --accent-secondary: #98c379;\r\n  --accent-danger: #e06c75;\r\n  --accent-warning: #e5c07b;\r\n  --accent-info: #56b6c2;\r\n  \r\n  /* Border colors */\r\n  --border-light: #3a3a4a;\r\n  --border-medium: #4a4a5a;\r\n  --border-dark: #5a5a6a;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #3a3a4a;\r\n  --button-bg-hover: #4a4a5a;\r\n  --button-bg-active: #5a5a6a;\r\n  --button-text: #e0e0e0;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #98c379;\r\n  --toggle-inactive-bg: #e06c75;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #3a3a4a;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(255, 255, 255, 0.15);\r\n  --mode-toggle-border: rgba(255, 255, 255, 0.25);\r\n  --mode-toggle-track: rgba(255, 255, 255, 0.2);\r\n  --mode-toggle-text: rgba(255, 255, 255, 0.9);\r\n  --mode-toggle-thumb-gradient-start: #8a7efa;\r\n  --mode-toggle-thumb-gradient-end: #a66dc2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #3a3a4a;\r\n  --progress-fill: #61afef;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.7);\r\n}\r\n\r\n/* Apply transition to all themed elements for smooth theme changes */\r\nbody {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease;\r\n}\r\n\r\n* {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Specific transitions for common elements */\r\nbutton, .button {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease,\r\n              opacity var(--theme-transition-time) ease;\r\n}\r\n\r\ninput, select, textarea {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Skip transitions on specific elements that shouldn't animate */\r\n.no-transition,\r\n.no-transition * {\r\n  transition: none !important;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -29688,6 +29703,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ThemeProvider = exports.useTheme = void 0;
 const jsx_runtime_1 = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const electron_1 = __webpack_require__(/*! electron */ "electron");
 // Create context with default values
 const ThemeContext = (0, react_1.createContext)({
     theme: 'light',
@@ -29699,15 +29715,54 @@ const useTheme = () => (0, react_1.useContext)(ThemeContext);
 exports.useTheme = useTheme;
 // Provider component to wrap around the app
 const ThemeProvider = ({ children, initialTheme = 'light' }) => {
-    const [theme, setTheme] = (0, react_1.useState)(initialTheme);
+    const [theme, setThemeState] = (0, react_1.useState)(initialTheme);
+    console.log('ThemeProvider initialized with initialTheme:', initialTheme);
+    // Load saved theme from settings on mount
+    (0, react_1.useEffect)(() => {
+        const loadSavedTheme = async () => {
+            try {
+                console.log('ThemeContext: Loading saved theme from settings...');
+                const savedTheme = await electron_1.ipcRenderer.invoke('get-theme-preference');
+                console.log('ThemeContext: Received saved theme:', savedTheme);
+                if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+                    console.log(`ThemeContext: Setting theme to saved value: ${savedTheme}`);
+                    setThemeState(savedTheme);
+                }
+                else {
+                    console.log(`ThemeContext: Using default theme: ${initialTheme} (saved theme was: ${savedTheme})`);
+                }
+            }
+            catch (error) {
+                console.error('ThemeContext: Failed to load theme preference:', error);
+            }
+        };
+        loadSavedTheme();
+    }, [initialTheme]);
     // Apply theme class to HTML element when theme changes
     (0, react_1.useEffect)(() => {
+        console.log(`ThemeContext: Applying theme class: theme-${theme}`);
         document.documentElement.classList.remove('theme-light', 'theme-dark');
         document.documentElement.classList.add(`theme-${theme}`);
     }, [theme]);
+    // Set theme with persistence
+    const setTheme = async (newTheme) => {
+        console.log(`ThemeContext: Setting theme to: ${newTheme}`);
+        setThemeState(newTheme);
+        // Save theme preference to settings
+        try {
+            console.log(`ThemeContext: Saving theme preference: ${newTheme}`);
+            const result = await electron_1.ipcRenderer.invoke('set-theme-preference', newTheme);
+            console.log('ThemeContext: Theme save result:', result);
+        }
+        catch (error) {
+            console.error('ThemeContext: Failed to save theme preference:', error);
+        }
+    };
     // Toggle between light and dark themes
     const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        console.log(`ThemeContext: Toggling theme from ${theme} to ${newTheme}`);
+        setTheme(newTheme);
     };
     return ((0, jsx_runtime_1.jsx)(ThemeContext.Provider, { value: { theme, toggleTheme, setTheme }, children: children }));
 };

@@ -53,7 +53,7 @@ This document defines the requirements for the taskbar and system tray icon func
 - The application's taskbar icon should match the system tray icon state:
   - Inactive state when sleep prevention is disabled
   - Active state when sleep prevention is enabled
-- On Windows, an additional overlay icon should be shown when active for better visibility
+- The entire icon changes to reflect the application state, not just an overlay badge
 
 #### 2.2 Windows-Specific Requirements
 - Implement specialized fixes to address known Windows taskbar icon issues:
@@ -105,7 +105,18 @@ This document defines the requirements for the taskbar and system tray icon func
   1. Apply multiple icon sizes (16x16, 24x24, 32x32, 48x48, 64x64)
   2. Copy icon to app.exe directory for direct access
   3. Use SetAppUserModelId for proper taskbar grouping
-  4. Apply and clear overlay icons to refresh icon cache
+  4. Completely replace the taskbar icon to reflect application status
+  5. Apply aggressive refresh techniques to overcome Windows icon caching:
+     - Direct icon replacement via setIcon
+     - Window visibility toggling (hide/show)
+     - Window size manipulation
+     - Window title temporary change
+     - Forced timeout between operations
+  6. Special production build enhancements:
+     - Runtime icon file copying to multiple locations
+     - Robust path resolution in packaged applications
+     - Enhanced logging for production diagnostics
+     - Multiple fallback mechanisms for icon loading
 
 ### 3. Tray Menu Management
 
@@ -122,7 +133,7 @@ This document defines the requirements for the taskbar and system tray icon func
 ### 1. Windows
 - Use .ico format for both taskbar and tray icons
 - Apply special taskbar icon fixes
-- Support overlay icons for additional status indication
+- Change the entire taskbar icon to indicate status, not just apply overlays
 
 ### 2. macOS
 - Use template images for proper Dark Mode support
@@ -208,6 +219,16 @@ The application currently implements icon management through the following compo
    - `createAppIcon(active)`: Creates the appropriate taskbar/dock icon based on active state
    - `updateAppIcons(window, tray, active)`: Updates both tray and taskbar icons when state changes
 
+2. **force-taskbar-icon-update.js**:
+   - `forceTaskbarIconUpdate(window, active)`: Applies aggressive Windows taskbar icon refresh techniques
+   - Handles both development and production environments
+   - Implements multiple icon refresh techniques to overcome Windows caching
+
+3. **ensure-icons-available.js**:
+   - `ensureIconsAvailable()`: Ensures icon files are available in the production environment
+   - Copies icon files to expected locations in the packaged application
+   - Provides robust fallback mechanisms for production builds
+
 2. **Icon Loading Strategy**:
    - Platform detection determines the appropriate icon format to use
    - Environment detection (development vs. production) determines icon paths
@@ -230,10 +251,67 @@ The application currently implements icon management through the following compo
 - [x] 1. Review and document existing icon resources in the project
 - [x] 2. Implement consistent icon loading system for all platforms
 - [x] 3. Refine Windows taskbar icon fix functionality
-- [ ] 4. Enhance tray menu organization and functionality
-- [ ] 5. Add proper error handling and fallback mechanisms
-- [ ] 6. Test icon behavior across all supported platforms
-- [ ] 7. Optimize icon resolution for different display densities
-- [ ] 8. Connect icon state to application status events
-- [ ] 9. Implement theme-aware icons (if applicable)
-- [ ] 10. Performance optimization for icon loading and updates
+- [x] 4. Enhance tray menu organization and functionality
+- [x] 5. Add proper error handling and fallback mechanisms
+- [x] 6. Test icon behavior across all supported platforms (Windows)
+- [x] 7. Implement robust system tray icon functionality in production builds
+- [x] 8. Optimize icon resolution for different display densities
+- [x] 9. Document limitations of Windows taskbar icon in production
+- [ ] 10. Implement theme-aware icons (if applicable)
+- [ ] 11. Performance optimization for icon loading and updates
+- [ ] 12. Test on macOS and Linux platforms
+
+## Production Build Icon Fixes
+
+Special attention has been given to ensure that icons work correctly in production builds where the application is packaged with electron-builder.
+
+### Challenges in Production Builds
+
+1. **ASAR packaging:** In production, most files are packaged into an ASAR archive, making direct file access more difficult
+2. **Icon caching:** Windows aggressively caches taskbar icons, making it difficult to update them
+3. **Resource paths:** File paths differ significantly between development and production environments
+4. **Icon extraction:** Icons need to be extracted from ASAR or included as extra resources
+
+### Solutions Implemented
+
+1. **Icon extraction utility:** `extract-and-copy-icons.js` extracts icons from ASAR and copies them to accessible locations
+2. **Multiple location checks:** The icon management system checks multiple possible locations for icons
+3. **Runtime icon copying:** Icons are copied to the executable directory at runtime for direct access
+4. **Electron-builder configuration:** The build configuration has been updated to include icons as extraResources
+5. **Aggressive taskbar refresh:** Multiple techniques are applied to force Windows to refresh the taskbar icon
+6. **Build preparation script:** `prepare-icons-for-build.js` prepares all icons before packaging
+7. **Comprehensive logging:** Enhanced logging helps diagnose issues in production builds
+
+### Startup Process for Production
+
+1. Extract icons from ASAR archive to accessible locations
+2. Copy icons to executable directory for direct access
+3. Initialize the application with the correct initial icon
+4. Apply special Windows taskbar icon fixes
+5. When toggling sleep prevention state:
+   - Update both tray and taskbar icons
+   - Force Windows to refresh the taskbar icon using multiple techniques
+
+This comprehensive approach ensures that both the tray and taskbar icons correctly reflect the application's state in production builds.
+
+## Known Limitations
+
+### Windows Taskbar Icon in Production Builds
+
+While the system tray icon correctly changes to reflect the application's active/inactive state in both development and production builds, the Windows taskbar icon may not update properly in production builds. This is due to Windows' aggressive icon caching mechanisms and limitations in how Electron applications can influence the Windows taskbar.
+
+#### Technical Background
+
+1. **Windows Icon Caching:** Windows caches application icons aggressively to improve performance.
+2. **Electron Packaging:** When packaged with electron-builder, resources are stored in ASAR archives which complicates direct file access.
+3. **Shell Integration:** Windows associates the taskbar icon with the application executable at startup and resists runtime changes.
+
+#### Alternative Visual Indicators
+
+Since the system tray icon works reliably, users can rely on it as the primary visual indicator of the application's current state. The tray icon:
+
+1. Shows active/inactive state with distinct visuals
+2. Provides a tooltip indicating the current state
+3. Offers immediate access to app controls via the context menu
+
+This approach aligns with other system tray utilities where the system tray icon is the primary interface for state indication and control.

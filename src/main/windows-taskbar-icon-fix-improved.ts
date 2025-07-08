@@ -100,43 +100,40 @@ async function findSuitableIcon(): Promise<string | null> {
   if (app.isPackaged) {
     // Paths for packaged app (production)
     possibleIconPaths = [
-      // Check resources/build/icons/win folder first (typical for packaged app)
+      // Check for eye icons first in win folder (our preferred icons)
+      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'eye-active.ico'),
+      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'eye-inactive.ico'),
+      // Then check for eye icons in build folder
+      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'eye-active.ico'),
+      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'eye-inactive.ico'),
+      // Try app.ico in root as it's a common location
+      path.join(path.dirname(app.getPath('exe')), 'app.ico'),
+      // Check standard icon locations as fallbacks
       path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon.ico'),
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon-active.ico'),
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icons', 'win', 'icon-inactive.ico'),
-      // Try resources/build as alternative
       path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icon.ico'),
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icon-active.ico'),
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'build', 'icon-inactive.ico'),
-      // Try resources/app/build as another alternative
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icon.ico'),
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'app', 'build', 'icon-active.ico'),
-      // Try direct resources directory icons
-      path.join(path.dirname(app.getPath('exe')), 'resources', 'icon.ico'),
       // Try public folder for fallbacks
+      path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'eye-active.svg'),
       path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.png'),
       path.join(path.dirname(app.getPath('exe')), 'resources', 'public', 'icon.svg'),
-      // Try root folder as last resort
-      path.join(path.dirname(app.getPath('exe')), 'icon.ico')
     ];
   } else {
     // Paths for development
     possibleIconPaths = [
-      // Check the build/icons/win folder first (best for Windows)
+      // Check for eye icons first in win folder (our preferred icons)
+      path.join(app.getAppPath(), 'build', 'icons', 'win', 'eye-active.ico'),
+      path.join(app.getAppPath(), 'build', 'icons', 'win', 'eye-inactive.ico'),
+      // Then check for eye icons in build folder
+      path.join(app.getAppPath(), 'build', 'eye-active.ico'),
+      path.join(app.getAppPath(), 'build', 'eye-inactive.ico'),
+      // Try app.ico in root as it's a common location
+      path.join(app.getAppPath(), 'app.ico'),
+      // Then check standard icon locations as fallbacks
       path.join(app.getAppPath(), 'build', 'icons', 'win', 'icon.ico'),
-      path.join(app.getAppPath(), 'build', 'icons', 'win', 'icon-active.ico'),
-      path.join(app.getAppPath(), 'build', 'icons', 'win', 'icon-inactive.ico'),
-      // Then try the standalone icons in build folder
       path.join(app.getAppPath(), 'build', 'icon.ico'),
-      path.join(app.getAppPath(), 'build', 'icon-active.ico'),
-      path.join(app.getAppPath(), 'build', 'icon-inactive.ico'),
       // Then try public folder
+      path.join(app.getAppPath(), 'public', 'eye-active.svg'),
       path.join(app.getAppPath(), 'public', 'icon.png'),
-      path.join(app.getAppPath(), 'public', 'icon-active.svg'),
       path.join(app.getAppPath(), 'public', 'icon.svg'),
-      // Then try app root
-      path.join(app.getAppPath(), 'icon.ico'),
-      path.join(app.getAppPath(), 'app.ico')
     ];
   }
   
@@ -282,28 +279,9 @@ async function copyIconToExeDir(window: BrowserWindow): Promise<boolean> {
  */
 async function applyOverlayIconRefresh(window: BrowserWindow): Promise<boolean> {
   try {
-    const iconPath = await findSuitableIcon();
-    if (!iconPath) return false;
-    
-    // Technique 4: Use same icon as taskbar overlay and clear it
-    // Sometimes this helps "refresh" the taskbar icon cache
-    console.log('Applying overlay icon refresh technique');
-    
-    try {
-      const smallIcon = nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 });
-      if (!smallIcon.isEmpty()) {
-        // Set and then clear the overlay icon
-        window.setOverlayIcon(smallIcon, 'Taskbar Icon Fix');
-        setTimeout(() => {
-          window.setOverlayIcon(null, '');
-        }, 1000);
-        console.log('Applied and cleared taskbar overlay icon as refresh technique');
-        return true;
-      }
-    } catch (err) {
-      console.error('Error applying overlay icon refresh:', err);
-    }
-    
+    // Skip this technique - we want to avoid using overlay icons completely
+    // as we're using full icon replacement to indicate application state
+    console.log('Skipping overlay icon refresh technique - using full icon replacement instead');
     return false;
   } catch (error) {
     console.error('Error applying overlay icon refresh:', error);
