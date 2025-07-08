@@ -79,11 +79,11 @@ html, body {
 }
 
 .title-bar-minimize:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .title-bar-corner:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .title-bar-close:hover {
@@ -164,15 +164,15 @@ html, body {
   border: none;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
-  background-color: var(--toggle-inactive-bg);
-  color: var(--toggle-inactive-text);
+  background-color: #e74c3c; /* Red when inactive */
+  color: white;
   box-shadow: var(--shadow-medium);
   margin-bottom: 0.75rem;
   letter-spacing: 0.5px;
 }
 .activate-button.active {
-  background-color: var(--toggle-active-bg);
-  color: var(--toggle-active-text);
+  background-color: #2ecc71; /* Green when active */
+  color: white;
 }
 
 .status-text {

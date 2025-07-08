@@ -164,7 +164,7 @@ const App: React.FC = () => {
   const statusColors = getStatusColors();
   
   return (
-    <div className="app-container">
+    <div className="app-container theme-light">
       <div className="fixed-header-container">
         <TitleBar title="NoDoze" />
         {/* <header className="app-header">

@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles.css';
 
+// Apply theme class to HTML element
+document.documentElement.classList.add('theme-light');
+
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
