@@ -83,6 +83,7 @@
   --bg-primary: #1e1e2e;
   --bg-secondary: #282838;
   --bg-tertiary: #313145;
+  --bg-element: #363652; /* New variable for elements that need to stand out */
   --bg-title-bar: #181825;
   --bg-header: #181825;
   --bg-tooltip: rgba(42, 42, 62, 0.9);
@@ -127,10 +128,10 @@
   --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);
   
   /* Sleep prevention mode toggle */
-  --mode-toggle-bg: rgba(255, 255, 255, 0.05);
-  --mode-toggle-border: rgba(255, 255, 255, 0.1);
-  --mode-toggle-track: rgba(255, 255, 255, 0.08);
-  --mode-toggle-text: rgba(255, 255, 255, 0.8);
+  --mode-toggle-bg: rgba(255, 255, 255, 0.15);
+  --mode-toggle-border: rgba(255, 255, 255, 0.25);
+  --mode-toggle-track: rgba(255, 255, 255, 0.2);
+  --mode-toggle-text: rgba(255, 255, 255, 0.9);
   --mode-toggle-thumb-gradient-start: #8a7efa;
   --mode-toggle-thumb-gradient-end: #a66dc2;
   

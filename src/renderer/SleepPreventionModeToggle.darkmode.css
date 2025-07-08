@@ -1,0 +1,29 @@
+/* Dark mode specific overrides for Sleep Prevention Mode Toggle */
+.theme-dark .sleep-mode-toggle {
+  background: var(--bg-element);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.theme-dark .sleep-mode-toggle:hover {
+  background: var(--bg-element);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-dark .toggle-track {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Make text more visible in dark mode */
+.theme-dark .toggle-option {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .toggle-option:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-dark .toggle-option.hovered:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+}

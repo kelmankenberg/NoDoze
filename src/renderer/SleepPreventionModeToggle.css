@@ -14,9 +14,22 @@
   color: #333;
 }
 
+/* Dark theme specific style for better visibility */
+.theme-dark .sleep-mode-toggle {
+  background: #363652;  /* Match the new --bg-element variable */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+}
+
 .sleep-mode-toggle:hover {
   background: rgba(0, 0, 0, 0.08);
   border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme hover state */
+.theme-dark .sleep-mode-toggle:hover {
+  background: #3e3e5e;  /* Slightly lighter than the base color */
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .sleep-mode-toggle.disabled {
@@ -67,6 +80,12 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
+}
+
+/* Dark theme toggle track */
+.theme-dark .toggle-track {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Animated Thumb */
@@ -131,6 +150,19 @@
 
 .toggle-option.hovered:not(.active) {
   background: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark theme toggle options */
+.theme-dark .toggle-option {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .toggle-option:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-dark .toggle-option.hovered:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .toggle-option:disabled {
