@@ -39,9 +39,22 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
   color: #333;
 }
 
+/* Dark theme specific style for better visibility */
+.theme-dark .sleep-mode-toggle {
+  background: #363652;  /* Match the new --bg-element variable */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+}
+
 .sleep-mode-toggle:hover {
   background: rgba(0, 0, 0, 0.08);
   border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme hover state */
+.theme-dark .sleep-mode-toggle:hover {
+  background: #3e3e5e;  /* Slightly lighter than the base color */
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .sleep-mode-toggle.disabled {
@@ -92,6 +105,12 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
+}
+
+/* Dark theme toggle track */
+.theme-dark .toggle-track {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Animated Thumb */
@@ -156,6 +175,19 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
 
 .toggle-option.hovered:not(.active) {
   background: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark theme toggle options */
+.theme-dark .toggle-option {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .toggle-option:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-dark .toggle-option.hovered:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .toggle-option:disabled {
@@ -396,7 +428,62 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Sleep Prevention Mode Toggle Styles
     animation: none;
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/renderer/SleepPreventionModeToggle.css"],"names":[],"mappings":"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","sourcesContent":["/* Sleep Prevention Mode Toggle Styles */\r\n@import './theme.css';\r\n\r\n.sleep-mode-toggle {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  padding: 20px;\r\n  background: rgba(0, 0, 0, 0.05);\r\n  border: 1px solid rgba(0, 0, 0, 0.1);\r\n  border-radius: 16px;\r\n  backdrop-filter: blur(10px);\r\n  transition: all 0.3s ease;\r\n  color: #333;\r\n}\r\n\r\n.sleep-mode-toggle:hover {\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-color: rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.sleep-mode-toggle.disabled {\r\n  opacity: 0.6;\r\n  pointer-events: none;\r\n}\r\n\r\n/* Header */\r\n.toggle-header {\r\n  text-align: center;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.toggle-title {\r\n  font-size: 16px;\r\n  font-weight: 600;\r\n  color: var(--text-primary);\r\n  margin: 0 0 4px 0;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n.toggle-subtitle {\r\n  font-size: 12px;\r\n  color: var(--text-secondary);\r\n  margin: 0;\r\n  font-weight: 400;\r\n}\r\n\r\n/* Toggle Container */\r\n.toggle-container {\r\n  display: flex;\r\n  gap: 16px;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n/* Toggle Track */\r\n.toggle-track {\r\n  position: relative;\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-radius: 24px;\r\n  padding: 6px;\r\n  border: 1px solid rgba(0, 0, 0, 0.15);\r\n  height: 80px;\r\n  width: 240px;\r\n  min-width: 240px;\r\n  max-width: 240px;\r\n  flex-shrink: 0;\r\n  display: flex;\r\n  flex-direction: row;\r\n}\r\n\r\n/* Animated Thumb */\r\n.toggle-thumb {\r\n  position: absolute;\r\n  top: 6px;\r\n  left: 6px;\r\n  bottom: 6px;\r\n  width: 76px;\r\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\r\n  border-radius: 18px;\r\n  box-shadow: \r\n    0 4px 12px rgba(102, 126, 234, 0.3),\r\n    0 2px 4px rgba(0, 0, 0, 0.1);\r\n  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;\r\n  z-index: 1;\r\n  transform: translateX(0);\r\n}\r\n\r\n.toggle-thumb.transitioning {\r\n  box-shadow: \r\n    0 6px 20px rgba(102, 126, 234, 0.4),\r\n    0 4px 8px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n/* Toggle Options */\r\n.toggle-options {\r\n  display: flex;\r\n  flex-direction: row;\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  z-index: 2;\r\n}\r\n\r\n.toggle-option {\r\n  flex: 1;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  border-radius: 16px;\r\n  padding: 12px 8px;\r\n  transition: all 0.2s ease;\r\n  color: rgba(0, 0, 0, 0.6);\r\n  position: relative;\r\n  min-width: 54px;\r\n}\r\n\r\n.toggle-option:hover {\r\n  color: rgba(0, 0, 0, 0.8);\r\n  transform: scale(1.05);\r\n}\r\n\r\n.toggle-option.active {\r\n  color: #ffffff;\r\n  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);\r\n}\r\n\r\n.toggle-option.hovered:not(.active) {\r\n  background: rgba(0, 0, 0, 0.05);\r\n}\r\n\r\n.toggle-option:disabled {\r\n  cursor: not-allowed;\r\n  opacity: 0.5;\r\n}\r\n\r\n.option-icon {\r\n  font-size: 18px;\r\n  margin-bottom: 4px;\r\n  line-height: 1;\r\n  transition: transform 0.2s ease;\r\n}\r\n\r\n.toggle-option:hover .option-icon {\r\n  transform: scale(1.1);\r\n}\r\n\r\n.toggle-option.active .option-icon {\r\n  transform: scale(1.15);\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));\r\n}\r\n\r\n.option-label {\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  text-transform: uppercase;\r\n  line-height: 1.2;\r\n}\r\n\r\n/* Mode Details */\r\n.mode-details {\r\n  flex: 1;\r\n  position: relative;\r\n  min-height: 60px;\r\n}\r\n\r\n.mode-detail {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  opacity: 0;\r\n  transform: translateY(10px);\r\n  transition: all 0.3s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 16px;\r\n  background: rgba(255, 255, 255, 0.05);\r\n  border-radius: 12px;\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.mode-detail.active {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n  background: rgba(255, 255, 255, 0.08);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n.detail-icon {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));\r\n}\r\n\r\n.detail-text {\r\n  flex: 1;\r\n}\r\n\r\n.detail-label {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #ffffff;\r\n  margin-bottom: 2px;\r\n}\r\n\r\n.detail-description {\r\n  font-size: 11px;\r\n  color: rgba(255, 255, 255, 0.7);\r\n  line-height: 1.3;\r\n}\r\n\r\n/* Status Indicator */\r\n.toggle-status {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin-top: 8px;\r\n}\r\n\r\n.status-indicator {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  padding: 6px 12px;\r\n  border-radius: 20px;\r\n  background: rgba(255, 255, 255, 0.1);\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.status-dot {\r\n  width: 8px;\r\n  height: 8px;\r\n  border-radius: 50%;\r\n  background: #4ade80;\r\n  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);\r\n  animation: pulse 2s infinite;\r\n}\r\n\r\n.status-text {\r\n  font-weight: 500;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n/* Mode-specific status colors */\r\n.status-indicator.basic .status-dot {\r\n  background: #60a5fa;\r\n  box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);\r\n}\r\n\r\n.status-indicator.full .status-dot {\r\n  background: #a78bfa;\r\n  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);\r\n}\r\n\r\n.status-indicator.activity-only .status-dot {\r\n  background: #fbbf24;\r\n  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);\r\n}\r\n\r\n/* Animations */\r\n@keyframes pulse {\r\n  0%, 100% {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n  50% {\r\n    opacity: 0.7;\r\n    transform: scale(1.1);\r\n  }\r\n}\r\n\r\n/* Responsive Design */\r\n@media (max-width: 400px) {\r\n  .sleep-mode-toggle {\r\n    padding: 16px;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-container {\r\n    flex-direction: column;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-track {\r\n    width: 100%;\r\n    height: 60px;\r\n    flex-direction: row;\r\n    min-height: auto;\r\n  }\r\n  \r\n  .toggle-thumb {\r\n    top: 6px;\r\n    bottom: 6px;\r\n    left: 6px;\r\n    /* width: calc(33.33% - 4px); */\r\n    height: auto;\r\n    transform: translateX(0);\r\n  }\r\n  \r\n  .toggle-options {\r\n    flex-direction: row;\r\n    width: 100%;\r\n    height: 100%;\r\n  }\r\n  \r\n  .toggle-option {\r\n    min-height: auto;\r\n    padding: 8px 4px;\r\n  }\r\n  \r\n  .option-icon {\r\n    font-size: 16px;\r\n  }\r\n  \r\n  .option-label {\r\n    font-size: 9px;\r\n  }\r\n}\r\n\r\n/* Accessibility */\r\n.toggle-option:focus {\r\n  outline: 2px solid rgba(255, 255, 255, 0.5);\r\n  outline-offset: 2px;\r\n}\r\n\r\n.toggle-option:focus-visible {\r\n  outline: 2px solid #667eea;\r\n  outline-offset: 2px;\r\n}\r\n\r\n/* High contrast mode support */\r\n@media (prefers-contrast: high) {\r\n  .sleep-mode-toggle {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n  \r\n  .toggle-track {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.9);\r\n  }\r\n  \r\n  .toggle-option {\r\n    color: #ffffff;\r\n  }\r\n  \r\n  .mode-detail {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n}\r\n\r\n/* Reduced motion support */\r\n@media (prefers-reduced-motion: reduce) {\r\n  .toggle-thumb,\r\n  .toggle-option,\r\n  .mode-detail,\r\n  .status-indicator {\r\n    transition: none;\r\n  }\r\n  \r\n  .status-dot {\r\n    animation: none;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/renderer/SleepPreventionModeToggle.css"],"names":[],"mappings":"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","sourcesContent":["/* Sleep Prevention Mode Toggle Styles */\r\n@import './theme.css';\r\n\r\n.sleep-mode-toggle {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 16px;\r\n  padding: 20px;\r\n  background: rgba(0, 0, 0, 0.05);\r\n  border: 1px solid rgba(0, 0, 0, 0.1);\r\n  border-radius: 16px;\r\n  backdrop-filter: blur(10px);\r\n  transition: all 0.3s ease;\r\n  color: #333;\r\n}\r\n\r\n/* Dark theme specific style for better visibility */\r\n.theme-dark .sleep-mode-toggle {\r\n  background: #363652;  /* Match the new --bg-element variable */\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n  color: #e0e0e0;\r\n}\r\n\r\n.sleep-mode-toggle:hover {\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-color: rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n/* Dark theme hover state */\r\n.theme-dark .sleep-mode-toggle:hover {\r\n  background: #3e3e5e;  /* Slightly lighter than the base color */\r\n  border-color: rgba(255, 255, 255, 0.3);\r\n}\r\n\r\n.sleep-mode-toggle.disabled {\r\n  opacity: 0.6;\r\n  pointer-events: none;\r\n}\r\n\r\n/* Header */\r\n.toggle-header {\r\n  text-align: center;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.toggle-title {\r\n  font-size: 16px;\r\n  font-weight: 600;\r\n  color: var(--text-primary);\r\n  margin: 0 0 4px 0;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n.toggle-subtitle {\r\n  font-size: 12px;\r\n  color: var(--text-secondary);\r\n  margin: 0;\r\n  font-weight: 400;\r\n}\r\n\r\n/* Toggle Container */\r\n.toggle-container {\r\n  display: flex;\r\n  gap: 16px;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n/* Toggle Track */\r\n.toggle-track {\r\n  position: relative;\r\n  background: rgba(0, 0, 0, 0.08);\r\n  border-radius: 24px;\r\n  padding: 6px;\r\n  border: 1px solid rgba(0, 0, 0, 0.15);\r\n  height: 80px;\r\n  width: 240px;\r\n  min-width: 240px;\r\n  max-width: 240px;\r\n  flex-shrink: 0;\r\n  display: flex;\r\n  flex-direction: row;\r\n}\r\n\r\n/* Dark theme toggle track */\r\n.theme-dark .toggle-track {\r\n  background: rgba(255, 255, 255, 0.15);\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n/* Animated Thumb */\r\n.toggle-thumb {\r\n  position: absolute;\r\n  top: 6px;\r\n  left: 6px;\r\n  bottom: 6px;\r\n  width: 76px;\r\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\r\n  border-radius: 18px;\r\n  box-shadow: \r\n    0 4px 12px rgba(102, 126, 234, 0.3),\r\n    0 2px 4px rgba(0, 0, 0, 0.1);\r\n  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;\r\n  z-index: 1;\r\n  transform: translateX(0);\r\n}\r\n\r\n.toggle-thumb.transitioning {\r\n  box-shadow: \r\n    0 6px 20px rgba(102, 126, 234, 0.4),\r\n    0 4px 8px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n/* Toggle Options */\r\n.toggle-options {\r\n  display: flex;\r\n  flex-direction: row;\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  z-index: 2;\r\n}\r\n\r\n.toggle-option {\r\n  flex: 1;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  border-radius: 16px;\r\n  padding: 12px 8px;\r\n  transition: all 0.2s ease;\r\n  color: rgba(0, 0, 0, 0.6);\r\n  position: relative;\r\n  min-width: 54px;\r\n}\r\n\r\n.toggle-option:hover {\r\n  color: rgba(0, 0, 0, 0.8);\r\n  transform: scale(1.05);\r\n}\r\n\r\n.toggle-option.active {\r\n  color: #ffffff;\r\n  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);\r\n}\r\n\r\n.toggle-option.hovered:not(.active) {\r\n  background: rgba(0, 0, 0, 0.05);\r\n}\r\n\r\n/* Dark theme toggle options */\r\n.theme-dark .toggle-option {\r\n  color: rgba(255, 255, 255, 0.7);\r\n}\r\n\r\n.theme-dark .toggle-option:hover {\r\n  color: rgba(255, 255, 255, 0.9);\r\n}\r\n\r\n.theme-dark .toggle-option.hovered:not(.active) {\r\n  background: rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.toggle-option:disabled {\r\n  cursor: not-allowed;\r\n  opacity: 0.5;\r\n}\r\n\r\n.option-icon {\r\n  font-size: 18px;\r\n  margin-bottom: 4px;\r\n  line-height: 1;\r\n  transition: transform 0.2s ease;\r\n}\r\n\r\n.toggle-option:hover .option-icon {\r\n  transform: scale(1.1);\r\n}\r\n\r\n.toggle-option.active .option-icon {\r\n  transform: scale(1.15);\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));\r\n}\r\n\r\n.option-label {\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  text-transform: uppercase;\r\n  line-height: 1.2;\r\n}\r\n\r\n/* Mode Details */\r\n.mode-details {\r\n  flex: 1;\r\n  position: relative;\r\n  min-height: 60px;\r\n}\r\n\r\n.mode-detail {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  opacity: 0;\r\n  transform: translateY(10px);\r\n  transition: all 0.3s ease;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 12px;\r\n  padding: 16px;\r\n  background: rgba(255, 255, 255, 0.05);\r\n  border-radius: 12px;\r\n  border: 1px solid rgba(255, 255, 255, 0.1);\r\n}\r\n\r\n.mode-detail.active {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n  background: rgba(255, 255, 255, 0.08);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n.detail-icon {\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));\r\n}\r\n\r\n.detail-text {\r\n  flex: 1;\r\n}\r\n\r\n.detail-label {\r\n  font-size: 14px;\r\n  font-weight: 600;\r\n  color: #ffffff;\r\n  margin-bottom: 2px;\r\n}\r\n\r\n.detail-description {\r\n  font-size: 11px;\r\n  color: rgba(255, 255, 255, 0.7);\r\n  line-height: 1.3;\r\n}\r\n\r\n/* Status Indicator */\r\n.toggle-status {\r\n  display: flex;\r\n  justify-content: center;\r\n  margin-top: 8px;\r\n}\r\n\r\n.status-indicator {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  padding: 6px 12px;\r\n  border-radius: 20px;\r\n  background: rgba(255, 255, 255, 0.1);\r\n  border: 1px solid rgba(255, 255, 255, 0.2);\r\n  transition: all 0.3s ease;\r\n}\r\n\r\n.status-dot {\r\n  width: 8px;\r\n  height: 8px;\r\n  border-radius: 50%;\r\n  background: #4ade80;\r\n  box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);\r\n  animation: pulse 2s infinite;\r\n}\r\n\r\n.status-text {\r\n  font-weight: 500;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.5px;\r\n}\r\n\r\n/* Mode-specific status colors */\r\n.status-indicator.basic .status-dot {\r\n  background: #60a5fa;\r\n  box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);\r\n}\r\n\r\n.status-indicator.full .status-dot {\r\n  background: #a78bfa;\r\n  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);\r\n}\r\n\r\n.status-indicator.activity-only .status-dot {\r\n  background: #fbbf24;\r\n  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);\r\n}\r\n\r\n/* Animations */\r\n@keyframes pulse {\r\n  0%, 100% {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n  50% {\r\n    opacity: 0.7;\r\n    transform: scale(1.1);\r\n  }\r\n}\r\n\r\n/* Responsive Design */\r\n@media (max-width: 400px) {\r\n  .sleep-mode-toggle {\r\n    padding: 16px;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-container {\r\n    flex-direction: column;\r\n    gap: 12px;\r\n  }\r\n  \r\n  .toggle-track {\r\n    width: 100%;\r\n    height: 60px;\r\n    flex-direction: row;\r\n    min-height: auto;\r\n  }\r\n  \r\n  .toggle-thumb {\r\n    top: 6px;\r\n    bottom: 6px;\r\n    left: 6px;\r\n    /* width: calc(33.33% - 4px); */\r\n    height: auto;\r\n    transform: translateX(0);\r\n  }\r\n  \r\n  .toggle-options {\r\n    flex-direction: row;\r\n    width: 100%;\r\n    height: 100%;\r\n  }\r\n  \r\n  .toggle-option {\r\n    min-height: auto;\r\n    padding: 8px 4px;\r\n  }\r\n  \r\n  .option-icon {\r\n    font-size: 16px;\r\n  }\r\n  \r\n  .option-label {\r\n    font-size: 9px;\r\n  }\r\n}\r\n\r\n/* Accessibility */\r\n.toggle-option:focus {\r\n  outline: 2px solid rgba(255, 255, 255, 0.5);\r\n  outline-offset: 2px;\r\n}\r\n\r\n.toggle-option:focus-visible {\r\n  outline: 2px solid #667eea;\r\n  outline-offset: 2px;\r\n}\r\n\r\n/* High contrast mode support */\r\n@media (prefers-contrast: high) {\r\n  .sleep-mode-toggle {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n  \r\n  .toggle-track {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.9);\r\n  }\r\n  \r\n  .toggle-option {\r\n    color: #ffffff;\r\n  }\r\n  \r\n  .mode-detail {\r\n    border-color: #ffffff;\r\n    background: rgba(0, 0, 0, 0.8);\r\n  }\r\n}\r\n\r\n/* Reduced motion support */\r\n@media (prefers-reduced-motion: reduce) {\r\n  .toggle-thumb,\r\n  .toggle-option,\r\n  .mode-detail,\r\n  .status-indicator {\r\n    transition: none;\r\n  }\r\n  \r\n  .status-dot {\r\n    animation: none;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/renderer/SleepPreventionModeToggle.darkmode.css":
+/*!***************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/renderer/SleepPreventionModeToggle.darkmode.css ***!
+  \***************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `/* Dark mode specific overrides for Sleep Prevention Mode Toggle */
+.theme-dark .sleep-mode-toggle {
+  background: var(--bg-element);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.theme-dark .sleep-mode-toggle:hover {
+  background: var(--bg-element);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-dark .toggle-track {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Make text more visible in dark mode */
+.theme-dark .toggle-option {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .toggle-option:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-dark .toggle-option.hovered:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+}
+`, "",{"version":3,"sources":["webpack://./src/renderer/SleepPreventionModeToggle.darkmode.css"],"names":[],"mappings":"AAAA,kEAAkE;AAClE;EACE,6BAA6B;EAC7B,sCAAsC;EACtC,0BAA0B;AAC5B;;AAEA;EACE,6BAA6B;EAC7B,sCAAsC;AACxC;;AAEA;EACE,qCAAqC;EACrC,sCAAsC;AACxC;;AAEA,wCAAwC;AACxC;EACE,+BAA+B;AACjC;;AAEA;EACE,+BAA+B;AACjC;;AAEA;EACE,oCAAoC;AACtC","sourcesContent":["/* Dark mode specific overrides for Sleep Prevention Mode Toggle */\r\n.theme-dark .sleep-mode-toggle {\r\n  background: var(--bg-element);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n  color: var(--text-primary);\r\n}\r\n\r\n.theme-dark .sleep-mode-toggle:hover {\r\n  background: var(--bg-element);\r\n  border-color: rgba(255, 255, 255, 0.3);\r\n}\r\n\r\n.theme-dark .toggle-track {\r\n  background: rgba(255, 255, 255, 0.15);\r\n  border-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n/* Make text more visible in dark mode */\r\n.theme-dark .toggle-option {\r\n  color: rgba(255, 255, 255, 0.7);\r\n}\r\n\r\n.theme-dark .toggle-option:hover {\r\n  color: rgba(255, 255, 255, 0.9);\r\n}\r\n\r\n.theme-dark .toggle-option.hovered:not(.active) {\r\n  background: rgba(255, 255, 255, 0.1);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -418,12 +505,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./theme.css */ "./node_modules/css-loader/dist/cjs.js!./src/renderer/theme.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_SleepPreventionModeToggle_darkmode_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./SleepPreventionModeToggle.darkmode.css */ "./node_modules/css-loader/dist/cjs.js!./src/renderer/SleepPreventionModeToggle.darkmode.css");
 // Imports
+
 
 
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_theme_css__WEBPACK_IMPORTED_MODULE_2__["default"]);
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_SleepPreventionModeToggle_darkmode_css__WEBPACK_IMPORTED_MODULE_3__["default"]);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `/* Import theme variables */
 
@@ -504,6 +594,14 @@ html, body {
   transition: background-color 0.2s;
 }
 
+/* More Menu Styles */
+.more-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag; /* Make menu clickable */
+}
+
 .title-bar-minimize:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -514,6 +612,66 @@ html, body {
 
 .title-bar-close:hover {
   background-color: var(--accent-danger);
+}
+
+/* More Menu Button */
+.more-menu-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* More Menu Dropdown */
+.more-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  box-shadow: var(--shadow-medium);
+  z-index: 1010;
+  overflow: hidden;
+  animation: fade-in 0.2s ease;
+  margin-top: 2px;
+  border: 1px solid var(--border-light);
+}
+
+/* More Menu Items */
+.more-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background-color 0.2s;
+}
+
+.more-menu-item:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.more-menu-item:active {
+  background-color: var(--bg-primary);
+}
+
+.more-menu-item-text {
+  font-size: 14px;
+}
+
+.more-menu-item-icon {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+/* Add a divider between menu items if needed */
+.more-menu-divider {
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 4px 0;
 }
 
 /* Header styles */
@@ -885,7 +1043,7 @@ input:checked + .slider:before {
   padding: 0 10px;
 }
 
-/* Rest of existing styles... */`, "",{"version":3,"sources":["webpack://./src/renderer/styles.css"],"names":[],"mappings":"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","sourcesContent":["/* Import theme variables */\r\n@import './theme.css';\r\n\r\n/* Reset and base styles */\r\nhtml, body {\r\n  margin: 0;\r\n  padding: 0;\r\n  overflow: hidden; /* Prevent scrolling at body level */\r\n  height: 100%;\r\n  width: 100%;\r\n}\r\n\r\n/* Main container styles */\r\n.app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  height: 720px; /* Increased height for more content visibility */\r\n  width: 100vw;\r\n  background-color: var(--bg-primary);\r\n  color: var(--text-primary);\r\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Fixed header container for title bar and app header - absolutely positioned */\r\n.fixed-header-container {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  width: 100%;\r\n  z-index: 1000;\r\n  background-color: var(--bg-title-bar);\r\n  box-shadow: var(--shadow-medium);\r\n}\r\n\r\n/* Title Bar styles */\r\n.title-bar {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  height: 38px;\r\n  background: var(--bg-title-bar);\r\n  color: var(--text-title);\r\n  -webkit-app-region: drag; /* Make the title bar draggable */\r\n  user-select: none;\r\n}\r\n\r\n.title-bar-drag-area {\r\n  flex: 1;\r\n  display: flex;\r\n  align-items: center;\r\n  margin-left: 12px;\r\n}\r\n\r\n.title-bar-title {\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n\r\n.title-bar-controls {\r\n  display: flex;\r\n  align-items: center;\r\n  -webkit-app-region: no-drag; /* Make buttons clickable */\r\n}\r\n\r\n.title-bar-button {\r\n  width: 46px;\r\n  height: 32px;\r\n  background: transparent;\r\n  border: none;\r\n  outline: none;\r\n  color: var(--text-title);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  transition: background-color 0.2s;\r\n}\r\n\r\n.title-bar-minimize:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-corner:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-close:hover {\r\n  background-color: var(--accent-danger);\r\n}\r\n\r\n/* Header styles */\r\n.app-header {\r\n  text-align: center;\r\n  padding: 0 0 1rem;\r\n  background-color: var(--bg-header);\r\n  color: var(--text-header);\r\n  border-top: none;\r\n}\r\n\r\n.app-header h1 {\r\n  margin: 0;\r\n  font-size: 2.2rem;\r\n  font-weight: 500;\r\n}\r\n\r\n.subtitle {\r\n  margin: 0.5rem 0 0;\r\n  font-size: 0.9rem;\r\n  opacity: 0.8;\r\n}\r\n\r\n/* Main content - scrollable area */\r\n.control-section {\r\n  flex: 1;\r\n  padding: 1.5rem 2rem 2rem 2rem;\r\n  margin-top: 40px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 1.25rem;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Ensure activate and mode toggle sections never scroll */\r\n.activate-section, .mode-toggle-section {\r\n  flex-shrink: 0;\r\n  margin-bottom: 0.5rem;\r\n}\r\n\r\n/* Timer section scrolls if needed */\r\n/* Timer section scrolls if needed */\r\n.timer-section {\r\n  flex: 1 1 auto;\r\n  min-height: 0;\r\n  overflow-y: auto;\r\n  max-height: 100%;\r\n}\r\n\r\n/* Toggle button */\r\n.toggle-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n\r\n/* Activate Button Styles */\r\n.activate-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  /* margin-bottom: 1.5rem; */\r\n}\r\n\r\n.activate-button {\r\n  width: 220px;\r\n  height: 56px;\r\n  border-radius: 12px;\r\n  font-size: 1.25rem;\r\n  font-weight: bold;\r\n  border: none;\r\n  cursor: pointer;\r\n  transition: background 0.2s, box-shadow 0.2s;\r\n  background-color: #e74c3c; /* Red when inactive */\r\n  color: white;\r\n  box-shadow: var(--shadow-medium);\r\n  margin-bottom: 0.75rem;\r\n  letter-spacing: 0.5px;\r\n}\r\n.activate-button.active {\r\n  background-color: #2ecc71; /* Green when active */\r\n  color: white;\r\n}\r\n\r\n.status-text {\r\n  margin-top: 1rem;\r\n  font-size: 0.9rem;\r\n  color: var(--text-primary);\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n/* Timer section */\r\n.timer-section {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  padding: 1.5rem;\r\n  box-shadow: var(--shadow-small);\r\n}\r\n\r\n.timer-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-header h3 {\r\n  margin: 0;\r\n  font-size: 1.1rem;\r\n}\r\n\r\n/* Switch toggle */\r\n.switch {\r\n  position: relative;\r\n  display: inline-block;\r\n  width: 48px;\r\n  height: 24px;\r\n}\r\n\r\n.switch input {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n}\r\n\r\n.slider {\r\n  position: absolute;\r\n  cursor: pointer;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--toggle-track);\r\n  transition: .4s;\r\n}\r\n\r\n.slider:before {\r\n  position: absolute;\r\n  content: \"\";\r\n  height: 18px;\r\n  width: 18px;\r\n  left: 3px;\r\n  bottom: 3px;\r\n  background-color: var(--toggle-thumb);\r\n  transition: .4s;\r\n}\r\n\r\ninput:checked + .slider {\r\n  background-color: var(--toggle-active-bg);\r\n}\r\n\r\ninput:focus + .slider {\r\n  box-shadow: 0 0 1px var(--toggle-active-bg);\r\n}\r\n\r\ninput:checked + .slider:before {\r\n  transform: translateX(24px);\r\n}\r\n\r\n.slider.round {\r\n  border-radius: 24px;\r\n}\r\n\r\n.slider.round:before {\r\n  border-radius: 50%;\r\n}\r\n\r\n/* Timer controls */\r\n.timer-controls {\r\n  padding-top: 1rem;\r\n}\r\n\r\n.timer-input {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 1rem;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-input input {\r\n  width: 80px;\r\n  padding: 0.5rem;\r\n  border: 1px solid var(--border-light);\r\n  border-radius: 4px;\r\n  font-size: 1rem;\r\n  background-color: var(--bg-tertiary);\r\n  color: var(--text-primary);\r\n}\r\n\r\n.timer-display {\r\n  margin-top: 1rem;\r\n}\r\n\r\n.progress-bar {\r\n  height: 8px;\r\n  background-color: var(--progress-bg);\r\n  border-radius: 4px;\r\n  margin-top: 0.5rem;\r\n  overflow: hidden;\r\n}\r\n\r\n.progress {\r\n  height: 100%;\r\n  background-color: var(--progress-fill);\r\n  transition: width 1s linear;\r\n}\r\n\r\n/* Footer */\r\n.app-footer {\r\n  padding: 0.5rem;\r\n  text-align: center;\r\n  background-color: var(--bg-tertiary);\r\n  border-top: 1px solid var(--border-light);\r\n  color: var(--text-secondary);\r\n  font-size: 0.8rem;\r\n  display: flex;\r\n  flex-direction: column;\r\n  /* gap: 0.25rem; */\r\n  position: relative; /* Keep the footer in the normal flow */\r\n  z-index: 900; /* Below the header but above content */\r\n}\r\n\r\n.footer-hint {\r\n  color: var(--text-tertiary);\r\n  font-style: italic;\r\n}\r\n\r\n/* Footer actions */\r\n.footer-actions {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  /* margin-top: 0.25rem; */\r\n}\r\n\r\n.link-button {\r\n  background: none;\r\n  border: none;\r\n  color: var(--accent-primary);\r\n  cursor: pointer;\r\n  font-size: 0.9rem;\r\n  padding: 0;\r\n  text-decoration: underline;\r\n  transition: color 0.2s;\r\n}\r\n\r\n.link-button:hover {\r\n  color: var(--accent-secondary);\r\n}\r\n\r\n.footer-separator {\r\n  color: #ccc;\r\n  margin: 0 0.25rem;\r\n}\r\n\r\n/* About Dialog Styles */\r\n.about-dialog-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--overlay-bg);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 1000;\r\n}\r\n\r\n.about-dialog {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  width: 90%;\r\n  max-width: 500px;\r\n  max-height: 90vh;\r\n  box-shadow: var(--shadow-medium);\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: fade-in 0.2s ease-in-out;\r\n}\r\n\r\n.about-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 1rem 1.5rem;\r\n  border-bottom: 1px solid var(--border-light);\r\n}\r\n\r\n.about-header h2 {\r\n  margin: 0;\r\n  font-size: 1.5rem;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.close-button {\r\n  background: none;\r\n  border: none;\r\n  font-size: 1.5rem;\r\n  cursor: pointer;\r\n  color: var(--text-secondary);\r\n  transition: color 0.2s;\r\n}\r\n\r\n.close-button:hover {\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-content {\r\n  padding: 1.5rem;\r\n  overflow-y: auto;\r\n  flex: 1;\r\n}\r\n\r\n.about-section {\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n.about-section h3 {\r\n  margin: 0 0 0.5rem;\r\n  font-size: 1.1rem;\r\n  color: var(--accent-primary);\r\n}\r\n\r\n.about-section p {\r\n  margin: 0;\r\n  line-height: 1.5;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-section ul {\r\n  margin: 0;\r\n  padding-left: 1.5rem;\r\n  line-height: 1.6;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-footer {\r\n  padding: 1rem 1.5rem;\r\n  border-top: 1px solid var(--border-light);\r\n  text-align: center;\r\n  color: var(--text-tertiary);\r\n  font-size: 0.9rem;\r\n}\r\n\r\n@keyframes fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: translateY(0);\r\n  }\r\n}\r\n\r\n/* Sleep Prevention Mode Toggle Section */\r\n.mode-toggle-section {\r\n  /* margin: 20px 0; */\r\n  padding: 0 10px;\r\n}\r\n\r\n/* Rest of existing styles... */"],"sourceRoot":""}]);
+/* Rest of existing styles... */`, "",{"version":3,"sources":["webpack://./src/renderer/styles.css"],"names":[],"mappings":"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","sourcesContent":["/* Import theme variables */\r\n@import './theme.css';\r\n@import './SleepPreventionModeToggle.darkmode.css';\r\n\r\n/* Reset and base styles */\r\nhtml, body {\r\n  margin: 0;\r\n  padding: 0;\r\n  overflow: hidden; /* Prevent scrolling at body level */\r\n  height: 100%;\r\n  width: 100%;\r\n}\r\n\r\n/* Main container styles */\r\n.app-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  height: 720px; /* Increased height for more content visibility */\r\n  width: 100vw;\r\n  background-color: var(--bg-primary);\r\n  color: var(--text-primary);\r\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Fixed header container for title bar and app header - absolutely positioned */\r\n.fixed-header-container {\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  width: 100%;\r\n  z-index: 1000;\r\n  background-color: var(--bg-title-bar);\r\n  box-shadow: var(--shadow-medium);\r\n}\r\n\r\n/* Title Bar styles */\r\n.title-bar {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  height: 38px;\r\n  background: var(--bg-title-bar);\r\n  color: var(--text-title);\r\n  -webkit-app-region: drag; /* Make the title bar draggable */\r\n  user-select: none;\r\n}\r\n\r\n.title-bar-drag-area {\r\n  flex: 1;\r\n  display: flex;\r\n  align-items: center;\r\n  margin-left: 12px;\r\n}\r\n\r\n.title-bar-title {\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n\r\n.title-bar-controls {\r\n  display: flex;\r\n  align-items: center;\r\n  -webkit-app-region: no-drag; /* Make buttons clickable */\r\n}\r\n\r\n.title-bar-button {\r\n  width: 46px;\r\n  height: 32px;\r\n  background: transparent;\r\n  border: none;\r\n  outline: none;\r\n  color: var(--text-title);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  cursor: pointer;\r\n  transition: background-color 0.2s;\r\n}\r\n\r\n/* More Menu Styles */\r\n.more-menu-container {\r\n  position: relative;\r\n  display: flex;\r\n  align-items: center;\r\n  -webkit-app-region: no-drag; /* Make menu clickable */\r\n}\r\n\r\n.title-bar-minimize:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-corner:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n.title-bar-close:hover {\r\n  background-color: var(--accent-danger);\r\n}\r\n\r\n/* More Menu Button */\r\n.more-menu-button:hover {\r\n  background-color: rgba(0, 0, 0, 0.1);\r\n}\r\n\r\n/* More Menu Dropdown */\r\n.more-menu-dropdown {\r\n  position: absolute;\r\n  top: 100%;\r\n  right: 0;\r\n  width: 200px;\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 4px;\r\n  box-shadow: var(--shadow-medium);\r\n  z-index: 1010;\r\n  overflow: hidden;\r\n  animation: fade-in 0.2s ease;\r\n  margin-top: 2px;\r\n  border: 1px solid var(--border-light);\r\n}\r\n\r\n/* More Menu Items */\r\n.more-menu-item {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  padding: 12px 16px;\r\n  width: 100%;\r\n  background: none;\r\n  border: none;\r\n  text-align: left;\r\n  cursor: pointer;\r\n  color: var(--text-primary);\r\n  transition: background-color 0.2s;\r\n}\r\n\r\n.more-menu-item:hover {\r\n  background-color: var(--bg-tertiary);\r\n}\r\n\r\n.more-menu-item:active {\r\n  background-color: var(--bg-primary);\r\n}\r\n\r\n.more-menu-item-text {\r\n  font-size: 14px;\r\n}\r\n\r\n.more-menu-item-icon {\r\n  margin-left: 8px;\r\n  font-size: 16px;\r\n}\r\n\r\n/* Add a divider between menu items if needed */\r\n.more-menu-divider {\r\n  height: 1px;\r\n  background-color: var(--border-light);\r\n  margin: 4px 0;\r\n}\r\n\r\n/* Header styles */\r\n.app-header {\r\n  text-align: center;\r\n  padding: 0 0 1rem;\r\n  background-color: var(--bg-header);\r\n  color: var(--text-header);\r\n  border-top: none;\r\n}\r\n\r\n.app-header h1 {\r\n  margin: 0;\r\n  font-size: 2.2rem;\r\n  font-weight: 500;\r\n}\r\n\r\n.subtitle {\r\n  margin: 0.5rem 0 0;\r\n  font-size: 0.9rem;\r\n  opacity: 0.8;\r\n}\r\n\r\n/* Main content - scrollable area */\r\n.control-section {\r\n  flex: 1;\r\n  padding: 1.5rem 2rem 2rem 2rem;\r\n  margin-top: 40px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 1.25rem;\r\n  height: 100%;\r\n  overflow: hidden;\r\n}\r\n\r\n/* Ensure activate and mode toggle sections never scroll */\r\n.activate-section, .mode-toggle-section {\r\n  flex-shrink: 0;\r\n  margin-bottom: 0.5rem;\r\n}\r\n\r\n/* Timer section scrolls if needed */\r\n/* Timer section scrolls if needed */\r\n.timer-section {\r\n  flex: 1 1 auto;\r\n  min-height: 0;\r\n  overflow-y: auto;\r\n  max-height: 100%;\r\n}\r\n\r\n/* Toggle button */\r\n.toggle-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n\r\n/* Activate Button Styles */\r\n.activate-section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  /* margin-bottom: 1.5rem; */\r\n}\r\n\r\n.activate-button {\r\n  width: 220px;\r\n  height: 56px;\r\n  border-radius: 12px;\r\n  font-size: 1.25rem;\r\n  font-weight: bold;\r\n  border: none;\r\n  cursor: pointer;\r\n  transition: background 0.2s, box-shadow 0.2s;\r\n  background-color: #e74c3c; /* Red when inactive */\r\n  color: white;\r\n  box-shadow: var(--shadow-medium);\r\n  margin-bottom: 0.75rem;\r\n  letter-spacing: 0.5px;\r\n}\r\n.activate-button.active {\r\n  background-color: #2ecc71; /* Green when active */\r\n  color: white;\r\n}\r\n\r\n.status-text {\r\n  margin-top: 1rem;\r\n  font-size: 0.9rem;\r\n  color: var(--text-primary);\r\n  font-weight: 500;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n/* Timer section */\r\n.timer-section {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  padding: 1.5rem;\r\n  box-shadow: var(--shadow-small);\r\n}\r\n\r\n.timer-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-header h3 {\r\n  margin: 0;\r\n  font-size: 1.1rem;\r\n}\r\n\r\n/* Switch toggle */\r\n.switch {\r\n  position: relative;\r\n  display: inline-block;\r\n  width: 48px;\r\n  height: 24px;\r\n}\r\n\r\n.switch input {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n}\r\n\r\n.slider {\r\n  position: absolute;\r\n  cursor: pointer;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--toggle-track);\r\n  transition: .4s;\r\n}\r\n\r\n.slider:before {\r\n  position: absolute;\r\n  content: \"\";\r\n  height: 18px;\r\n  width: 18px;\r\n  left: 3px;\r\n  bottom: 3px;\r\n  background-color: var(--toggle-thumb);\r\n  transition: .4s;\r\n}\r\n\r\ninput:checked + .slider {\r\n  background-color: var(--toggle-active-bg);\r\n}\r\n\r\ninput:focus + .slider {\r\n  box-shadow: 0 0 1px var(--toggle-active-bg);\r\n}\r\n\r\ninput:checked + .slider:before {\r\n  transform: translateX(24px);\r\n}\r\n\r\n.slider.round {\r\n  border-radius: 24px;\r\n}\r\n\r\n.slider.round:before {\r\n  border-radius: 50%;\r\n}\r\n\r\n/* Timer controls */\r\n.timer-controls {\r\n  padding-top: 1rem;\r\n}\r\n\r\n.timer-input {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 1rem;\r\n  margin-bottom: 1rem;\r\n}\r\n\r\n.timer-input input {\r\n  width: 80px;\r\n  padding: 0.5rem;\r\n  border: 1px solid var(--border-light);\r\n  border-radius: 4px;\r\n  font-size: 1rem;\r\n  background-color: var(--bg-tertiary);\r\n  color: var(--text-primary);\r\n}\r\n\r\n.timer-display {\r\n  margin-top: 1rem;\r\n}\r\n\r\n.progress-bar {\r\n  height: 8px;\r\n  background-color: var(--progress-bg);\r\n  border-radius: 4px;\r\n  margin-top: 0.5rem;\r\n  overflow: hidden;\r\n}\r\n\r\n.progress {\r\n  height: 100%;\r\n  background-color: var(--progress-fill);\r\n  transition: width 1s linear;\r\n}\r\n\r\n/* Footer */\r\n.app-footer {\r\n  padding: 0.5rem;\r\n  text-align: center;\r\n  background-color: var(--bg-tertiary);\r\n  border-top: 1px solid var(--border-light);\r\n  color: var(--text-secondary);\r\n  font-size: 0.8rem;\r\n  display: flex;\r\n  flex-direction: column;\r\n  /* gap: 0.25rem; */\r\n  position: relative; /* Keep the footer in the normal flow */\r\n  z-index: 900; /* Below the header but above content */\r\n}\r\n\r\n.footer-hint {\r\n  color: var(--text-tertiary);\r\n  font-style: italic;\r\n}\r\n\r\n/* Footer actions */\r\n.footer-actions {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 0.5rem;\r\n  /* margin-top: 0.25rem; */\r\n}\r\n\r\n.link-button {\r\n  background: none;\r\n  border: none;\r\n  color: var(--accent-primary);\r\n  cursor: pointer;\r\n  font-size: 0.9rem;\r\n  padding: 0;\r\n  text-decoration: underline;\r\n  transition: color 0.2s;\r\n}\r\n\r\n.link-button:hover {\r\n  color: var(--accent-secondary);\r\n}\r\n\r\n.footer-separator {\r\n  color: #ccc;\r\n  margin: 0 0.25rem;\r\n}\r\n\r\n/* About Dialog Styles */\r\n.about-dialog-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: var(--overlay-bg);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 1000;\r\n}\r\n\r\n.about-dialog {\r\n  background-color: var(--bg-secondary);\r\n  border-radius: 8px;\r\n  width: 90%;\r\n  max-width: 500px;\r\n  max-height: 90vh;\r\n  box-shadow: var(--shadow-medium);\r\n  display: flex;\r\n  flex-direction: column;\r\n  animation: fade-in 0.2s ease-in-out;\r\n}\r\n\r\n.about-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 1rem 1.5rem;\r\n  border-bottom: 1px solid var(--border-light);\r\n}\r\n\r\n.about-header h2 {\r\n  margin: 0;\r\n  font-size: 1.5rem;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.close-button {\r\n  background: none;\r\n  border: none;\r\n  font-size: 1.5rem;\r\n  cursor: pointer;\r\n  color: var(--text-secondary);\r\n  transition: color 0.2s;\r\n}\r\n\r\n.close-button:hover {\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-content {\r\n  padding: 1.5rem;\r\n  overflow-y: auto;\r\n  flex: 1;\r\n}\r\n\r\n.about-section {\r\n  margin-bottom: 1.5rem;\r\n}\r\n\r\n.about-section h3 {\r\n  margin: 0 0 0.5rem;\r\n  font-size: 1.1rem;\r\n  color: var(--accent-primary);\r\n}\r\n\r\n.about-section p {\r\n  margin: 0;\r\n  line-height: 1.5;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-section ul {\r\n  margin: 0;\r\n  padding-left: 1.5rem;\r\n  line-height: 1.6;\r\n  color: var(--text-primary);\r\n}\r\n\r\n.about-footer {\r\n  padding: 1rem 1.5rem;\r\n  border-top: 1px solid var(--border-light);\r\n  text-align: center;\r\n  color: var(--text-tertiary);\r\n  font-size: 0.9rem;\r\n}\r\n\r\n@keyframes fade-in {\r\n  from {\r\n    opacity: 0;\r\n    transform: translateY(-20px);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: translateY(0);\r\n  }\r\n}\r\n\r\n/* Sleep Prevention Mode Toggle Section */\r\n.mode-toggle-section {\r\n  /* margin: 20px 0; */\r\n  padding: 0 10px;\r\n}\r\n\r\n/* Rest of existing styles... */"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -996,6 +1154,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/**
   --bg-primary: #1e1e2e;
   --bg-secondary: #282838;
   --bg-tertiary: #313145;
+  --bg-element: #363652; /* New variable for elements that need to stand out */
   --bg-title-bar: #181825;
   --bg-header: #181825;
   --bg-tooltip: rgba(42, 42, 62, 0.9);
@@ -1040,10 +1199,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/**
   --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);
   
   /* Sleep prevention mode toggle */
-  --mode-toggle-bg: rgba(255, 255, 255, 0.05);
-  --mode-toggle-border: rgba(255, 255, 255, 0.1);
-  --mode-toggle-track: rgba(255, 255, 255, 0.08);
-  --mode-toggle-text: rgba(255, 255, 255, 0.8);
+  --mode-toggle-bg: rgba(255, 255, 255, 0.15);
+  --mode-toggle-border: rgba(255, 255, 255, 0.25);
+  --mode-toggle-track: rgba(255, 255, 255, 0.2);
+  --mode-toggle-text: rgba(255, 255, 255, 0.9);
   --mode-toggle-thumb-gradient-start: #8a7efa;
   --mode-toggle-thumb-gradient-end: #a66dc2;
   
@@ -1073,7 +1232,7 @@ body {
 .no-transition * {
   transition: none !important;
 }
-`, "",{"version":3,"sources":["webpack://./src/renderer/theme.css"],"names":[],"mappings":"AAAA;;;EAGE;;AAEF;EACE,wBAAwB;EACxB,6BAA6B;;EAE7B,qCAAqC;EACrC,uBAAuB;EACvB,qBAAqB;AACvB;;AAEA,0BAA0B;AAC1B;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,4CAA4C;EAC5C,6CAA6C;EAC7C,6CAA6C;;EAE7C,iCAAiC;EACjC,qCAAqC;EACrC,wCAAwC;EACxC,wCAAwC;EACxC,sCAAsC;EACtC,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,eAAe;AACf;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,6CAA6C;EAC7C,8CAA8C;EAC9C,8CAA8C;;EAE9C,iCAAiC;EACjC,2CAA2C;EAC3C,8CAA8C;EAC9C,8CAA8C;EAC9C,4CAA4C;EAC5C,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,qEAAqE;AACrE;EACE;qDACmD;AACrD;;AAEA;EACE;;;0DAGwD;AAC1D;;AAEA,iEAAiE;AACjE;;EAEE,2BAA2B;AAC7B","sourcesContent":["/**\r\n * NoDoze Theme System\r\n * This file defines CSS variables for light and dark themes\r\n */\r\n\r\n:root {\r\n  /* Animation durations */\r\n  --theme-transition-time: 0.3s;\r\n  \r\n  /* Default to light theme variables */\r\n  --bg-title-bar: #e0e0e0;\r\n  --text-title: #333333;\r\n}\r\n\r\n/* Light Theme (default) */\r\n.theme-light {\r\n  /* Background colors */\r\n  --bg-primary: #f5f5f5;\r\n  --bg-secondary: #ffffff;\r\n  --bg-tertiary: #f0f0f0;\r\n  --bg-title-bar: #e0e0e0;\r\n  --bg-header: #2c3e50;\r\n  --bg-tooltip: rgba(97, 97, 97, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #333333;\r\n  --text-secondary: #666666;\r\n  --text-tertiary: #999999;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #333333;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #3498db;\r\n  --accent-secondary: #2ecc71;\r\n  --accent-danger: #e74c3c;\r\n  --accent-warning: #f39c12;\r\n  --accent-info: #1abc9c;\r\n  \r\n  /* Border colors */\r\n  --border-light: #dddddd;\r\n  --border-medium: #cccccc;\r\n  --border-dark: #999999;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #f0f0f0;\r\n  --button-bg-hover: #e0e0e0;\r\n  --button-bg-active: #d0d0d0;\r\n  --button-text: #333333;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #2ecc71;\r\n  --toggle-inactive-bg: #e74c3c;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #cccccc;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(0, 0, 0, 0.05);\r\n  --mode-toggle-border: rgba(0, 0, 0, 0.1);\r\n  --mode-toggle-track: rgba(0, 0, 0, 0.08);\r\n  --mode-toggle-text: rgba(0, 0, 0, 0.6);\r\n  --mode-toggle-thumb-gradient-start: #667eea;\r\n  --mode-toggle-thumb-gradient-end: #764ba2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #eeeeee;\r\n  --progress-fill: #3498db;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n/* Dark Theme */\r\n.theme-dark {\r\n  /* Background colors */\r\n  --bg-primary: #1e1e2e;\r\n  --bg-secondary: #282838;\r\n  --bg-tertiary: #313145;\r\n  --bg-title-bar: #181825;\r\n  --bg-header: #181825;\r\n  --bg-tooltip: rgba(42, 42, 62, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #e0e0e0;\r\n  --text-secondary: #b0b0b0;\r\n  --text-tertiary: #808080;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #ffffff;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #61afef;\r\n  --accent-secondary: #98c379;\r\n  --accent-danger: #e06c75;\r\n  --accent-warning: #e5c07b;\r\n  --accent-info: #56b6c2;\r\n  \r\n  /* Border colors */\r\n  --border-light: #3a3a4a;\r\n  --border-medium: #4a4a5a;\r\n  --border-dark: #5a5a6a;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #3a3a4a;\r\n  --button-bg-hover: #4a4a5a;\r\n  --button-bg-active: #5a5a6a;\r\n  --button-text: #e0e0e0;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #98c379;\r\n  --toggle-inactive-bg: #e06c75;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #3a3a4a;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(255, 255, 255, 0.05);\r\n  --mode-toggle-border: rgba(255, 255, 255, 0.1);\r\n  --mode-toggle-track: rgba(255, 255, 255, 0.08);\r\n  --mode-toggle-text: rgba(255, 255, 255, 0.8);\r\n  --mode-toggle-thumb-gradient-start: #8a7efa;\r\n  --mode-toggle-thumb-gradient-end: #a66dc2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #3a3a4a;\r\n  --progress-fill: #61afef;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.7);\r\n}\r\n\r\n/* Apply transition to all themed elements for smooth theme changes */\r\nbody {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease;\r\n}\r\n\r\n* {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Skip transitions on specific elements that shouldn't animate */\r\n.no-transition,\r\n.no-transition * {\r\n  transition: none !important;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/renderer/theme.css"],"names":[],"mappings":"AAAA;;;EAGE;;AAEF;EACE,wBAAwB;EACxB,6BAA6B;;EAE7B,qCAAqC;EACrC,uBAAuB;EACvB,qBAAqB;AACvB;;AAEA,0BAA0B;AAC1B;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,4CAA4C;EAC5C,6CAA6C;EAC7C,6CAA6C;;EAE7C,iCAAiC;EACjC,qCAAqC;EACrC,wCAAwC;EACxC,wCAAwC;EACxC,sCAAsC;EACtC,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,eAAe;AACf;EACE,sBAAsB;EACtB,qBAAqB;EACrB,uBAAuB;EACvB,sBAAsB;EACtB,qBAAqB,EAAE,qDAAqD;EAC5E,uBAAuB;EACvB,oBAAoB;EACpB,mCAAmC;;EAEnC,gBAAgB;EAChB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,qBAAqB;EACrB,sBAAsB;EACtB,qBAAqB;;EAErB,kBAAkB;EAClB,yBAAyB;EACzB,2BAA2B;EAC3B,wBAAwB;EACxB,yBAAyB;EACzB,sBAAsB;;EAEtB,kBAAkB;EAClB,uBAAuB;EACvB,wBAAwB;EACxB,sBAAsB;;EAEtB,kBAAkB;EAClB,4BAA4B;EAC5B,0BAA0B;EAC1B,2BAA2B;EAC3B,sBAAsB;;EAEtB,yBAAyB;EACzB,2BAA2B;EAC3B,6BAA6B;EAC7B,6BAA6B;EAC7B,+BAA+B;EAC/B,uBAAuB;EACvB,uBAAuB;;EAEvB,mBAAmB;EACnB,6CAA6C;EAC7C,8CAA8C;EAC9C,8CAA8C;;EAE9C,iCAAiC;EACjC,2CAA2C;EAC3C,+CAA+C;EAC/C,6CAA6C;EAC7C,4CAA4C;EAC5C,2CAA2C;EAC3C,yCAAyC;;EAEzC,kBAAkB;EAClB,sBAAsB;EACtB,wBAAwB;;EAExB,aAAa;EACb,gCAAgC;AAClC;;AAEA,qEAAqE;AACrE;EACE;qDACmD;AACrD;;AAEA;EACE;;;0DAGwD;AAC1D;;AAEA,iEAAiE;AACjE;;EAEE,2BAA2B;AAC7B","sourcesContent":["/**\r\n * NoDoze Theme System\r\n * This file defines CSS variables for light and dark themes\r\n */\r\n\r\n:root {\r\n  /* Animation durations */\r\n  --theme-transition-time: 0.3s;\r\n  \r\n  /* Default to light theme variables */\r\n  --bg-title-bar: #e0e0e0;\r\n  --text-title: #333333;\r\n}\r\n\r\n/* Light Theme (default) */\r\n.theme-light {\r\n  /* Background colors */\r\n  --bg-primary: #f5f5f5;\r\n  --bg-secondary: #ffffff;\r\n  --bg-tertiary: #f0f0f0;\r\n  --bg-title-bar: #e0e0e0;\r\n  --bg-header: #2c3e50;\r\n  --bg-tooltip: rgba(97, 97, 97, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #333333;\r\n  --text-secondary: #666666;\r\n  --text-tertiary: #999999;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #333333;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #3498db;\r\n  --accent-secondary: #2ecc71;\r\n  --accent-danger: #e74c3c;\r\n  --accent-warning: #f39c12;\r\n  --accent-info: #1abc9c;\r\n  \r\n  /* Border colors */\r\n  --border-light: #dddddd;\r\n  --border-medium: #cccccc;\r\n  --border-dark: #999999;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #f0f0f0;\r\n  --button-bg-hover: #e0e0e0;\r\n  --button-bg-active: #d0d0d0;\r\n  --button-text: #333333;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #2ecc71;\r\n  --toggle-inactive-bg: #e74c3c;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #cccccc;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.1);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(0, 0, 0, 0.05);\r\n  --mode-toggle-border: rgba(0, 0, 0, 0.1);\r\n  --mode-toggle-track: rgba(0, 0, 0, 0.08);\r\n  --mode-toggle-text: rgba(0, 0, 0, 0.6);\r\n  --mode-toggle-thumb-gradient-start: #667eea;\r\n  --mode-toggle-thumb-gradient-end: #764ba2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #eeeeee;\r\n  --progress-fill: #3498db;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n/* Dark Theme */\r\n.theme-dark {\r\n  /* Background colors */\r\n  --bg-primary: #1e1e2e;\r\n  --bg-secondary: #282838;\r\n  --bg-tertiary: #313145;\r\n  --bg-element: #363652; /* New variable for elements that need to stand out */\r\n  --bg-title-bar: #181825;\r\n  --bg-header: #181825;\r\n  --bg-tooltip: rgba(42, 42, 62, 0.9);\r\n  \r\n  /* Text colors */\r\n  --text-primary: #e0e0e0;\r\n  --text-secondary: #b0b0b0;\r\n  --text-tertiary: #808080;\r\n  --text-light: #ffffff;\r\n  --text-header: #ffffff;\r\n  --text-title: #ffffff;\r\n  \r\n  /* Accent colors */\r\n  --accent-primary: #61afef;\r\n  --accent-secondary: #98c379;\r\n  --accent-danger: #e06c75;\r\n  --accent-warning: #e5c07b;\r\n  --accent-info: #56b6c2;\r\n  \r\n  /* Border colors */\r\n  --border-light: #3a3a4a;\r\n  --border-medium: #4a4a5a;\r\n  --border-dark: #5a5a6a;\r\n  \r\n  /* Button colors */\r\n  --button-bg-default: #3a3a4a;\r\n  --button-bg-hover: #4a4a5a;\r\n  --button-bg-active: #5a5a6a;\r\n  --button-text: #e0e0e0;\r\n  \r\n  /* Toggle button colors */\r\n  --toggle-active-bg: #98c379;\r\n  --toggle-inactive-bg: #e06c75;\r\n  --toggle-active-text: #ffffff;\r\n  --toggle-inactive-text: #ffffff;\r\n  --toggle-thumb: #ffffff;\r\n  --toggle-track: #3a3a4a;\r\n  \r\n  /* Shadow effects */\r\n  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);\r\n  --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.25);\r\n  --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.25);\r\n  \r\n  /* Sleep prevention mode toggle */\r\n  --mode-toggle-bg: rgba(255, 255, 255, 0.15);\r\n  --mode-toggle-border: rgba(255, 255, 255, 0.25);\r\n  --mode-toggle-track: rgba(255, 255, 255, 0.2);\r\n  --mode-toggle-text: rgba(255, 255, 255, 0.9);\r\n  --mode-toggle-thumb-gradient-start: #8a7efa;\r\n  --mode-toggle-thumb-gradient-end: #a66dc2;\r\n  \r\n  /* Progress bars */\r\n  --progress-bg: #3a3a4a;\r\n  --progress-fill: #61afef;\r\n  \r\n  /* Overlays */\r\n  --overlay-bg: rgba(0, 0, 0, 0.7);\r\n}\r\n\r\n/* Apply transition to all themed elements for smooth theme changes */\r\nbody {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease;\r\n}\r\n\r\n* {\r\n  transition: background-color var(--theme-transition-time) ease,\r\n              color var(--theme-transition-time) ease,\r\n              border-color var(--theme-transition-time) ease,\r\n              box-shadow var(--theme-transition-time) ease;\r\n}\r\n\r\n/* Skip transitions on specific elements that shouldn't animate */\r\n.no-transition,\r\n.no-transition * {\r\n  transition: none !important;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -29092,7 +29251,10 @@ __webpack_require__(/*! ./styles.css */ "./src/renderer/styles.css");
 const AboutDialog_1 = __importDefault(__webpack_require__(/*! ./AboutDialog */ "./src/renderer/AboutDialog.tsx"));
 const TitleBar_1 = __importDefault(__webpack_require__(/*! ./TitleBar */ "./src/renderer/TitleBar.tsx"));
 const SleepPreventionModeToggle_1 = __importStar(__webpack_require__(/*! ./SleepPreventionModeToggle */ "./src/renderer/SleepPreventionModeToggle.tsx"));
-const App = () => {
+const ThemeContext_1 = __webpack_require__(/*! ./ThemeContext */ "./src/renderer/ThemeContext.tsx");
+// Main App content separated for theme context usage
+const AppContent = () => {
+    const { theme, toggleTheme } = (0, ThemeContext_1.useTheme)();
     const [isActive, setIsActive] = (0, react_1.useState)(false);
     const [timerMode, setTimerMode] = (0, react_1.useState)(false);
     const [timerDuration, setTimerDuration] = (0, react_1.useState)(30); // Default 30 minutes
@@ -29225,9 +29387,97 @@ const App = () => {
         }
     };
     const statusColors = getStatusColors();
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "app-container theme-light", children: [(0, jsx_runtime_1.jsx)("div", { className: "fixed-header-container", children: (0, jsx_runtime_1.jsx)(TitleBar_1.default, { title: "NoDoze" }) }), (0, jsx_runtime_1.jsxs)("div", { className: "control-section", children: [(0, jsx_runtime_1.jsxs)("div", { className: "activate-section", children: [(0, jsx_runtime_1.jsx)("button", { className: `activate-button${isActive ? ' active' : ''}`, onClick: () => handleToggle(!isActive), children: isActive ? 'Deactivate' : 'Activate' }), (0, jsx_runtime_1.jsxs)("p", { className: "status-text", children: [statusColors.statusEmoji, " ", statusColors.statusText] })] }), (0, jsx_runtime_1.jsx)("div", { className: "mode-toggle-section", children: (0, jsx_runtime_1.jsx)(SleepPreventionModeToggle_1.default, { currentMode: sleepPreventionState.mode, onModeChange: handleModeChange, disabled: false }) })] }), (0, jsx_runtime_1.jsxs)("footer", { className: "app-footer", children: [(0, jsx_runtime_1.jsx)("p", { children: "NoDoze v1.0.0" }), (0, jsx_runtime_1.jsxs)("div", { className: "footer-actions", children: [(0, jsx_runtime_1.jsx)("button", { className: "link-button", onClick: () => setShowAbout(true), children: "About" }), (0, jsx_runtime_1.jsx)("span", { className: "footer-separator", children: "|" }), (0, jsx_runtime_1.jsx)("small", { children: "Close this window to minimize to system tray" })] })] }), (0, jsx_runtime_1.jsx)(AboutDialog_1.default, { isOpen: showAbout, onClose: () => setShowAbout(false) })] }));
+    return ((0, jsx_runtime_1.jsxs)("div", { className: `app-container theme-${theme}`, children: [(0, jsx_runtime_1.jsx)("div", { className: "fixed-header-container", children: (0, jsx_runtime_1.jsx)(TitleBar_1.default, { title: "NoDoze", currentTheme: theme, onThemeToggle: toggleTheme }) }), (0, jsx_runtime_1.jsxs)("div", { className: "control-section", children: [(0, jsx_runtime_1.jsxs)("div", { className: "activate-section", children: [(0, jsx_runtime_1.jsx)("button", { className: `activate-button${isActive ? ' active' : ''}`, onClick: () => handleToggle(!isActive), children: isActive ? 'Deactivate' : 'Activate' }), (0, jsx_runtime_1.jsxs)("p", { className: "status-text", children: [statusColors.statusEmoji, " ", statusColors.statusText] })] }), (0, jsx_runtime_1.jsx)("div", { className: "mode-toggle-section", children: (0, jsx_runtime_1.jsx)(SleepPreventionModeToggle_1.default, { currentMode: sleepPreventionState.mode, onModeChange: handleModeChange, disabled: false }) })] }), (0, jsx_runtime_1.jsxs)("footer", { className: "app-footer", children: [(0, jsx_runtime_1.jsx)("p", { children: "NoDoze v1.0.0" }), (0, jsx_runtime_1.jsxs)("div", { className: "footer-actions", children: [(0, jsx_runtime_1.jsx)("button", { className: "link-button", onClick: () => setShowAbout(true), children: "About" }), (0, jsx_runtime_1.jsx)("span", { className: "footer-separator", children: "|" }), (0, jsx_runtime_1.jsx)("small", { children: "Close this window to minimize to system tray" })] })] }), (0, jsx_runtime_1.jsx)(AboutDialog_1.default, { isOpen: showAbout, onClose: () => setShowAbout(false) })] }));
+};
+// Main App wrapper component
+const App = () => {
+    return ((0, jsx_runtime_1.jsx)(ThemeContext_1.ThemeProvider, { initialTheme: "light", children: (0, jsx_runtime_1.jsx)(AppContent, {}) }));
 };
 exports["default"] = App;
+
+
+/***/ }),
+
+/***/ "./src/renderer/MoreMenu.tsx":
+/*!***********************************!*\
+  !*** ./src/renderer/MoreMenu.tsx ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const jsx_runtime_1 = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+const MoreMenu = ({ currentTheme, onThemeToggle }) => {
+    const [isOpen, setIsOpen] = (0, react_1.useState)(false);
+    const menuRef = (0, react_1.useRef)(null);
+    const buttonRef = (0, react_1.useRef)(null);
+    // Toggle menu open/closed state
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+    // Close menu when clicking outside
+    (0, react_1.useEffect)(() => {
+        const handleClickOutside = (event) => {
+            if (isOpen &&
+                menuRef.current &&
+                buttonRef.current &&
+                !menuRef.current.contains(event.target) &&
+                !buttonRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
+    // Handle theme toggle and close menu
+    const handleThemeToggle = () => {
+        onThemeToggle();
+        setIsOpen(false);
+    };
+    // Determine theme-related labels and icons
+    const themeToggleText = currentTheme === 'light'
+        ? 'Switch to Dark Mode'
+        : 'Switch to Light Mode';
+    const themeToggleIcon = currentTheme === 'light' ? '🌙' : '☀️';
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "more-menu-container", children: [(0, jsx_runtime_1.jsx)("button", { ref: buttonRef, className: "title-bar-button more-menu-button", onClick: toggleMenu, "aria-label": "More Options", "aria-expanded": isOpen, "aria-haspopup": "true", children: (0, jsx_runtime_1.jsxs)("svg", { width: "16", height: "16", viewBox: "0 0 16 16", children: [(0, jsx_runtime_1.jsx)("circle", { cx: "8", cy: "2", r: "1.5", fill: "currentColor" }), (0, jsx_runtime_1.jsx)("circle", { cx: "8", cy: "8", r: "1.5", fill: "currentColor" }), (0, jsx_runtime_1.jsx)("circle", { cx: "8", cy: "14", r: "1.5", fill: "currentColor" })] }) }), isOpen && ((0, jsx_runtime_1.jsx)("div", { ref: menuRef, className: "more-menu-dropdown", role: "menu", children: (0, jsx_runtime_1.jsxs)("button", { className: "more-menu-item", onClick: handleThemeToggle, role: "menuitem", children: [(0, jsx_runtime_1.jsx)("span", { className: "more-menu-item-text", children: themeToggleText }), (0, jsx_runtime_1.jsx)("span", { className: "more-menu-item-icon", children: themeToggleIcon })] }) }))] }));
+};
+exports["default"] = MoreMenu;
 
 
 /***/ }),
@@ -29394,6 +29644,79 @@ exports["default"] = exports.SleepPreventionModeToggle;
 
 /***/ }),
 
+/***/ "./src/renderer/ThemeContext.tsx":
+/*!***************************************!*\
+  !*** ./src/renderer/ThemeContext.tsx ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ThemeProvider = exports.useTheme = void 0;
+const jsx_runtime_1 = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+const react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+// Create context with default values
+const ThemeContext = (0, react_1.createContext)({
+    theme: 'light',
+    toggleTheme: () => { },
+    setTheme: () => { },
+});
+// Hook for using the theme context
+const useTheme = () => (0, react_1.useContext)(ThemeContext);
+exports.useTheme = useTheme;
+// Provider component to wrap around the app
+const ThemeProvider = ({ children, initialTheme = 'light' }) => {
+    const [theme, setTheme] = (0, react_1.useState)(initialTheme);
+    // Apply theme class to HTML element when theme changes
+    (0, react_1.useEffect)(() => {
+        document.documentElement.classList.remove('theme-light', 'theme-dark');
+        document.documentElement.classList.add(`theme-${theme}`);
+    }, [theme]);
+    // Toggle between light and dark themes
+    const toggleTheme = () => {
+        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    };
+    return ((0, jsx_runtime_1.jsx)(ThemeContext.Provider, { value: { theme, toggleTheme, setTheme }, children: children }));
+};
+exports.ThemeProvider = ThemeProvider;
+exports["default"] = ThemeContext;
+
+
+/***/ }),
+
 /***/ "./src/renderer/TitleBar.tsx":
 /*!***********************************!*\
   !*** ./src/renderer/TitleBar.tsx ***!
@@ -29408,7 +29731,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const jsx_runtime_1 = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 const electron_1 = __webpack_require__(/*! electron */ "electron");
-const TitleBar = ({ title }) => {
+const MoreMenu_1 = __importDefault(__webpack_require__(/*! ./MoreMenu */ "./src/renderer/MoreMenu.tsx"));
+const TitleBar = ({ title, currentTheme = 'light', onThemeToggle = () => { } }) => {
     const handleMinimize = () => {
         electron_1.ipcRenderer.send('window-minimize');
     };
@@ -29418,7 +29742,7 @@ const TitleBar = ({ title }) => {
     const handleClose = () => {
         electron_1.ipcRenderer.send('window-close');
     };
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "title-bar", children: [(0, jsx_runtime_1.jsx)("div", { className: "title-bar-drag-area", children: (0, jsx_runtime_1.jsx)("div", { className: "title-bar-title", children: title }) }), (0, jsx_runtime_1.jsxs)("div", { className: "title-bar-controls", children: ["        ", (0, jsx_runtime_1.jsx)("button", { className: "title-bar-button title-bar-minimize", onClick: handleMinimize, "aria-label": "Minimize", children: (0, jsx_runtime_1.jsx)("svg", { width: "16", height: "1", viewBox: "0 0 10 1", children: (0, jsx_runtime_1.jsx)("path", { d: "M0 0h10v1H0z", fill: "currentColor" }) }) }), "        ", (0, jsx_runtime_1.jsxs)("button", { className: "title-bar-button title-bar-corner", onClick: handleCorner, "aria-label": "Move to Corner", children: ["          ", (0, jsx_runtime_1.jsxs)("svg", { width: "16", height: "16", viewBox: "0 0 10 10", children: [(0, jsx_runtime_1.jsx)("rect", { x: "0.5", y: "0.5", width: "9", height: "5.5", stroke: "currentColor", fill: "none", strokeWidth: "1" }), (0, jsx_runtime_1.jsx)("circle", { cx: "8.5", cy: "5", r: "1.5", fill: "currentColor" })] })] }), (0, jsx_runtime_1.jsx)("button", { className: "title-bar-button title-bar-close", onClick: handleClose, "aria-label": "Close", children: (0, jsx_runtime_1.jsx)("svg", { width: "16", height: "16", viewBox: "0 0 10 10", children: (0, jsx_runtime_1.jsx)("path", { d: "M1.41 0L0 1.41 3.59 5 0 8.59 1.41 10 5 6.41 8.59 10 10 8.59 6.41 5 10 1.41 8.59 0 5 3.59 1.41 0z", fill: "currentColor" }) }) })] })] }));
+    return ((0, jsx_runtime_1.jsxs)("div", { className: "title-bar", children: [(0, jsx_runtime_1.jsx)("div", { className: "title-bar-drag-area", children: (0, jsx_runtime_1.jsx)("div", { className: "title-bar-title", children: title }) }), (0, jsx_runtime_1.jsxs)("div", { className: "title-bar-controls", children: [(0, jsx_runtime_1.jsx)(MoreMenu_1.default, { currentTheme: currentTheme, onThemeToggle: onThemeToggle }), (0, jsx_runtime_1.jsx)("button", { className: "title-bar-button title-bar-minimize", onClick: handleMinimize, "aria-label": "Minimize", children: (0, jsx_runtime_1.jsx)("svg", { width: "16", height: "1", viewBox: "0 0 10 1", children: (0, jsx_runtime_1.jsx)("path", { d: "M0 0h10v1H0z", fill: "currentColor" }) }) }), "        ", (0, jsx_runtime_1.jsxs)("button", { className: "title-bar-button title-bar-corner", onClick: handleCorner, "aria-label": "Move to Corner", children: ["          ", (0, jsx_runtime_1.jsxs)("svg", { width: "16", height: "16", viewBox: "0 0 10 10", children: [(0, jsx_runtime_1.jsx)("rect", { x: "0.5", y: "0.5", width: "9", height: "5.5", stroke: "currentColor", fill: "none", strokeWidth: "1" }), (0, jsx_runtime_1.jsx)("circle", { cx: "8.5", cy: "5", r: "1.5", fill: "currentColor" })] })] }), (0, jsx_runtime_1.jsx)("button", { className: "title-bar-button title-bar-close", onClick: handleClose, "aria-label": "Close", children: (0, jsx_runtime_1.jsx)("svg", { width: "16", height: "16", viewBox: "0 0 10 10", children: (0, jsx_runtime_1.jsx)("path", { d: "M1.41 0L0 1.41 3.59 5 0 8.59 1.41 10 5 6.41 8.59 10 10 8.59 6.41 5 10 1.41 8.59 0 5 3.59 1.41 0z", fill: "currentColor" }) }) })] })] }));
 };
 exports["default"] = TitleBar;
 
@@ -29441,8 +29765,6 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules
 const client_1 = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 const App_1 = __importDefault(__webpack_require__(/*! ./App */ "./src/renderer/App.tsx"));
 __webpack_require__(/*! ./styles.css */ "./src/renderer/styles.css");
-// Apply theme class to HTML element
-document.documentElement.classList.add('theme-light');
 const container = document.getElementById('root');
 const root = (0, client_1.createRoot)(container);
 root.render((0, jsx_runtime_1.jsx)(react_1.default.StrictMode, { children: (0, jsx_runtime_1.jsx)(App_1.default, {}) }));

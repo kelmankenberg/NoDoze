@@ -4,6 +4,7 @@ import './styles.css';
 import AboutDialog from './AboutDialog';
 import TitleBar from './TitleBar';
 import SleepPreventionModeToggle, { SleepPreventionMode } from './SleepPreventionModeToggle';
+import { ThemeProvider, useTheme } from './ThemeContext';
 
 interface SleepPreventionState {
   mode: SleepPreventionMode;
@@ -14,7 +15,9 @@ interface SleepPreventionState {
   timeRemaining: number;
 }
 
-const App: React.FC = () => {
+// Main App content separated for theme context usage
+const AppContent: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const [isActive, setIsActive] = useState(false);
   const [timerMode, setTimerMode] = useState(false);
   const [timerDuration, setTimerDuration] = useState(30); // Default 30 minutes
@@ -164,9 +167,13 @@ const App: React.FC = () => {
   const statusColors = getStatusColors();
   
   return (
-    <div className="app-container theme-light">
+    <div className={`app-container theme-${theme}`}>
       <div className="fixed-header-container">
-        <TitleBar title="NoDoze" />
+        <TitleBar 
+          title="NoDoze" 
+          currentTheme={theme}
+          onThemeToggle={toggleTheme}
+        />
         {/* <header className="app-header">
           <h1>NoDoze</h1>
           <p className="subtitle">Keep your computer awake</p>
@@ -257,6 +264,15 @@ const App: React.FC = () => {
         onClose={() => setShowAbout(false)}
       />
     </div>
+  );
+};
+
+// Main App wrapper component
+const App: React.FC = () => {
+  return (
+    <ThemeProvider initialTheme="light">
+      <AppContent />
+    </ThemeProvider>
   );
 };
 

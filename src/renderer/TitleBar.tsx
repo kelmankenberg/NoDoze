@@ -1,11 +1,18 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
+import MoreMenu from './MoreMenu';
 
 interface TitleBarProps {
   title: string;
+  currentTheme?: 'light' | 'dark';
+  onThemeToggle?: () => void;
 }
 
-const TitleBar: React.FC<TitleBarProps> = ({ title }) => {
+const TitleBar: React.FC<TitleBarProps> = ({ 
+  title, 
+  currentTheme = 'light', 
+  onThemeToggle = () => {} 
+}) => {
   const handleMinimize = () => {
     ipcRenderer.send('window-minimize');
   };
@@ -23,7 +30,12 @@ const TitleBar: React.FC<TitleBarProps> = ({ title }) => {
       <div className="title-bar-drag-area">
         <div className="title-bar-title">{title}</div>
       </div>
-      <div className="title-bar-controls">        <button 
+      <div className="title-bar-controls">
+        <MoreMenu 
+          currentTheme={currentTheme}
+          onThemeToggle={onThemeToggle}
+        />
+        <button 
           className="title-bar-button title-bar-minimize" 
           onClick={handleMinimize}
           aria-label="Minimize"
