@@ -96,8 +96,8 @@ This document defines the requirements for implementing a "More" menu in the NoD
 
 #### 1.3 IPC Communication
 - Add IPC handlers for theme-related actions:
-  - `get-theme` - Retrieve current theme from settings
-  - `set-theme` - Update theme in settings
+  - `get-theme-preference` - Retrieve current theme from settings
+  - `set-theme-preference` - Update theme in settings
 
 ### 2. Theme Implementation
 
@@ -162,8 +162,8 @@ This document defines the requirements for implementing a "More" menu in the NoD
 - [x] 1. Add theme variables to CSS - 1 day
 - [x] 2. Create MoreMenu component and integrate with TitleBar - 1 day
 - [x] 3. Implement ThemeContext and theme switching logic - 1 day
-- [ ] 4. Update SettingsManager for theme persistence - 0.5 day
-- [ ] 5. Test theme support across all components - 1 day
-- [ ] 6. Final adjustments and bug fixes - 0.5 day
+- [x] 4. Update SettingsManager for theme persistence - 0.5 day
+- [x] 5. Test theme support across all components - 1 day
+- [x] 6. Final adjustments and bug fixes - 0.5 day
 
 **Total Estimated Time:** 5 days

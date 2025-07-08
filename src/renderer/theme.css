@@ -156,6 +156,21 @@ body {
               box-shadow var(--theme-transition-time) ease;
 }
 
+/* Specific transitions for common elements */
+button, .button {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease,
+              box-shadow var(--theme-transition-time) ease,
+              opacity var(--theme-transition-time) ease;
+}
+
+input, select, textarea {
+  transition: background-color var(--theme-transition-time) ease,
+              color var(--theme-transition-time) ease,
+              border-color var(--theme-transition-time) ease;
+}
+
 /* Skip transitions on specific elements that shouldn't animate */
 .no-transition,
 .no-transition * {

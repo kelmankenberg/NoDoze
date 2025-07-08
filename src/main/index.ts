@@ -488,13 +488,18 @@ function createWindow() {
 }
 
 /**
- * Initialize the sleep prevention manager and activity simulator
+ * Initialize the sleep prevention system
  */
 function initializeSleepPreventionSystem() {
+  console.log('Initializing sleep prevention system...');
+  
   // Initialize settings manager
   settingsManager = new SettingsManager();
   
-  // Initialize the sleep prevention manager with saved settings
+  // Debug settings file
+  debugSettingsFile();
+  
+  // Create sleep prevention manager with settings
   const config = settingsManager.getSleepPreventionConfig();
   sleepPreventionManager = new SleepPreventionManager(config);
 
@@ -515,6 +520,35 @@ function initializeSleepPreventionSystem() {
   });
 
   console.log('Sleep prevention system initialized with saved settings');
+}
+
+/**
+ * Debug utility to log settings file info
+ */
+function debugSettingsFile() {
+  try {
+    const settingsPath = settingsManager.getSettingsPath();
+    console.log('=== DEBUG SETTINGS INFO ===');
+    console.log(`Settings file location: ${settingsPath}`);
+    
+    if (fs.existsSync(settingsPath)) {
+      const settingsContent = fs.readFileSync(settingsPath, 'utf8');
+      console.log('Settings file content:');
+      console.log(settingsContent);
+      
+      try {
+        const parsedSettings = JSON.parse(settingsContent);
+        console.log('Theme setting:', parsedSettings.ui?.theme || 'not set');
+      } catch (parseError) {
+        console.error('Error parsing settings file:', parseError);
+      }
+    } else {
+      console.log('Settings file does not exist yet');
+    }
+    console.log('=========================');
+  } catch (error) {
+    console.error('Error debugging settings file:', error);
+  }
 }
 
 /**
@@ -837,6 +871,7 @@ app.on('before-quit', async () => {
 
 // Initialize the sleep prevention system
 initializeSleepPreventionSystem();
+debugSettingsFile();
 
 // Handle sleep prevention mode changes
 ipcMain.handle('set-sleep-prevention-mode', async (event, mode: SleepPreventionMode) => {
@@ -944,5 +979,33 @@ ipcMain.handle('import-settings', (event, jsonString) => {
   } catch (error) {
     console.error('Error importing settings:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+});
+
+// Handle theme preference operations
+ipcMain.handle('get-theme-preference', () => {
+  console.log('Main: get-theme-preference IPC handler called');
+  try {
+    const theme = settingsManager.getTheme();
+    console.log(`Main: Current theme preference: ${theme}`);
+    return theme;
+  } catch (error) {
+    console.error('Main: Error getting theme preference:', error);
+    return 'light'; // Default to light theme on error
+  }
+});
+
+ipcMain.handle('set-theme-preference', (_, theme: 'light' | 'dark') => {
+  console.log(`Main: set-theme-preference IPC handler called with theme: ${theme}`);
+  try {
+    settingsManager.setTheme(theme);
+    console.log(`Main: Theme preference set to: ${theme}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Main: Error setting theme preference:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
   }
 });

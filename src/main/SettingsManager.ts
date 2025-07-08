@@ -19,6 +19,7 @@ export interface UserSettings {
     windowSize?: { width: number; height: number };
     minimizeToTray: boolean;
     showNotifications: boolean;
+    theme: 'light' | 'dark';
   };
   version: string;
 }
@@ -45,7 +46,8 @@ export class SettingsManager {
       },
       ui: {
         minimizeToTray: true,
-        showNotifications: true
+        showNotifications: true,
+        theme: 'light'
       },
       version: '1.0.0'
     };
@@ -57,22 +59,57 @@ export class SettingsManager {
   private loadSettings(): void {
     try {
       if (fs.existsSync(this.settingsPath)) {
+        console.log(`SettingsManager: Loading settings from ${this.settingsPath}`);
         const data = fs.readFileSync(this.settingsPath, 'utf8');
         const loadedSettings = JSON.parse(data);
+        console.log('SettingsManager: Loaded settings:', JSON.stringify(loadedSettings, null, 2));
         
-        // Merge with defaults to ensure all properties exist
-        this.settings = {
-          ...this.getDefaultSettings(),
-          ...loadedSettings
+        // Get default settings
+        const defaultSettings = this.getDefaultSettings();
+        console.log('SettingsManager: Default settings:', JSON.stringify(defaultSettings, null, 2));
+        
+        // Deep merge settings recursively to preserve all nested properties
+        const deepMerge = (target: any, source: any): any => {
+          for (const key in source) {
+            if (source.hasOwnProperty(key)) {
+              if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+                // If property is an object, recursively merge
+                target[key] = target[key] || {};
+                target[key] = deepMerge(target[key], source[key]);
+              } else {
+                // Otherwise, overwrite with source value
+                target[key] = source[key];
+              }
+            }
+          }
+          return target;
         };
         
-        console.log('Settings loaded successfully');
+        // Apply deep merge with defaults and loaded settings
+        this.settings = deepMerge(JSON.parse(JSON.stringify(defaultSettings)), loadedSettings);
+        
+        console.log('SettingsManager: Merged settings:', JSON.stringify(this.settings, null, 2));
+        console.log('SettingsManager: Theme after loading:', this.settings.ui?.theme);
+        
+        // Ensure theme property exists
+        if (!this.settings.ui) {
+          console.log('SettingsManager: ui object missing, creating it');
+          this.settings.ui = defaultSettings.ui;
+        }
+        
+        if (!this.settings.ui.theme) {
+          console.log('SettingsManager: theme property missing, using default');
+          this.settings.ui.theme = defaultSettings.ui.theme;
+        }
+        
+        console.log('SettingsManager: Settings loaded successfully');
       } else {
-        console.log('No settings file found, using defaults');
+        console.log('SettingsManager: No settings file found, using defaults');
+        this.settings = this.getDefaultSettings();
         this.saveSettings(); // Create initial settings file
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
+      console.error('SettingsManager: Error loading settings:', error);
       this.settings = this.getDefaultSettings();
     }
   }
@@ -82,15 +119,32 @@ export class SettingsManager {
    */
   private saveSettings(): void {
     try {
+      console.log(`SettingsManager: Saving settings to ${this.settingsPath}`);
+      console.log('SettingsManager: Settings to save:', JSON.stringify(this.settings, null, 2));
+      
       const settingsDir = path.dirname(this.settingsPath);
       if (!fs.existsSync(settingsDir)) {
+        console.log(`SettingsManager: Creating settings directory: ${settingsDir}`);
         fs.mkdirSync(settingsDir, { recursive: true });
       }
 
+      // Make sure the theme property exists before saving
+      if (!this.settings.ui.hasOwnProperty('theme')) {
+        console.log('SettingsManager: Theme property missing, adding default');
+        this.settings.ui.theme = 'light';
+      }
+
       fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2));
-      console.log('Settings saved successfully');
+      console.log('SettingsManager: Settings saved successfully');
+      
+      // Verify the file was written correctly
+      if (fs.existsSync(this.settingsPath)) {
+        const savedData = fs.readFileSync(this.settingsPath, 'utf8');
+        const savedSettings = JSON.parse(savedData);
+        console.log('SettingsManager: Verified saved settings:', JSON.stringify(savedSettings, null, 2));
+      }
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.error('SettingsManager: Error saving settings:', error);
     }
   }
 
@@ -189,6 +243,36 @@ export class SettingsManager {
   }
 
   /**
+   * Get theme preference
+   */
+  getTheme(): 'light' | 'dark' {
+    console.log('SettingsManager: Getting theme preference, current settings:', JSON.stringify(this.settings, null, 2));
+    const theme = this.settings.ui.theme || 'light';
+    console.log(`SettingsManager: Current theme is ${theme}`);
+    return theme;
+  }
+
+  /**
+   * Set theme preference
+   */
+  setTheme(theme: 'light' | 'dark'): void {
+    console.log(`SettingsManager: Setting theme to ${theme}`);
+    if (!this.settings.ui) {
+      console.log('SettingsManager: ui object is missing, creating it');
+      this.settings.ui = {
+        minimizeToTray: true,
+        showNotifications: true,
+        theme: theme
+      };
+    } else {
+      console.log('SettingsManager: Updating ui.theme property');
+      this.settings.ui.theme = theme;
+    }
+    console.log('SettingsManager: Settings after update:', JSON.stringify(this.settings, null, 2));
+    this.saveSettings();
+  }
+
+  /**
    * Reset settings to defaults
    */
   resetSettings(): void {
@@ -234,7 +318,7 @@ export class SettingsManager {
   private validateSettings(settings: any): boolean {
     try {
       // Check required properties exist
-      return (
+      const basicValidation = (
         typeof settings === 'object' &&
         typeof settings.sleepPreventionMode === 'string' &&
         Object.values(SleepPreventionMode).includes(settings.sleepPreventionMode) &&
@@ -243,7 +327,29 @@ export class SettingsManager {
         typeof settings.activitySimulation.activityType === 'string' &&
         ['mouse', 'keyboard', 'both'].includes(settings.activitySimulation.activityType)
       );
-    } catch {
+      
+      // Don't strictly require the theme property, but validate it if it exists
+      if (basicValidation) {
+        // If ui or ui.theme doesn't exist, that's fine - we'll use defaults
+        if (!settings.ui || !settings.ui.theme) {
+          console.log('SettingsManager: Theme not found in settings, will use default');
+          return true;
+        }
+        
+        // If theme exists, make sure it's a valid value
+        if (typeof settings.ui.theme === 'string' && 
+            ['light', 'dark'].includes(settings.ui.theme)) {
+          console.log(`SettingsManager: Valid theme found in settings: ${settings.ui.theme}`);
+          return true;
+        } else {
+          console.log(`SettingsManager: Invalid theme value found: ${settings.ui.theme}`);
+          return false;
+        }
+      }
+      
+      return basicValidation;
+    } catch (error) {
+      console.error('SettingsManager: Error validating settings:', error);
       return false;
     }
   }
