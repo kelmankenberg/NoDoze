@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen } from 'electron';
+import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, Notification } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import { createTrayIcon, createAppIcon, updateAppIcons } from './icon-manager-improved';
@@ -149,22 +149,86 @@ function createTray() {
   // Don't create a tray if it already exists
   if (tray !== null) return;
   
-  // Create the tray icon
-  const icon = createTrayIcon(isPreventingSleep);
-  tray = new Tray(icon);
-  tray.setToolTip('NoDoze - Keep Your Computer Awake');
+  console.log('Creating system tray icon...');
   
-  // Update the context menu
-  updateTrayMenu();
-  
-  // Show/hide window on tray click
-  tray.on('click', () => {
-    if (mainWindow?.isVisible()) {
-      mainWindow.hide();
-    } else {
-      mainWindow?.show();
+  try {
+    // Find the icon file using a similar approach as the test script
+    const possibleIcons = [
+      path.join(app.getAppPath(), 'build', 'icons', 'win', isPreventingSleep ? 'eye-active.ico' : 'eye-inactive.ico'),
+      path.join(app.getAppPath(), 'build', isPreventingSleep ? 'eye-active.ico' : 'eye-inactive.ico'),
+      path.join(app.getAppPath(), 'app.ico'),
+      path.join(app.getAppPath(), 'build', 'icon.ico'),
+      path.join(app.getAppPath(), 'public', isPreventingSleep ? 'eye-active.svg' : 'eye-inactive.svg')
+    ];
+    
+    // Find the first existing icon
+    let iconPath = null;
+    for (const p of possibleIcons) {
+      try {
+        if (fs.existsSync(p)) {
+          iconPath = p;
+          console.log(`Found tray icon at: ${iconPath}`);
+          break;
+        }
+      } catch (err) {
+        console.error(`Error checking icon path: ${p}`, err);
+      }
     }
-  });
+    
+    // Create icon and tray
+    let icon;
+    if (iconPath) {
+      icon = nativeImage.createFromPath(iconPath);
+      console.log(`Created tray icon from: ${iconPath}`);
+    } else {
+      // Fallback to the icon manager
+      icon = createTrayIcon(isPreventingSleep);
+      console.log('Used icon manager to create tray icon');
+    }
+    
+    // Create the tray with the icon
+    tray = new Tray(icon);
+    tray.setToolTip('NoDoze - Keep Your Computer Awake');
+    
+    console.log('System tray icon created successfully');
+    
+    // Update the context menu
+    updateTrayMenu();
+    
+    // Show/hide window on tray click
+    tray.on('click', () => {
+      if (mainWindow?.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow?.show();
+      }
+    });
+    
+    // Log platform specific info to help with debugging
+    console.log(`Platform: ${process.platform}`);
+    console.log(`Electron version: ${process.versions.electron}`);
+    
+    // Help user find the tray icon in the notification area
+    setTimeout(() => {
+      if (mainWindow && process.platform === 'win32') {
+        mainWindow.webContents.executeJavaScript(`
+          if (!document.getElementById('tray-icon-alert')) {
+            const alert = document.createElement('div');
+            alert.id = 'tray-icon-alert';
+            alert.style = 'position:fixed;bottom:20px;right:20px;background:#f0f7ff;border:1px solid #0078d4;padding:15px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.1);z-index:9999;';
+            alert.innerHTML = '<h3 style="margin-top:0;color:#0078d4;">NoDoze Running in System Tray</h3><p>Look for the eye icon in your system tray (notification area).</p><p>Click on the up-arrow (^) in the taskbar if you don\'t see it.</p><button id="close-alert" style="padding:5px 10px;">Got it</button>';
+            document.body.appendChild(alert);
+            document.getElementById('close-alert').onclick = function() { document.getElementById('tray-icon-alert').style.display = 'none'; };
+          }
+        `).catch(err => console.error('Error showing tray notification:', err));
+      }
+    }, 2000);
+    
+    return true;
+  } catch (error) {
+    console.error('Failed to create system tray icon:', error);
+    return false;
+  }
 }
 
 /**
@@ -677,6 +741,33 @@ function debugIconPath(iconPath: string) {
   }
 }
 
+/**
+ * Show a notification to help users find the tray icon
+ */
+function showTrayIconNotification() {
+  if (process.platform === 'win32' && mainWindow) {
+    try {
+      const notification = new Notification({
+        title: 'NoDoze System Tray Icon',
+        body: 'NoDoze is running in the system tray. Look for the eye icon in the notification area.',
+        icon: createAppIcon(isPreventingSleep)
+      });
+      
+      notification.show();
+      console.log('Showed notification about tray icon location');
+      
+      // When clicked, show the main window
+      notification.on('click', () => {
+        if (mainWindow) {
+          mainWindow.show();
+        }
+      });
+    } catch (err) {
+      console.error('Failed to show tray icon notification:', err);
+    }
+  }
+}
+
 // This method will be called when Electron has finished initialization
 app.whenReady().then(async () => {
   // Extract icons from asar and copy them to accessible locations (production only)
@@ -688,6 +779,11 @@ app.whenReady().then(async () => {
   initializePlatform();
   createWindow();
   createTray();
+  
+  // Show notification to help users find the tray icon
+  setTimeout(() => {
+    showTrayIconNotification();
+  }, 2000);
   
   // Apply our special Windows taskbar icon fix
   if (process.platform === 'win32' && mainWindow) {
